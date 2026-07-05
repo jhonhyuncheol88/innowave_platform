@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CARD_SHADOW, INPUT_STYLE, LABEL_STYLE, Loading, Notice, Stepper } from '../components.js';
 import { EVENT_TYPES, EXTRACTED_FIELDS, OP_MODES, UPLOADED_FORM } from '../data.js';
 import {
-  DOC_ACCEPT, errMessage, invalidateEvent, startDocParse, subscribeDocParse, useEvent,
+  DOC_ACCEPT, errMessage, invalidateEvent, saveWorkflowStep, startDocParse, subscribeDocParse, useEvent,
   type DocParse, type ParsedFields,
 } from '../hooks.js';
 import { useIw } from '../state.js';
@@ -209,16 +209,15 @@ function Step1Inner() {
     setSaveError(null);
     try {
       if (s.currentEventId) {
-        await eventRepository.patch(s.currentEventId, {
-          basicInfo, parsedFromDoc: up, status: 'composing', currentStep: 2,
-        });
+        // 상태·currentStep은 앞으로만 — 진행 중 프로젝트 수정 시 회귀 방지
+        await saveWorkflowStep(s.currentEventId, 'composing', 2, { basicInfo, parsedFromDoc: up });
       } else {
         const created = await eventRepository.create(new Event({
           ownerUid: user.uid, basicInfo, parsedFromDoc: up, status: 'composing', currentStep: 2,
         }));
         set({ currentEventId: created.id });
+        invalidateEvent(created.id);
       }
-      invalidateEvent(s.currentEventId);
       go('step2');
     } catch (e) {
       setSaveError(errMessage(e));

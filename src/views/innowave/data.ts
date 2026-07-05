@@ -18,6 +18,79 @@ export const INITIAL_PROGRAMS: ProgramItem[] = [
   { time: '18:00', name: '네트워킹 리셉션', dur: 90, ai: true },
 ];
 
+/** 행사 유형별 1일차 프로그램 AI 초안 — 저장본이 없는 프로젝트의 시작점 (REQ-05) */
+export const PROGRAM_DRAFTS: Record<string, ProgramItem[]> = {
+  '해커톤·아이디어톤': INITIAL_PROGRAMS,
+  '부트캠프·창업캠프': [
+    { time: '09:30', name: '오리엔테이션 및 팀 배정', dur: 60, ai: true },
+    { time: '10:30', name: '커리큘럼 소개 및 목표 설정', dur: 45, ai: true },
+    { time: '11:15', name: '주제 강의 1 — 문제 정의', dur: 90, ai: true },
+    { time: '12:45', name: '중식', dur: 60, ai: true },
+    { time: '13:45', name: '실습 워크숍', dur: 150, ai: true },
+    { time: '16:15', name: '멘토 코칭 세션', dur: 90, ai: true },
+    { time: '17:45', name: '일일 회고 및 과제 안내', dur: 45, ai: true },
+  ],
+  '데모데이·IR피칭': [
+    { time: '13:00', name: '등록 및 리허설', dur: 60, ai: true },
+    { time: '14:00', name: '개회 및 축사', dur: 30, ai: true },
+    { time: '14:30', name: 'IR 피칭 1부', dur: 90, ai: true },
+    { time: '16:00', name: '휴식 및 네트워킹', dur: 30, ai: true },
+    { time: '16:30', name: 'IR 피칭 2부', dur: 90, ai: true },
+    { time: '18:00', name: '심사 결과 발표 및 시상', dur: 40, ai: true },
+    { time: '18:40', name: '투자자 네트워킹 리셉션', dur: 80, ai: true },
+  ],
+  '경진대회': [
+    { time: '09:00', name: '참가자 등록 및 개회식', dur: 60, ai: true },
+    { time: '10:00', name: '과제 공개 및 규정 안내', dur: 30, ai: true },
+    { time: '10:30', name: '본선 경연 1부', dur: 150, ai: true },
+    { time: '13:00', name: '중식', dur: 60, ai: true },
+    { time: '14:00', name: '본선 경연 2부', dur: 150, ai: true },
+    { time: '16:30', name: '심사 및 집계', dur: 60, ai: true },
+    { time: '17:30', name: '시상식 및 폐회', dur: 60, ai: true },
+  ],
+  '네트워킹': [
+    { time: '18:00', name: '등록 및 웰컴 드링크', dur: 30, ai: true },
+    { time: '18:30', name: '오프닝 및 참가자 소개', dur: 30, ai: true },
+    { time: '19:00', name: '라운드테이블 네트워킹 1부', dur: 60, ai: true },
+    { time: '20:00', name: '스탠딩 디너', dur: 45, ai: true },
+    { time: '20:45', name: '자유 네트워킹 2부', dur: 60, ai: true },
+    { time: '21:45', name: '클로징 및 경품 추첨', dur: 15, ai: true },
+  ],
+  '포럼·컨퍼런스': [
+    { time: '09:00', name: '등록 및 개회', dur: 60, ai: true },
+    { time: '10:00', name: '기조연설', dur: 50, ai: true },
+    { time: '10:50', name: '세션 1 — 주제 발표', dur: 80, ai: true },
+    { time: '12:10', name: '오찬', dur: 80, ai: true },
+    { time: '13:30', name: '세션 2 — 사례 발표', dur: 90, ai: true },
+    { time: '15:00', name: '패널 토론', dur: 80, ai: true },
+    { time: '16:20', name: '폐회 및 네트워킹', dur: 60, ai: true },
+  ],
+  '특강·세미나': [
+    { time: '13:30', name: '등록 및 안내', dur: 30, ai: true },
+    { time: '14:00', name: '개회 및 연사 소개', dur: 15, ai: true },
+    { time: '14:15', name: '특강 1부', dur: 75, ai: true },
+    { time: '15:30', name: '휴식', dur: 15, ai: true },
+    { time: '15:45', name: '특강 2부', dur: 75, ai: true },
+    { time: '17:00', name: '질의응답', dur: 30, ai: true },
+    { time: '17:30', name: '폐회 및 개별 상담', dur: 30, ai: true },
+  ],
+  '박람회·전시': [
+    { time: '09:00', name: '부스 최종 점검', dur: 60, ai: true },
+    { time: '10:00', name: '개장 및 개막식', dur: 40, ai: true },
+    { time: '10:40', name: '전시 관람 및 부스 운영', dur: 140, ai: true },
+    { time: '13:00', name: '바이어 상담회', dur: 120, ai: true },
+    { time: '15:00', name: '무대 이벤트 — 신제품 발표', dur: 60, ai: true },
+    { time: '16:00', name: '전시 관람 2부', dur: 90, ai: true },
+    { time: '17:30', name: '일일 결산 및 폐장', dur: 30, ai: true },
+  ],
+};
+
+/** 행사 유형에 맞는 프로그램 초안 복사본 (없으면 해커톤 초안) */
+export function programDraftFor(eventType: string): ProgramItem[] {
+  const draft = PROGRAM_DRAFTS[eventType] ?? PROGRAM_DRAFTS['해커톤·아이디어톤'];
+  return draft.map((p) => ({ ...p }));
+}
+
 export const EXTRACTED_FIELDS = [
   { label: '행사명', value: '2026 청년 창업 해커톤' },
   { label: '주관기관', value: '창업진흥원' },

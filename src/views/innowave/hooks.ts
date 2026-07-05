@@ -3,7 +3,7 @@
  * 화면 컴포넌트는 이 훅/헬퍼와 컨트롤러만 사용하고 Firestore SDK를 직접 다루지 않는다.
  * (예외: 모델이 없는 caseData/quoteParams와 서브컬렉션 배치 교체는 여기서 직접 처리)
  */
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { create } from 'zustand';
 import {
   addDoc,
@@ -66,15 +66,22 @@ export interface AsyncData<T> {
 
 interface CacheStore {
   entries: Record<string, unknown>;
+  /** key별 무효화 세대 — invalidate 시 증가해 마운트된 useAsyncData가 자동 재조회 */
+  versions: Record<string, number>;
   setEntry: (key: string, value: unknown) => void;
   invalidate: (prefix: string) => void;
 }
 
 export const useCacheStore = create<CacheStore>((set) => ({
   entries: {},
-  setEntry: (key, value) => set((s) => ({ entries: { ...s.entries, [key]: value } })),
+  versions: {},
+  setEntry: (key, value) => set((s) => ({
+    entries: { ...s.entries, [key]: value },
+    versions: { ...s.versions, [key]: s.versions[key] ?? 0 },
+  })),
   invalidate: (prefix) => set((s) => ({
     entries: Object.fromEntries(Object.entries(s.entries).filter(([k]) => !k.startsWith(prefix))),
+    versions: Object.fromEntries(Object.entries(s.versions).map(([k, v]) => [k, k.startsWith(prefix) ? v + 1 : v])),
   })),
 }));
 
@@ -89,18 +96,24 @@ export function invalidateCache(prefix: string): void {
  */
 export function useAsyncData<T>(key: string | null, fetcher: () => Promise<T>, deps: unknown[]): AsyncData<T> {
   const cached = useCacheStore((s) => (key != null ? (s.entries[key] as T | undefined) : undefined));
+  const version = useCacheStore((s) => (key != null ? (s.versions[key] ?? 0) : 0));
   const setEntry = useCacheStore((s) => s.setEntry);
   const [local, setLocal] = useState<T | null>(null);
   const [fetching, setFetching] = useState(cached === undefined);
   const [error, setError] = useState<string | null>(null);
   const [tick, setTick] = useState(0);
+  const keyRef = useRef(key);
 
   useEffect(() => {
     let alive = true;
+    const keyChanged = keyRef.current !== key;
+    keyRef.current = key;
     const hasCache = key != null && useCacheStore.getState().entries[key] !== undefined;
     if (!hasCache) {
       setFetching(true);
-      setLocal(null);
+      // 키가 바뀐 경우(다른 프로젝트/탭)에는 이전 키의 값을 보여주지 않는다.
+      // 같은 키의 무효화(재검증)라면 이전 값을 유지해 깜빡임 없이 갱신.
+      if (keyChanged) setLocal(null);
     }
     setError(null);
     fetcher()
@@ -110,12 +123,14 @@ export function useAsyncData<T>(key: string | null, fetcher: () => Promise<T>, d
       })
       .catch((e) => { if (alive) { setError(errMessage(e)); setFetching(false); } });
     return () => { alive = false; };
+    // version: invalidateCache가 세대를 올리면 마운트된 상태에서도 자동 재조회
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...deps, tick]);
+  }, [...deps, tick, version]);
 
   const reload = useCallback(() => setTick((t) => t + 1), []);
   const data = (cached !== undefined ? cached : local) ?? null;
-  return { data, loading: cached === undefined && fetching, error, reload };
+  // 재검증 중에는 이전 값(local)을 유지해 스피너 깜빡임 없이 조용히 갱신
+  return { data, loading: data === null && fetching, error, reload };
 }
 
 /** Firestore Timestamp → '2026. 7. 3.' */
@@ -227,6 +242,31 @@ export async function deleteEvent(eventId: string): Promise<void> {
 export function invalidateEvent(eventId: string | null): void {
   invalidateCache('events');
   if (eventId) invalidateCache(`event:${eventId}`);
+}
+
+/** 워크플로우 상태 순서 — 단계 저장이 확정/진행 중 상태를 되돌리지 않게 하는 기준 */
+const STATUS_RANK: Record<string, number> = {
+  draft: 0, composing: 1, matching: 2, quoted: 3, confirmed: 4, in_progress: 5, done: 6,
+};
+
+/**
+ * 단계 저장 시 이벤트 패치 — 상태·currentStep은 앞으로 갈 때만 갱신한다.
+ * (예: in_progress 프로젝트의 프로그램을 수정해도 상태가 'matching'으로 후퇴하지 않음)
+ */
+export async function saveWorkflowStep(
+  eventId: string,
+  status: string,
+  step: number,
+  extra: DocumentData = {},
+): Promise<void> {
+  const event = await eventRepository.findById(eventId);
+  const patch: DocumentData = { ...extra };
+  const curRank = STATUS_RANK[event?.status ?? 'draft'] ?? 0;
+  const nextRank = STATUS_RANK[status] ?? 0;
+  if (nextRank > curRank) patch.status = status;
+  if (step > (event?.currentStep ?? 1)) patch.currentStep = step;
+  if (Object.keys(patch).length > 0) await eventRepository.patch(eventId, patch);
+  invalidateEvent(eventId);
 }
 
 /* ── 마스터 데이터 ────────────────────────────────── */

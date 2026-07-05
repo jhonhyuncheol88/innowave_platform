@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CARD_SHADOW, GROTESK, INPUT_STYLE, LABEL_STYLE, Loading, Notice, Stepper } from '../components.js';
-import { errMessage, invalidateEvent, savePrograms, usePrograms } from '../hooks.js';
+import { programDraftFor } from '../data.js';
+import { errMessage, savePrograms, saveWorkflowStep, useEvent, usePrograms } from '../hooks.js';
 import { useAuth } from '../../../hooks/useAuth.js';
 import { useIw } from '../state.js';
-import { eventRepository } from '../../../repositories/EventRepository.js';
 
 function durText(dur: number): string {
   return (dur >= 60 ? `${Math.floor(dur / 60)}시간 ` : '') + (dur % 60 ? `${dur % 60}분` : '');
@@ -13,11 +13,18 @@ export function Step2Screen() {
   const { s, set, go } = useIw();
   const { user } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [dirty, setDirty] = useState(false);
+  const [savedChip, setSavedChip] = useState(false);
+  const [isDraft, setIsDraft] = useState(false);
+  const chipTimer = useRef<number | null>(null);
   const totalMin = s.programs.reduce((a, p) => a + p.dur, 0);
 
   // ── 기존 프로젝트 수정: 저장된 프로그램(events/{id}/programs)으로 로컬 상태 복원 ──
   const { programs: savedPrograms, loading: savedLoading } = usePrograms(user ? s.currentEventId : null);
+  const { event } = useEvent(user ? s.currentEventId : null);
+  const eventType = event?.basicInfo.eventType || '';
   const needsHydration = !!user && !!s.currentEventId && s.programsEventId !== s.currentEventId;
 
   useEffect(() => {
@@ -32,11 +39,18 @@ export function Step2Screen() {
         })),
         programsEventId: s.currentEventId,
       });
-    } else {
-      // 저장본이 없는 새 프로젝트 — AI 제안 기본 구성을 그대로 사용
-      set({ programsEventId: s.currentEventId });
+      setIsDraft(false);
+      setDirty(false);
+    } else if (event) {
+      // 저장본이 없는 프로젝트 — 행사 유형에 맞는 AI 초안으로 시작 (저장 전까지 프로젝트에 기록되지 않음)
+      set({ programs: programDraftFor(event.basicInfo.eventType), programsEventId: s.currentEventId });
+      setIsDraft(true);
+      setDirty(false);
     }
-  }, [needsHydration, savedLoading, savedPrograms, s.currentEventId, set]);
+    // event가 아직 로딩 중이면 다음 렌더에서 이어서 처리
+  }, [needsHydration, savedLoading, savedPrograms, event, s.currentEventId, set]);
+
+  const markDirty = () => { setDirty(true); setSavedChip(false); };
 
   const editSave = () => {
     if (s.editIdx === null) return;
@@ -44,6 +58,29 @@ export function Step2Screen() {
       ? { ...p, time: s.editTime, name: s.editName, dur: Math.max(5, s.editDur || 30), ai: false }
       : p);
     set({ programs: next, editIdx: null });
+    markDirty();
+  };
+
+  const canSave = !!user && !!s.currentEventId;
+
+  /** ② 명시 저장 — 단계 이동 없이 프로그램 구성만 프로젝트에 기록 */
+  const saveOnly = async () => {
+    if (!canSave || saving) return;
+    setSaving(true);
+    setSaveError(null);
+    try {
+      await savePrograms(s.currentEventId!, s.programs);
+      await saveWorkflowStep(s.currentEventId!, 'composing', 2);
+      setDirty(false);
+      setIsDraft(false);
+      setSavedChip(true);
+      if (chipTimer.current) window.clearTimeout(chipTimer.current);
+      chipTimer.current = window.setTimeout(() => setSavedChip(false), 2500);
+    } catch (e) {
+      setSaveError(errMessage(e));
+    } finally {
+      setSaving(false);
+    }
   };
 
   const goNext = async () => {
@@ -56,8 +93,10 @@ export function Step2Screen() {
     setSaveError(null);
     try {
       await savePrograms(s.currentEventId, s.programs);
-      await eventRepository.patch(s.currentEventId, { status: 'matching', currentStep: 3 });
-      invalidateEvent(s.currentEventId);
+      // ① 상태 회귀 방지 — 확정/진행 중 프로젝트는 상태를 되돌리지 않고 데이터만 저장
+      await saveWorkflowStep(s.currentEventId, 'matching', 3);
+      setDirty(false);
+      setIsDraft(false);
       go('step3');
     } catch (e) {
       setSaveError(errMessage(e));
@@ -74,10 +113,11 @@ export function Step2Screen() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '16px', flexWrap: 'wrap', marginBottom: '22px' }}>
           <div>
             <h1 style={{ margin: '0 0 6px', fontSize: '26px', fontWeight: 800, color: '#071A3E', letterSpacing: '-0.01em' }}>프로그램 구성을 확인하세요</h1>
-            <p style={{ margin: 0, fontSize: '15px', color: '#5A6478' }}>AI가 해커톤 유형에 맞춰 제안한 구성입니다. 순서를 바꾸거나 자유롭게 수정하세요.</p>
-            {s.currentEventId && (
-              <p style={{ margin: '6px 0 0', fontSize: '12.5px', color: '#9AA3B8' }}>다음 단계로 이동하면 events/{s.currentEventId}/programs 서브컬렉션에 저장됩니다.</p>
-            )}
+            <p style={{ margin: 0, fontSize: '15px', color: '#5A6478' }}>
+              {eventType
+                ? `AI가 ${eventType} 유형에 맞춰 제안한 구성입니다. 순서를 바꾸거나 자유롭게 수정하세요.`
+                : 'AI가 해커톤 유형에 맞춰 제안한 구성입니다. 순서를 바꾸거나 자유롭게 수정하세요.'}
+            </p>
           </div>
           <div style={{ display: 'flex', gap: '20px', background: '#FFFFFF', borderRadius: '16px', boxShadow: CARD_SHADOW, padding: '13px 22px' }}>
             <div>
@@ -97,7 +137,13 @@ export function Step2Screen() {
           </div>
         </div>
 
-        {needsHydration && savedLoading ? (
+        {isDraft && s.currentEventId && (
+          <Notice tone="info">
+            아직 저장된 프로그램 구성이 없어 &lsquo;{eventType || '해커톤·아이디어톤'}&rsquo; 유형의 AI 초안을 보여드립니다. 저장을 눌러야 프로젝트에 기록됩니다.
+          </Notice>
+        )}
+
+        {needsHydration && (savedLoading || (savedPrograms.length === 0 && !event)) ? (
           <Loading label="저장된 프로그램 구성을 불러오는 중…" />
         ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -121,7 +167,7 @@ export function Step2Screen() {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z" /></svg>
                 </button>
                 <button
-                  onClick={() => set({ programs: s.programs.filter((_, j) => j !== i) })}
+                  onClick={() => { set({ programs: s.programs.filter((_, j) => j !== i) }); markDirty(); }}
                   title="삭제" className="iw-icon-delete"
                   style={{ width: '32px', height: '32px', borderRadius: '10px', border: '1px solid rgba(112,115,124,0.22)', background: '#FFFFFF', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5A6478' }}
                 >
@@ -131,7 +177,7 @@ export function Step2Screen() {
             </div>
           ))}
           <button
-            onClick={() => set({ programs: [...s.programs, { time: '19:30', name: '새 프로그램', dur: 30, ai: false }] })}
+            onClick={() => { set({ programs: [...s.programs, { time: '19:30', name: '새 프로그램', dur: 30, ai: false }] }); markDirty(); }}
             className="iw-btn-dashed"
             style={{ border: '2px dashed rgba(20,99,243,0.35)', background: 'transparent', borderRadius: '20px', padding: '16px', fontSize: '14.5px', fontWeight: 700, color: '#1463F3', cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'all .16s' }}
           >
@@ -144,7 +190,29 @@ export function Step2Screen() {
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginTop: '30px', flexWrap: 'wrap' }}>
           <button onClick={() => go('step1')} className="iw-btn-outline-navy" style={{ background: 'transparent', color: '#0D3B8F', border: '1px solid rgba(13,59,143,0.25)', borderRadius: '999px', padding: '13px 30px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>이전</button>
-          <button onClick={goNext} disabled={busy} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '13px clamp(16px,5vw,32px)', fontSize: '15px', fontWeight: 700, cursor: busy ? 'wait' : 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 18px rgba(20,99,243,0.3)', opacity: busy ? 0.7 : 1 }}>{busy ? '저장 중…' : '다음 단계로'}</button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            {dirty && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', fontWeight: 600, color: '#B26A00' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: '#F5A623', display: 'inline-block' }} />
+                저장되지 않은 변경
+              </span>
+            )}
+            {savedChip && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 700, color: '#1B8A4B' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                저장됨
+              </span>
+            )}
+            {canSave && (
+              <button
+                onClick={() => void saveOnly()}
+                disabled={!dirty || saving}
+                className={dirty ? 'iw-btn-outline-navy' : undefined}
+                style={{ background: 'transparent', color: dirty ? '#0D3B8F' : '#9AA3B8', border: `1px solid ${dirty ? 'rgba(13,59,143,0.25)' : 'rgba(112,115,124,0.2)'}`, borderRadius: '999px', padding: '13px 28px', fontSize: '15px', fontWeight: 700, cursor: dirty && !saving ? 'pointer' : 'not-allowed', fontFamily: 'inherit', opacity: saving ? 0.7 : 1 }}
+              >{saving ? '저장 중…' : '저장'}</button>
+            )}
+            <button onClick={goNext} disabled={busy} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '13px clamp(16px,5vw,32px)', fontSize: '15px', fontWeight: 700, cursor: busy ? 'wait' : 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 18px rgba(20,99,243,0.3)', opacity: busy ? 0.7 : 1 }}>{busy ? '저장 중…' : '다음 단계로'}</button>
+          </div>
         </div>
       </div>
 

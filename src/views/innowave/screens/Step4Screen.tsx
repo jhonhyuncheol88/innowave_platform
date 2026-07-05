@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CARD_SHADOW, GROTESK, Loading, Notice, Stepper } from '../components.js';
-import { buildOptionQuote, buildQuoteItems, errMessage, invalidateCache, invalidateEvent, useEvent, useLatestQuote, useQuoteParams, useRateCards } from '../hooks.js';
+import { buildOptionQuote, buildQuoteItems, errMessage, invalidateCache, saveWorkflowStep, useEvent, useLatestQuote, useQuoteParams, useRateCards } from '../hooks.js';
 import { fmt, mkQuote, useIw } from '../state.js';
 import type { PlanId } from '../types.js';
 import { useAuth } from '../../../hooks/useAuth.js';
@@ -116,8 +116,8 @@ function Step4Body() {
         set({ currentEventId: eventId });
       }
       await eventRepository.quoteRepo(eventId!).create(selectedQuote);
-      await eventRepository.patch(eventId!, { status: 'quoted', currentStep: 4 });
-      invalidateEvent(eventId);
+      // 상태·currentStep은 앞으로만 — confirmed/in_progress 프로젝트의 재견적 시 회귀 방지
+      await saveWorkflowStep(eventId!, 'quoted', 4);
       invalidateCache(`quote:${eventId}`);
       go('proposal');
     } catch (e) {

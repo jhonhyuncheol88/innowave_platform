@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { CARD_SHADOW, GROTESK, Loading, Notice, Stepper } from '../components.js';
 import { PEOPLE_DATA } from '../data.js';
-import { errMessage, invalidateEvent, saveMatches, useEvent, useMatches, usePersonnel, type MatchSelection } from '../hooks.js';
+import { errMessage, saveMatches, saveWorkflowStep, useEvent, useMatches, usePersonnel, type MatchSelection } from '../hooks.js';
 import { selectionSummary, useIw } from '../state.js';
 import { useAuth } from '../../../hooks/useAuth.js';
 import { Event } from '../../../models/Event.js';
 import { Personnel } from '../../../models/Personnel.js';
-import { eventRepository } from '../../../repositories/EventRepository.js';
 
 const ROLES = ['강사', '멘토', '심사위원', '운영인력'];
 const AVATAR_COLORS = ['#0D3B8F', '#1463F3', '#26B8CE', '#3A4358'];
@@ -79,8 +78,8 @@ function Step3Body() {
         return { personnelId: rest.join(':'), role, matchScore: 0, unitRateSnapshot: 0 };
       });
       await saveMatches(s.currentEventId, selections);
-      await eventRepository.patch(s.currentEventId, { currentStep: 4 });
-      invalidateEvent(s.currentEventId);
+      // 상태·currentStep은 앞으로만 — 진행 중 프로젝트 수정 시 회귀 방지
+      await saveWorkflowStep(s.currentEventId, 'matching', 4);
       go('step4');
     } catch (e) {
       setSaveError(errMessage(e));
