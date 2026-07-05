@@ -59,6 +59,10 @@ export interface IwState {
   currentEventId: string | null;
   /** 비로그인 게스트가 1단계에서 입력한 행사 정보 (Firestore 미저장, 3·4단계 데모 계산용) */
   guestInfo: EventBasicInfo | null;
+  /** 하이드레이션 마커 — 어느 이벤트의 저장본을 로컬 상태로 복원했는지 (이벤트 전환 감지용) */
+  programsEventId: string | null;
+  matchesEventId: string | null;
+  planEventId: string | null;
   uploaded: boolean;
   opMode: string;
   programs: ProgramItem[];

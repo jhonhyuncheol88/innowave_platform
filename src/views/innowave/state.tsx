@@ -7,6 +7,9 @@ import { INITIAL_MILESTONES, INITIAL_POOL_LIST, INITIAL_PROGRAMS, INITIAL_RATE_L
 const INITIAL_STATE: IwState = {
   currentEventId: null,
   guestInfo: null,
+  programsEventId: null,
+  matchesEventId: null,
+  planEventId: null,
   uploaded: false,
   opMode: '오프라인',
   programs: INITIAL_PROGRAMS,
@@ -41,6 +44,23 @@ const INITIAL_STATE: IwState = {
   rcUnit: '',
   rcPrice: '',
   rcMargin: '',
+};
+
+/** '새 기획 시작' 등에서 워크플로우 로컬 상태를 초기값으로 되돌릴 때 사용 */
+export const WORKFLOW_RESET: Partial<IwState> = {
+  currentEventId: null,
+  guestInfo: null,
+  programsEventId: null,
+  matchesEventId: null,
+  planEventId: null,
+  uploaded: false,
+  opMode: '오프라인',
+  programs: INITIAL_PROGRAMS,
+  editIdx: null,
+  selected: {},
+  budget: 6000,
+  plan: 'standard',
+  detailOpen: false,
 };
 
 interface IwStore extends IwState {

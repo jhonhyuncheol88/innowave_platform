@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CARD_SHADOW, GROTESK, Loading, Notice, Stepper } from '../components.js';
 import { PEOPLE_DATA } from '../data.js';
-import { errMessage, invalidateEvent, saveMatches, useEvent, usePersonnel, type MatchSelection } from '../hooks.js';
+import { errMessage, invalidateEvent, saveMatches, useEvent, useMatches, usePersonnel, type MatchSelection } from '../hooks.js';
 import { selectionSummary, useIw } from '../state.js';
 import { useAuth } from '../../../hooks/useAuth.js';
 import { Event } from '../../../models/Event.js';
@@ -21,6 +21,19 @@ function Step3Body() {
   const { people, loading, error } = usePersonnel(s.roleTab, 60, !!user);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  // ── 기존 프로젝트 수정: 저장된 인력 선택(events/{id}/matches) 복원 ──
+  const { matches: savedMatches, loading: matchesLoading } = useMatches(user ? s.currentEventId : null);
+  useEffect(() => {
+    if (!user || !s.currentEventId || s.matchesEventId === s.currentEventId || matchesLoading) return;
+    const selected: Record<string, boolean> = {};
+    savedMatches.forEach((m) => {
+      const key = `${m.role}:${m.personnelId}`;
+      selected[key] = true;
+      selectionInfo.set(key, m);
+    });
+    set({ selected, matchesEventId: s.currentEventId });
+  }, [user, s.currentEventId, s.matchesEventId, matchesLoading, savedMatches, set]);
 
   // 매칭 점수 산정 대상 — 이벤트가 없으면 게스트 입력값 → 기본 조건 순으로 채점
   const event = useMemo(

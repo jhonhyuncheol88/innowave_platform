@@ -197,6 +197,24 @@ export function usePrograms(eventId: string | null) {
   return { ...result, programs: result.data ?? [] };
 }
 
+/** 저장된 인력 선택 (events/{id}/matches) — 3단계 수정 시 복원용 */
+export function useMatches(eventId: string | null) {
+  const result = useAsyncData<MatchSelection[]>(eventId ? `matches:${eventId}` : null, async () => {
+    if (!eventId) return [];
+    const snap = await getDocs(collection(db, `events/${eventId}/matches`));
+    return snap.docs.map((d) => {
+      const v = d.data();
+      return {
+        personnelId: v.personnelId ?? '',
+        role: v.role ?? '',
+        matchScore: Number(v.matchScore) || 0,
+        unitRateSnapshot: Number(v.unitRateSnapshot) || 0,
+      };
+    });
+  }, [eventId]);
+  return { ...result, matches: result.data ?? [] };
+}
+
 /** 프로젝트 삭제 — 소유자/관리자만 (rules). 서브컬렉션 정리는 서버 함수 도입 전까지 보류 */
 export async function deleteEvent(eventId: string): Promise<void> {
   await eventRepository.remove(eventId);
@@ -620,6 +638,7 @@ export async function saveMatches(eventId: string, selections: MatchSelection[])
   await replaceSubcollection(`events/${eventId}/matches`, selections.map((s) => ({
     data: { ...s, status: 'selected' },
   })));
+  invalidateCache(`matches:${eventId}`);
 }
 
 export interface StageSeed {

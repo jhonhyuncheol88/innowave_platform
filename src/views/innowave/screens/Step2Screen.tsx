@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { CARD_SHADOW, GROTESK, INPUT_STYLE, LABEL_STYLE, Notice, Stepper } from '../components.js';
-import { errMessage, invalidateEvent, savePrograms } from '../hooks.js';
+import { useEffect, useState } from 'react';
+import { CARD_SHADOW, GROTESK, INPUT_STYLE, LABEL_STYLE, Loading, Notice, Stepper } from '../components.js';
+import { errMessage, invalidateEvent, savePrograms, usePrograms } from '../hooks.js';
 import { useAuth } from '../../../hooks/useAuth.js';
 import { useIw } from '../state.js';
 import { eventRepository } from '../../../repositories/EventRepository.js';
@@ -15,6 +15,28 @@ export function Step2Screen() {
   const [busy, setBusy] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const totalMin = s.programs.reduce((a, p) => a + p.dur, 0);
+
+  // ── 기존 프로젝트 수정: 저장된 프로그램(events/{id}/programs)으로 로컬 상태 복원 ──
+  const { programs: savedPrograms, loading: savedLoading } = usePrograms(user ? s.currentEventId : null);
+  const needsHydration = !!user && !!s.currentEventId && s.programsEventId !== s.currentEventId;
+
+  useEffect(() => {
+    if (!needsHydration || savedLoading) return;
+    if (savedPrograms.length > 0) {
+      set({
+        programs: savedPrograms.map((p) => ({
+          time: p.startTime || '09:00',
+          name: p.title,
+          dur: p.durationMin || 30,
+          ai: p.source === 'ai',
+        })),
+        programsEventId: s.currentEventId,
+      });
+    } else {
+      // 저장본이 없는 새 프로젝트 — AI 제안 기본 구성을 그대로 사용
+      set({ programsEventId: s.currentEventId });
+    }
+  }, [needsHydration, savedLoading, savedPrograms, s.currentEventId, set]);
 
   const editSave = () => {
     if (s.editIdx === null) return;
@@ -75,6 +97,9 @@ export function Step2Screen() {
           </div>
         </div>
 
+        {needsHydration && savedLoading ? (
+          <Loading label="저장된 프로그램 구성을 불러오는 중…" />
+        ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {s.programs.map((pg, i) => (
             <div key={`${pg.name}-${i}`} className="iw-program-row" style={{ display: 'flex', alignItems: 'center', gap: '14px', background: '#FFFFFF', borderRadius: '20px', boxShadow: CARD_SHADOW, padding: '15px 20px', flexWrap: 'wrap' }}>
@@ -113,6 +138,7 @@ export function Step2Screen() {
             <span style={{ fontSize: '18px', lineHeight: 1 }}>＋</span> 프로그램 추가
           </button>
         </div>
+        )}
 
         {saveError && <div style={{ marginTop: '18px' }}><Notice tone="error">{saveError}</Notice></div>}
 

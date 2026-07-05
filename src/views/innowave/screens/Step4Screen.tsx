@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CARD_SHADOW, GROTESK, Loading, Notice, Stepper } from '../components.js';
-import { buildOptionQuote, buildQuoteItems, errMessage, invalidateCache, invalidateEvent, useEvent, useQuoteParams, useRateCards } from '../hooks.js';
+import { buildOptionQuote, buildQuoteItems, errMessage, invalidateCache, invalidateEvent, useEvent, useLatestQuote, useQuoteParams, useRateCards } from '../hooks.js';
 import { fmt, mkQuote, useIw } from '../state.js';
 import type { PlanId } from '../types.js';
 import { useAuth } from '../../../hooks/useAuth.js';
@@ -39,6 +39,16 @@ function Step4Body() {
       set({ budget: Math.min(BUDGET_MAX, Math.max(BUDGET_MIN, man)) });
     }
   }, [event, s.guestInfo, set]);
+
+  // ── 기존 프로젝트 수정: 저장된 최신 견적의 옵션(Basic/Standard/Premium) 복원 ──
+  const { quote: savedQuote, loading: savedQuoteLoading } = useLatestQuote(user ? s.currentEventId : null);
+  useEffect(() => {
+    if (!user || !s.currentEventId || s.planEventId === s.currentEventId || savedQuoteLoading) return;
+    set({
+      ...(savedQuote ? { plan: savedQuote.optionType as PlanId } : {}),
+      planEventId: s.currentEventId,
+    });
+  }, [user, s.currentEventId, s.planEventId, savedQuoteLoading, savedQuote, set]);
 
   const signIn = () => {
     setSigningIn(true);
