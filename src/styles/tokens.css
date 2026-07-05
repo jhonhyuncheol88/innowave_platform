@@ -1,0 +1,48 @@
+/* =========================================================
+   INNOWAVE 디자인 토큰
+   브랜드: 파랑(Innowave Blue) / MICE — 신뢰감 있는 딥네이비 위에
+   '웨이브' 그라디언트를 시그니처로 사용
+   ========================================================= */
+:root {
+  /* Color — 브랜드 팔레트 */
+  --iw-blue-900: #071A3E;   /* Deep Harbor — 헤더/푸터/히어로 배경 */
+  --iw-blue-700: #0D3B8F;   /* Convention Navy — 보조 배경, 그라디언트 하단 */
+  --iw-blue-500: #1463F3;   /* Innowave Blue — 프라이머리 액션 */
+  --iw-blue-300: #6EA8FF;   /* Wave Light — 링크 호버, 보조 강조 */
+  --iw-cyan-300: #4FD8EB;   /* Signal Cyan — 웨이브 그라디언트 상단, 포인트 */
+  --iw-surface:  #F6F9FF;   /* 페이지 배경 */
+  --iw-white:    #FFFFFF;
+  --iw-ink:      #101828;   /* 본문 텍스트 */
+  --iw-ink-soft: #4A5568;   /* 보조 텍스트 */
+  --iw-line:     #DCE6F5;   /* 경계선 */
+  --iw-success:  #12B76A;
+  --iw-warning:  #F79009;
+  --iw-danger:   #F04438;
+
+  /* 시그니처 웨이브 그라디언트 */
+  --iw-wave: linear-gradient(120deg, var(--iw-cyan-300) 0%, var(--iw-blue-500) 55%, var(--iw-blue-700) 100%);
+
+  /* Typography */
+  --font-body: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+  --font-display: "Space Grotesk", "Pretendard Variable", sans-serif; /* 숫자·영문 디스플레이 */
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.5rem;
+  --text-hero: clamp(2.25rem, 5vw, 3.75rem);
+
+  /* Spacing / Radius / Shadow */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-12: 48px; --space-16: 64px;
+  --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-pill: 999px;
+  --shadow-card: 0 1px 2px rgba(7, 26, 62, 0.06), 0 8px 24px rgba(7, 26, 62, 0.08);
+  --shadow-float: 0 12px 40px rgba(13, 59, 143, 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

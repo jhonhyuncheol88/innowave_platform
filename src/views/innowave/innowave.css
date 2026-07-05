@@ -1,0 +1,153 @@
+/* =========================================================
+   INNOWAVE.dc.html 디자인 구현 — 인터랙션(가상 클래스) 스타일
+   레이아웃·색은 각 컴포넌트의 인라인 스타일이 담당하고,
+   여기서는 hover/focus/active 상태만 정의한다.
+   ========================================================= */
+
+@keyframes iwSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes iwPulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(20, 99, 243, .25); }
+  50%      { box-shadow: 0 0 0 9px rgba(20, 99, 243, .07); }
+}
+
+.iw-root input::placeholder,
+.iw-root textarea::placeholder { color: #9AA3B8; }
+
+/* 프라이머리(파란) 버튼 */
+.iw-btn-primary:hover  { background: #0E56D9 !important; }
+.iw-btn-primary:active { background: #0A49BE !important; transform: scale(0.98); }
+
+/* 네이비 아웃라인 버튼 */
+.iw-btn-outline-navy:hover { background: rgba(13, 59, 143, 0.05) !important; }
+
+/* 블루 아웃라인 버튼 */
+.iw-btn-outline-blue:hover { background: #F0F7FF !important; }
+
+/* 눌림 축소 효과만 필요한 버튼 */
+.iw-press:active { transform: scale(0.98); }
+
+/* 헤더 로그인(반투명 흰색) 버튼 */
+.iw-btn-glass:hover { background: rgba(255, 255, 255, 0.18) !important; }
+
+/* 히어로 고스트 버튼 */
+.iw-btn-hero-ghost:hover { background: rgba(255, 255, 255, 0.08) !important; }
+
+/* 흰 배경 보조 버튼 (구글 로그인 등) */
+.iw-btn-soft:hover { background: #F6F9FF !important; }
+
+/* 닫기(✕) 원형 버튼 */
+.iw-btn-close:hover { background: #E2E7F0 !important; color: #071A3E !important; }
+
+/* 다크 헤더 내비 링크 */
+.iw-navlink { color: rgba(255, 255, 255, 0.72); text-decoration: none; }
+.iw-navlink:hover { color: #FFFFFF; }
+
+/* 입력 필드 — 시안 포커스 링 */
+.iw-input:focus {
+  border-color: #4FD8EB !important;
+  box-shadow: 0 0 0 3px rgba(79, 216, 235, 0.28);
+}
+
+/* 관리자 입력 필드 — 블루 포커스 링 */
+.iw-input-admin:focus {
+  border-color: #1463F3 !important;
+  box-shadow: 0 0 0 2px rgba(20, 99, 243, 0.18);
+}
+
+/* 업로드 드롭존 */
+.iw-dropzone:hover { border-color: #1463F3 !important; background: #F0F7FF !important; }
+
+/* 점선 추가 버튼 (프로그램 추가·단계 추가·산출물 첨부) */
+.iw-btn-dashed:hover { background: #F0F7FF !important; border-color: #1463F3 !important; }
+
+/* 프로그램 행 카드 */
+.iw-program-row:hover { box-shadow: 0 10px 28px rgba(20, 99, 243, 0.14) !important; }
+
+/* 행 아이콘 버튼 — 수정 */
+.iw-icon-edit:hover { background: #F0F7FF !important; color: #1463F3 !important; }
+/* 행 아이콘 버튼 — 삭제 */
+.iw-icon-delete:hover { background: #FFF1F1 !important; color: #E5484D !important; }
+.iw-icon-delete-stage:hover {
+  background: #FFF1F1 !important; color: #E5484D !important;
+  border-color: rgba(229, 72, 77, 0.4) !important;
+}
+
+/* 상세 내역 아코디언 헤더 */
+.iw-accordion-head:hover { background: #FAFCFF !important; }
+
+/* 프로젝트 카드 */
+.iw-project-card:hover {
+  box-shadow: 0 12px 32px rgba(20, 99, 243, 0.16) !important;
+  transform: translateY(-2px);
+}
+
+/* 템플릿 카드 */
+.iw-tmpl-card:hover {
+  border-color: rgba(20, 99, 243, 0.4) !important;
+  box-shadow: 0 12px 32px rgba(20, 99, 243, 0.14) !important;
+}
+/* 템플릿 선택 버튼: hover 시 파랑 채움 */
+.iw-tmpl-pick:hover { background: #1463F3 !important; color: #FFFFFF !important; border-color: #1463F3 !important; }
+
+/* 관리자 사이드바 메뉴 */
+.iw-admin-menu:hover { background: #F0F4FA !important; }
+
+/* 전역 헤더(GNB) 링크 */
+.iw-gnb-link:hover { background: #F0F4FA !important; }
+
+/* 관리자 테이블 행 */
+.iw-table-row:hover { background: #F7FAFF !important; }
+
+/* 테이블 텍스트 삭제 버튼 */
+.iw-text-delete:hover { color: #E5484D !important; }
+
+/* 회색 텍스트 링크 버튼 (템플릿 변경 등) */
+.iw-text-link:hover { color: #1463F3 !important; }
+
+/* 첨부 삭제 ✕ */
+.iw-detach:hover { background: #E5484D !important; color: #FFFFFF !important; }
+
+/* 단계명 인라인 입력 */
+.iw-stage-title:hover { border-color: rgba(112, 115, 124, 0.28) !important; background: #FFFFFF !important; }
+.iw-stage-title:focus {
+  border-color: #4FD8EB !important; background: #FFFFFF !important;
+  box-shadow: 0 0 0 3px rgba(79, 216, 235, 0.28);
+}
+
+/* ── 모바일 반응형 ─────────────────────────────────── */
+
+/* 인라인 스타일은 media query로 덮을 수 없으므로 클래스 + !important 로 처리 */
+@media (max-width: 760px) {
+  /* 관리자: 세로 사이드바 → 상단 가로 스크롤 메뉴바 */
+  .iw-admin-layout { flex-direction: column !important; }
+  .iw-admin-side {
+    width: 100% !important;
+    min-height: 0 !important;
+    padding: 12px 14px !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(112, 115, 124, 0.22);
+    gap: 10px !important;
+    position: sticky;
+    top: 58px; /* GNB 아래 */
+    z-index: 800;
+  }
+  .iw-admin-nav {
+    flex-direction: row !important;
+    overflow-x: auto;
+    gap: 4px !important;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .iw-admin-nav > div { white-space: nowrap; flex-shrink: 0; }
+
+  /* 1단계 AI 패널: 1열 레이아웃에서는 고정 해제 */
+  .iw-sticky-panel { position: static !important; }
+}
+
+/* 좁은 화면 가로 스크롤 안전망 — 그림자/음수 마진이 만드는 미세 넘침 차단 */
+@media (max-width: 640px) {
+  html, body { overflow-x: hidden; }
+}

@@ -1,0 +1,44 @@
+rules_version = '2';
+
+// INNOWAVE Storage Rules — 업로드 문서(REQ-03) / 생성 문서(REQ-11) / 중간 산출물(REQ-13)
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() { return request.auth != null; }
+
+    // 문서 분석 업로드: uploads/{uid}/{docId}/{fileName} — 본인 경로에만 쓰기 (REQ-03/04)
+    match /uploads/{uid}/{docId}/{fileName} {
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow write: if isSignedIn()
+        && request.auth.uid == uid
+        && request.resource.size < 20 * 1024 * 1024
+        && request.resource.contentType.matches(
+             'application/pdf|application/vnd.openxmlformats-officedocument.*|application/x-hwp|application/haansofthwp|application/vnd.hancom.*|application/octet-stream');
+    }
+
+    // 업로드 문서: events/{eventId}/uploads/{fileName}
+    match /events/{eventId}/uploads/{fileName} {
+      allow read: if isSignedIn();   // 상세 권한은 Firestore 메타 문서로 통제, 경로 추측 방지 위해 UUID 파일명 사용
+      allow write: if isSignedIn()
+        && request.resource.size < 20 * 1024 * 1024                       // 20MB 제한
+        && request.resource.contentType.matches(
+             'application/pdf|application/vnd.openxmlformats-officedocument.*|application/x-hwp|application/haansofthwp|application/octet-stream');
+    }
+
+    // 생성된 통합 기획안/견적 문서: 서버(Functions)만 쓰기
+    match /events/{eventId}/generated/{fileName} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
+    // 진행 현황 중간 산출물: 운영자 업로드는 Functions/콘솔 경유 권장
+    match /events/{eventId}/deliverables/{fileName} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

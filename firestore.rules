@@ -1,0 +1,219 @@
+rules_version = '2';
+
+// INNOWAVE Firestore Rules — 3-Role(user / client / admin) + REQ-15 권한 분리
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── 헬퍼 ──────────────────────────────────────────────────────────────
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userPath() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+
+    function userDoc() {
+      return get(userPath());
+    }
+
+    function hasProfile() {
+      return exists(userPath());
+    }
+
+    function userRole() {
+      return userDoc().data.role;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && hasProfile() && userRole() == 'admin';
+    }
+
+    function isClient() {
+      return isSignedIn() && hasProfile() && userRole() == 'client';
+    }
+
+    function myClientOrgId() {
+      return userDoc().data.get('clientOrgId', null);
+    }
+
+    function optionalString(v, max) {
+      return v == null || (v is string && v.size() <= max);
+    }
+
+    // 관리자 사용허가 — approvalStatus 필드가 없는 기존 계정은 승인으로 간주
+    function isApproved() {
+      return isSignedIn() && hasProfile()
+        && userDoc().data.get('approvalStatus', 'approved') == 'approved';
+    }
+
+    function eventData(eventId) {
+      return get(/databases/$(database)/documents/events/$(eventId)).data;
+    }
+
+    function canReadEvent(eventId) {
+      let e = eventData(eventId);
+      return isAdmin()
+        || (isSignedIn() && e.ownerUid == request.auth.uid)
+        || (isClient() && e.clientOrgId != null && e.clientOrgId == myClientOrgId());
+    }
+
+    function canWriteEvent(eventId) {
+      let e = eventData(eventId);
+      return isAdmin() || (isSignedIn() && !isClient() && e.ownerUid == request.auth.uid);
+    }
+
+    function validEventStatus(v) {
+      return v in ['draft', 'composing', 'matching', 'quoted', 'confirmed', 'in_progress', 'done'];
+    }
+
+    // ── users ─────────────────────────────────────────────────────────────
+    match /users/{uid} {
+      allow read: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+
+      // 최초 Google 로그인 시 프로필 생성 (role 상승·자가 승인 차단)
+      allow create: if isSignedIn()
+        && request.auth.uid == uid
+        && request.resource.data.role == 'user'
+        && request.resource.data.get('approvalStatus', 'pending') == 'pending'
+        && request.resource.data.clientOrgId == null
+        && optionalString(request.resource.data.displayName, 50)
+        && optionalString(request.resource.data.email, 120)
+        && optionalString(request.resource.data.organization, 100)
+        && optionalString(request.resource.data.photoURL, 500);
+
+      allow update: if isAdmin()
+        || (isSignedIn()
+            && request.auth.uid == uid
+            && request.resource.data.role == resource.data.role
+            && request.resource.data.get('approvalStatus', 'approved') == resource.data.get('approvalStatus', 'approved')
+            && request.resource.data.get('clientOrgId', null) == resource.data.get('clientOrgId', null)
+            && optionalString(request.resource.data.displayName, 50)
+            && optionalString(request.resource.data.email, 120)
+            && optionalString(request.resource.data.organization, 100)
+            && optionalString(request.resource.data.photoURL, 500));
+
+      allow delete: if isAdmin();
+    }
+
+    // ── events (워크플로우 중심) ───────────────────────────────────────────
+    match /events/{eventId} {
+      allow read: if canReadEvent(eventId);
+
+      allow create: if isSignedIn()
+        && !isClient()
+        && isApproved()
+        && request.resource.data.ownerUid == request.auth.uid
+        && optionalString(request.resource.data.clientOrgId, 64)
+        && validEventStatus(request.resource.data.status)
+        && request.resource.data.currentStep is int
+        && request.resource.data.currentStep >= 1
+        && request.resource.data.currentStep <= 4;
+
+      allow update: if canWriteEvent(eventId)
+        && validEventStatus(request.resource.data.status)
+        && request.resource.data.ownerUid == resource.data.ownerUid;
+
+      allow delete: if isAdmin()
+        || (isSignedIn() && resource.data.ownerUid == request.auth.uid);
+
+      match /documents/{docId} {
+        allow read: if canReadEvent(eventId);
+        allow write: if canWriteEvent(eventId);
+      }
+
+      match /programs/{programId} {
+        allow read: if canReadEvent(eventId);
+        allow write: if canWriteEvent(eventId);
+      }
+
+      match /matches/{matchId} {
+        allow read: if canReadEvent(eventId);
+        allow write: if canWriteEvent(eventId);
+      }
+
+      match /quotes/{quoteId} {
+        allow read: if canReadEvent(eventId);
+        allow write: if canWriteEvent(eventId);
+      }
+
+      match /progress/{stageId} {
+        allow read: if canReadEvent(eventId);
+        allow write: if isAdmin();
+      }
+    }
+
+    // ── 마스터 데이터 (읽기 전용, 관리자 쓰기) ─────────────────────────────
+    match /rateCards/{cardId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /caseData/{caseId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /personnelPool/{personId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // ── 알림 (생성은 서버 전용, 수신자는 read 플래그만 갱신) ───────────────
+    match /notifications/{notifId} {
+      allow create: if false;
+
+      allow read: if isSignedIn()
+        && (resource.data.recipientUid == request.auth.uid || isAdmin());
+
+      allow update: if isSignedIn()
+        && resource.data.recipientUid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
+        && request.resource.data.read is bool;
+
+      allow delete: if isAdmin();
+    }
+
+    // ── 문서 분석 작업 (REQ-03/04 — 결과 기록은 Functions(admin SDK)가 수행) ──
+    match /docParses/{docId} {
+      allow create: if isSignedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && optionalString(request.resource.data.fileName, 200);
+
+      allow read: if isSignedIn()
+        && (resource.data.uid == request.auth.uid || isAdmin());
+
+      allow update, delete: if isAdmin();
+    }
+
+    // ── 고객문의 (랜딩 인바운드 — 비로그인 접수 허용, 처리·조회는 관리자) ──
+    match /inquiries/{inquiryId} {
+      allow create: if request.resource.data.name is string
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.name.size() <= 50
+        && request.resource.data.contact is string
+        && request.resource.data.contact.size() >= 5
+        && request.resource.data.contact.size() <= 120
+        && request.resource.data.message is string
+        && request.resource.data.message.size() >= 1
+        && request.resource.data.message.size() <= 2000
+        && optionalString(request.resource.data.organization, 100)
+        && optionalString(request.resource.data.eventType, 40)
+        && optionalString(request.resource.data.budgetRange, 40)
+        && request.resource.data.status == 'new'
+        && request.resource.data.memo == '';
+
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ── 견적 파라미터 (관리자 전용) ───────────────────────────────────────
+    match /quoteParams/{paramId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

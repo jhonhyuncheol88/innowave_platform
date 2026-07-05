@@ -1,0 +1,167 @@
+[
+  {
+    "id": 1,
+    "sample_event_id": 2,
+    "stage_name": "요구사항 분석",
+    "stage_order": 1,
+    "status": "완료",
+    "progress_rate": 100,
+    "updated_note": "요구사항 분석 단계 완료",
+    "deliverable_name": "요구사항 분석_산출물.pdf",
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 2,
+    "sample_event_id": 2,
+    "stage_name": "화면설계",
+    "stage_order": 2,
+    "status": "완료",
+    "progress_rate": 100,
+    "updated_note": "화면설계 단계 완료",
+    "deliverable_name": "화면설계_산출물.pdf",
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 3,
+    "sample_event_id": 2,
+    "stage_name": "핵심 개발",
+    "stage_order": 3,
+    "status": "진행중",
+    "progress_rate": 60,
+    "updated_note": "핵심 개발 단계 진행 중 (60%)",
+    "deliverable_name": null,
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 4,
+    "sample_event_id": 2,
+    "stage_name": "통합 테스트",
+    "stage_order": 4,
+    "status": "예정",
+    "progress_rate": 0,
+    "updated_note": null,
+    "deliverable_name": null,
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 5,
+    "sample_event_id": 2,
+    "stage_name": "최종 검수",
+    "stage_order": 5,
+    "status": "예정",
+    "progress_rate": 0,
+    "updated_note": null,
+    "deliverable_name": null,
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 6,
+    "sample_event_id": 7,
+    "stage_name": "요구사항 분석",
+    "stage_order": 1,
+    "status": "완료",
+    "progress_rate": 100,
+    "updated_note": "요구사항 분석 단계 완료",
+    "deliverable_name": "요구사항 분석_산출물.pdf",
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 7,
+    "sample_event_id": 7,
+    "stage_name": "화면설계",
+    "stage_order": 2,
+    "status": "완료",
+    "progress_rate": 100,
+    "updated_note": "화면설계 단계 완료",
+    "deliverable_name": "화면설계_산출물.pdf",
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 8,
+    "sample_event_id": 7,
+    "stage_name": "핵심 개발",
+    "stage_order": 3,
+    "status": "완료",
+    "progress_rate": 100,
+    "updated_note": "핵심 개발 단계 완료",
+    "deliverable_name": null,
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 9,
+    "sample_event_id": 7,
+    "stage_name": "통합 테스트",
+    "stage_order": 4,
+    "status": "완료",
+    "progress_rate": 100,
+    "updated_note": "통합 테스트 단계 완료",
+    "deliverable_name": null,
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 10,
+    "sample_event_id": 7,
+    "stage_name": "최종 검수",
+    "stage_order": 5,
+    "status": "완료",
+    "progress_rate": 100,
+    "updated_note": "최종 검수 단계 완료",
+    "deliverable_name": null,
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 11,
+    "sample_event_id": 9,
+    "stage_name": "요구사항 분석",
+    "stage_order": 1,
+    "status": "완료",
+    "progress_rate": 100,
+    "updated_note": "요구사항 분석 단계 완료",
+    "deliverable_name": "요구사항 분석_산출물.pdf",
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 12,
+    "sample_event_id": 9,
+    "stage_name": "화면설계",
+    "stage_order": 2,
+    "status": "진행중",
+    "progress_rate": 60,
+    "updated_note": "화면설계 단계 진행 중 (60%)",
+    "deliverable_name": null,
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 13,
+    "sample_event_id": 9,
+    "stage_name": "핵심 개발",
+    "stage_order": 3,
+    "status": "예정",
+    "progress_rate": 0,
+    "updated_note": null,
+    "deliverable_name": null,
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 14,
+    "sample_event_id": 9,
+    "stage_name": "통합 테스트",
+    "stage_order": 4,
+    "status": "예정",
+    "progress_rate": 0,
+    "updated_note": null,
+    "deliverable_name": null,
+    "updated_at": "2026-06-25 15:00:00"
+  },
+  {
+    "id": 15,
+    "sample_event_id": 9,
+    "stage_name": "최종 검수",
+    "stage_order": 5,
+    "status": "예정",
+    "progress_rate": 0,
+    "updated_note": null,
+    "deliverable_name": null,
+    "updated_at": "2026-06-25 15:00:00"
+  }
+]

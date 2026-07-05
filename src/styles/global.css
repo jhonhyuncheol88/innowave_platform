@@ -1,0 +1,47 @@
+@import './tokens.css';
+
+* { box-sizing: border-box; margin: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--iw-ink);
+  background: var(--iw-surface);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { line-height: 1.25; letter-spacing: -0.02em; }
+
+a { color: var(--iw-blue-500); text-decoration: none; }
+a:hover { color: var(--iw-blue-300); }
+
+button { font-family: inherit; cursor: pointer; }
+
+:focus-visible {
+  outline: 3px solid var(--iw-cyan-300);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.container { max-width: 1120px; margin: 0 auto; padding: 0 var(--space-6); }
+
+/* 공통 버튼 */
+.btn {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  padding: 12px 24px; border-radius: var(--radius-pill);
+  font-size: var(--text-base); font-weight: 600; border: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-primary { background: var(--iw-blue-500); color: var(--iw-white); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-float); }
+.btn-ghost { background: transparent; color: var(--iw-white); border: 1px solid rgba(255,255,255,0.35); }
+.btn-ghost:hover { border-color: var(--iw-cyan-300); color: var(--iw-cyan-300); }
+
+/* 카드 */
+.card {
+  background: var(--iw-white); border: 1px solid var(--iw-line);
+  border-radius: var(--radius-lg); padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+}
