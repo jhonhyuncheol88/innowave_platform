@@ -286,6 +286,35 @@ export const CASE_ROWS = [
   { name: '중소기업 수출 박람회', type: '박람회·전시', scale: '3,000명', budget: '3억 8,000만 원', year: '2024', org: '중소벤처기업부' },
 ];
 
+/** 랜딩 운영 사례 섹션 — caseData 80건 중 유형별 대표 사례 발췌 (비로그인 노출용 정적 큐레이션) */
+export const SHOWCASE_CASES = [
+  { type: '포럼·컨퍼런스', name: '2026 포럼 데이', org: 'OO디자인진흥원', scale: 500, rating: 4.8, outcome: '언론 노출 12건, SNS 도달 5만 회 이상' },
+  { type: '해커톤·아이디어톤', name: '2026 해커톤 데이', org: 'OO문화재단', scale: 50, rating: 4.9, outcome: '예산 대비 3% 절감하여 종료' },
+  { type: '부트캠프·창업캠프', name: '2026 부트캠프 페스타', org: 'OO청년정책네트워크', scale: 500, rating: 4.7, outcome: '후속 창업·투자 연계 3건 발생' },
+  { type: '네트워킹', name: '2026 네트워킹 데이', org: 'OO대학교 산학협력단', scale: 500, rating: 4.8, outcome: '예산 대비 3% 절감하여 종료' },
+  { type: '특강·세미나', name: '2026 특강 캠프', org: 'OO창조경제혁신센터', scale: 300, rating: 4.8, outcome: '목표 참가 인원 대비 105% 달성' },
+  { type: '박람회·전시', name: '2026 박람회 페스타', org: 'OO여성기업종합지원센터', scale: 300, rating: 4.8, outcome: '언론 노출 12건, SNS 도달 5만 회 이상' },
+];
+
+/** 랜딩 서비스 소개 섹션 — 실제 구현된 3대 가치 */
+export const ABOUT_FEATURES = [
+  {
+    title: 'AI 과업지시서 분석',
+    desc: 'PDF·DOCX·HWPX 과업지시서를 올리면 행사명·기간·규모·예산을 AI가 자동으로 추출해 입력란을 채웁니다. 신뢰도가 낮은 항목은 검토 표시로 알려드려요.',
+    icon: 'doc',
+  },
+  {
+    title: '표준 레이트카드 견적',
+    desc: '120개 표준 단가를 기준으로 Basic·Standard·Premium 3가지 예산 옵션을 실시간 산출하고, 예산 한도에 맞춰 구성을 자동 조정합니다.',
+    icon: 'calc',
+  },
+  {
+    title: '발주처 공유·실시간 진행',
+    desc: '링크 하나로 기획안·견적서를 발주처와 공유하고, 진행 단계는 대시보드로 실시간 확인됩니다. 견적서는 PDF로 바로 내려받을 수 있어요.',
+    icon: 'share',
+  },
+];
+
 export const PR_STAFF_DEFAULT: [string, number][] = [
   ['강사', 2], ['멘토', 4], ['심사위원', 3], ['운영인력', 16],
 ];
