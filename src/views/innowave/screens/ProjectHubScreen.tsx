@@ -8,8 +8,9 @@ import type { ScreenId } from '../types.js';
 const STEP_DEFS: { n: number; label: string; screen: ScreenId }[] = [
   { n: 1, label: '행사 정보', screen: 'step1' },
   { n: 2, label: '프로그램 구성', screen: 'step2' },
-  { n: 3, label: '인력 매칭', screen: 'step3' },
-  { n: 4, label: '견적·기획안', screen: 'step4' },
+  { n: 3, label: '비품 선택', screen: 'step3' },
+  { n: 4, label: '인력 매칭', screen: 'step4' },
+  { n: 5, label: '견적·기획안', screen: 'step5' },
 ];
 
 const OPTION_LABEL: Record<string, string> = { basic: 'Basic', standard: 'Standard', premium: 'Premium' };
@@ -55,7 +56,7 @@ function ProjectHubBody() {
 
   const b = event.basicInfo;
   const [statusLabel, stBg, stColor] = PROJ_STATUS_MAP[event.status] ?? PROJ_STATUS_MAP.draft;
-  const currentStep = Math.min(Math.max(event.currentStep || 1, 1), 4);
+  const currentStep = Math.min(Math.max(event.currentStep || 1, 1), 5);
   const summary = event.progressSummary;
 
   const removeProject = async () => {
@@ -147,14 +148,14 @@ function ProjectHubBody() {
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#5A6478' }}>부가세</span><span style={{ fontFamily: GROTESK, fontWeight: 600, color: '#3A4358' }}>₩{fmt(quote.vat)}</span></div>
               </div>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: 'auto' }}>
-                <button onClick={() => go('step4')} className="iw-btn-outline-blue" style={{ flex: 1, border: '1px solid rgba(20,99,243,0.4)', background: '#FFFFFF', color: '#1463F3', borderRadius: '999px', padding: '11px 0', fontSize: '13.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>견적 다시 산출</button>
+                <button onClick={() => go('step5')} className="iw-btn-outline-blue" style={{ flex: 1, border: '1px solid rgba(20,99,243,0.4)', background: '#FFFFFF', color: '#1463F3', borderRadius: '999px', padding: '11px 0', fontSize: '13.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>견적 다시 산출</button>
                 <button onClick={() => go('proposal')} className="iw-btn-primary" style={{ flex: 1, background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '11px 0', fontSize: '13.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>발주처 공유 문서 보기</button>
               </div>
             </>
           ) : (
             <>
               <p style={{ margin: 0, fontSize: '14px', color: '#5A6478' }}>저장된 견적이 아직 없습니다.</p>
-              <button onClick={() => go('step4')} className="iw-btn-primary" style={{ marginTop: 'auto', background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '11px 0', fontSize: '13.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>견적 만들기</button>
+              <button onClick={() => go('step5')} className="iw-btn-primary" style={{ marginTop: 'auto', background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '11px 0', fontSize: '13.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>견적 만들기</button>
             </>
           )}
         </div>

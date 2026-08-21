@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { CARD_SHADOW, INPUT_STYLE, LABEL_STYLE, Loading, Notice, Stepper } from '../components.js';
-import { EVENT_TYPES, EXTRACTED_FIELDS, OP_MODES, UPLOADED_FORM } from '../data.js';
+import { CARD_SHADOW, INPUT_STYLE, InstructionBox, LABEL_STYLE, Loading, Notice, Stepper } from '../components.js';
+import { EVENT_TYPES, EXTRACTED_FIELDS, INSTRUCTION_EXAMPLES, INSTRUCTION_TIPS, OP_MODES, UPLOADED_FORM } from '../data.js';
 import {
-  DOC_ACCEPT, errMessage, invalidateEvent, saveWorkflowStep, startDocParse, subscribeDocParse, useEvent,
+  DOC_ACCEPT, demoParseFor, errMessage, invalidateEvent, loadStepInstruction, saveStepInstruction, saveWorkflowStep, startDocParse, subscribeDocParse, useEvent,
   type DocParse, type ParsedFields,
 } from '../hooks.js';
 import { useIw } from '../state.js';
@@ -95,13 +95,14 @@ function fieldsToPanel(f: ParsedFields): { label: string; value: string; confide
 
 function Step1Inner() {
   const { s, set, go } = useIw();
-  const { user, role, approval } = useAuth();
+  const { user, role, approval, signInWithGoogle } = useAuth();
   const canOperate = role === 'admin' || approval === 'approved';
   const { event, loading: eventLoading } = useEvent(s.currentEventId);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [invalid, setInvalid] = useState(false);
   const [busy, setBusy] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [instr2, setInstr2] = useState('');
 
   const up = s.uploaded;
   const patch = (p: Partial<FormState>) => setForm((f) => ({ ...f, ...p }));
@@ -111,6 +112,25 @@ function Step1Inner() {
   const unsubRef = useRef<(() => void) | null>(null);
   const [parse, setParse] = useState<DocParse | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const dragDepthRef = useRef(0);
+
+  // ── 게스트 데모 체험 후 로그인 유도 팝업 ──
+  const [loginPromptOpen, setLoginPromptOpen] = useState(false);
+  const [promptSigningIn, setPromptSigningIn] = useState(false);
+  const [promptError, setPromptError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user) setLoginPromptOpen(false);
+  }, [user]);
+
+  const promptSignIn = () => {
+    setPromptSigningIn(true);
+    setPromptError(null);
+    signInWithGoogle()
+      .catch((e) => setPromptError(errMessage(e)))
+      .finally(() => setPromptSigningIn(false));
+  };
 
   useEffect(() => () => { unsubRef.current?.(); }, []);
 
@@ -118,6 +138,19 @@ function Step1Inner() {
     if (!user) return;
     setUploadError(null);
     unsubRef.current?.();
+    // 시연 프로필: 등록된 공고·과업지시서 파일이면 업로드·AI 호출 없이 사전 추출값 표시
+    const demoFields = demoParseFor(file.name);
+    if (demoFields) {
+      setParse({ id: 'demo', fileName: file.name, status: 'processing', fields: null, error: null });
+      const timer = window.setTimeout(() => {
+        setParse({ id: 'demo', fileName: file.name, status: 'done', fields: demoFields, error: null });
+        setForm((f) => ({ ...f, ...fieldsToForm(demoFields) }));
+        set({ uploaded: true });
+        setInvalid(false);
+      }, 2600);
+      unsubRef.current = () => window.clearTimeout(timer);
+      return;
+    }
     setParse({ id: '', fileName: file.name, status: 'pending', fields: null, error: null });
     try {
       const docId = await startDocParse(user.uid, file);
@@ -137,6 +170,39 @@ function Step1Inner() {
 
   const parsing = parse?.status === 'pending' || parse?.status === 'processing';
 
+  const onDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    dragDepthRef.current += 1;
+    if (!parsing) setDragging(true);
+  };
+  const onDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    dragDepthRef.current -= 1;
+    if (dragDepthRef.current <= 0) {
+      dragDepthRef.current = 0;
+      setDragging(false);
+    }
+  };
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    dragDepthRef.current = 0;
+    setDragging(false);
+    if (parsing) return;
+    const f = e.dataTransfer.files?.[0];
+    if (!f) return;
+    if (!user) {
+      // 게스트: 데모 채움만 (실제 분석은 로그인 필요)
+      if (!up) toggleUpload();
+      return;
+    }
+    const ext = `.${f.name.split('.').pop()?.toLowerCase() ?? ''}`;
+    if (!DOC_ACCEPT.split(',').includes(ext)) {
+      setUploadError(`지원하지 않는 파일 형식입니다. ${DOC_ACCEPT.replaceAll(',', ', ')} 파일을 올려 주세요.`);
+      return;
+    }
+    void onFilePicked(f);
+  };
+
   // 게스트가 다시 돌아왔을 때 입력값 복원
   useEffect(() => {
     if (event || !s.guestInfo) return;
@@ -155,6 +221,12 @@ function Step1Inner() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 기존 이벤트의 지침 문서(events/{id}/instructions/toStep2) 프리필
+  useEffect(() => {
+    if (!event?.id) return;
+    void loadStepInstruction(event.id, 'toStep2').then(setInstr2).catch(() => {});
+  }, [event?.id]);
 
   // 기존 이벤트(currentEventId)를 이어서 수정할 때 프리필
   useEffect(() => {
@@ -179,6 +251,7 @@ function Step1Inner() {
     set({ uploaded: next });
     setForm(next ? FILLED_FORM : EMPTY_FORM);
     setInvalid(false);
+    if (next) setLoginPromptOpen(true);
   };
 
   const submit = async () => {
@@ -211,12 +284,14 @@ function Step1Inner() {
       if (s.currentEventId) {
         // 상태·currentStep은 앞으로만 — 진행 중 프로젝트 수정 시 회귀 방지
         await saveWorkflowStep(s.currentEventId, 'composing', 2, { basicInfo, parsedFromDoc: up });
+        await saveStepInstruction(s.currentEventId, 'toStep2', instr2);
       } else {
         const created = await eventRepository.create(new Event({
           ownerUid: user.uid, basicInfo, parsedFromDoc: up, status: 'composing', currentStep: 2,
         }));
         set({ currentEventId: created.id });
         invalidateEvent(created.id);
+        if (created.id && instr2.trim()) await saveStepInstruction(created.id, 'toStep2', instr2);
       }
       go('step2');
     } catch (e) {
@@ -261,12 +336,17 @@ function Step1Inner() {
                     if (user) fileInputRef.current?.click();
                     else toggleUpload();
                   }}
+                  onDragEnter={onDragEnter}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDragLeave={onDragLeave}
+                  onDrop={onDrop}
                   className="iw-dropzone"
                   style={{
-                    background: (user ? parse?.status === 'done' : up) ? '#F0FBF4' : parse?.status === 'failed' ? '#FFF7F7' : '#FFFFFF',
-                    border: `2px dashed ${(user ? parse?.status === 'done' : up) ? '#2BB673' : parse?.status === 'failed' ? 'rgba(229,72,77,0.5)' : 'rgba(20,99,243,0.35)'}`,
+                    background: dragging ? '#E5F0FF' : (user ? parse?.status === 'done' : up) ? '#F0FBF4' : parse?.status === 'failed' ? '#FFF7F7' : '#FFFFFF',
+                    border: `2px dashed ${dragging ? '#1463F3' : (user ? parse?.status === 'done' : up) ? '#2BB673' : parse?.status === 'failed' ? 'rgba(229,72,77,0.5)' : 'rgba(20,99,243,0.35)'}`,
                     borderRadius: '20px', padding: '26px 24px', textAlign: 'center',
                     cursor: parsing ? 'progress' : 'pointer', transition: 'all .18s',
+                    ...(dragging ? { transform: 'scale(1.01)' } : null),
                   }}
                 >
                   {user && parsing ? (
@@ -301,7 +381,7 @@ function Step1Inner() {
                       </div>
                       <div style={{ fontSize: '15.5px', fontWeight: 700, color: '#071A3E', marginBottom: '5px' }}>과업지시서·제안요청서 업로드</div>
                       <div style={{ fontSize: '13.5px', color: '#5A6478' }}>
-                        {user ? '클릭해 파일을 선택하세요 · PDF, DOCX, PPTX, HWPX 지원' : '클릭해서 데모 문서를 넣어 보세요 (로그인하면 실제 AI 분석)'}
+                        {user ? '파일을 끌어다 놓거나 클릭해 선택하세요 · PDF, DOCX, PPTX, HWPX 지원' : '클릭해서 데모 문서를 넣어 보세요 (로그인하면 실제 AI 분석)'}
                       </div>
                     </>
                   ) : (
@@ -373,6 +453,16 @@ function Step1Inner() {
                     <textarea rows={3} value={form.purpose} onChange={(e) => patch({ purpose: e.target.value })} placeholder="행사를 통해 이루고 싶은 목표를 적어 주세요" className="iw-input" style={{ ...INPUT_STYLE, resize: 'vertical', lineHeight: 1.55 }} />
                   </div>
                 </div>
+
+                <InstructionBox
+                  title="다음 단계 AI 지침"
+                  description="2단계 프로그램 구성 초안을 만들 때 AI가 이 지침을 참고합니다."
+                  value={instr2}
+                  onChange={setInstr2}
+                  examples={INSTRUCTION_EXAMPLES.toStep2}
+                  tips={INSTRUCTION_TIPS}
+                  disabled={!user}
+                />
               </div>
 
               <div className="iw-sticky-panel" style={{ background: '#FFFFFF', borderRadius: '20px', boxShadow: CARD_SHADOW, padding: '26px', position: 'sticky', top: '86px' }}>
@@ -438,6 +528,47 @@ function Step1Inner() {
           </>
         )}
       </div>
+
+      {/* 게스트 데모 체험 후 로그인 유도 팝업 */}
+      {loginPromptOpen && !user && (
+        <div
+          onClick={() => { if (!promptSigningIn) setLoginPromptOpen(false); }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,62,0.45)', backdropFilter: 'blur(3px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            style={{ background: '#FFFFFF', borderRadius: '22px', boxShadow: '0 24px 64px rgba(7,26,62,0.28)', padding: '34px clamp(22px,5vw,38px)', maxWidth: '440px', width: '100%', textAlign: 'center' }}
+          >
+            <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: '#E5F0FF', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1463F3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+            </div>
+            <h2 style={{ margin: '0 0 8px', fontSize: '19px', fontWeight: 800, color: '#071A3E' }}>데모 문서를 무료로 체험하셨어요</h2>
+            <p style={{ margin: '0 0 22px', fontSize: '13.5px', lineHeight: 1.65, color: '#5A6478' }}>
+              지금 채워진 값은 데모 데이터입니다.<br />
+              실제 과업지시서를 AI가 분석해 자동으로 채우려면<br />
+              로그인을 진행해 주세요. 입력하신 내용은 그대로 유지돼요.
+            </p>
+            <button
+              onClick={promptSignIn}
+              disabled={promptSigningIn}
+              className="iw-btn-primary"
+              style={{ width: '100%', background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '14px 0', fontSize: '15px', fontWeight: 700, cursor: promptSigningIn ? 'wait' : 'pointer', fontFamily: 'inherit', boxShadow: '0 8px 24px rgba(20,99,243,0.35)', opacity: promptSigningIn ? 0.7 : 1 }}
+            >
+              {promptSigningIn ? '로그인 중…' : 'Google로 로그인하고 실제 분석 사용하기'}
+            </button>
+            <button
+              onClick={() => setLoginPromptOpen(false)}
+              disabled={promptSigningIn}
+              style={{ marginTop: '12px', background: 'transparent', color: '#5A6478', border: 'none', fontSize: '13.5px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline' }}
+            >
+              계속 둘러보기
+            </button>
+            {promptError && <div style={{ marginTop: '14px', textAlign: 'left' }}><Notice tone="error">{promptError}</Notice></div>}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

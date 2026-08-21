@@ -3,7 +3,7 @@ import type { EventBasicInfo } from '../../models/Event.js';
 
 export type ScreenId =
   | 'landing' | 'auth'
-  | 'step1' | 'step2' | 'step3' | 'step4'
+  | 'step1' | 'step2' | 'step3' | 'step4' | 'step5'
   | 'proposal' | 'progress' | 'dashboard' | 'projects' | 'admin'
   | 'project'; // 프로젝트 상세 허브 (하단 데모 내비게이션에는 미노출)
 
@@ -12,6 +12,18 @@ export interface ProgramItem {
   name: string;
   dur: number; // 분
   ai: boolean; // AI 제안 여부 (false = 직접 수정)
+}
+
+/** 3단계 비품 선택 항목 — 레이트카드 스냅샷 + 수량 */
+export interface SupplyItem {
+  rateCardId: string;
+  name: string;
+  cat: string;
+  unit: string;
+  unitPrice: number;
+  marginRate: number;
+  qty: number;
+  source: 'ai' | 'user';
 }
 
 export type StageStatus = 'done' | 'active' | 'todo';
@@ -50,6 +62,7 @@ export interface MatchPerson {
   rating: string;
   region: string;
   c: string; // 아바타 배경색
+  rate: number; // 계약 단가 (1일 기준, 원)
 }
 
 export type PlanId = 'basic' | 'standard' | 'premium';
@@ -61,11 +74,13 @@ export interface IwState {
   guestInfo: EventBasicInfo | null;
   /** 하이드레이션 마커 — 어느 이벤트의 저장본을 로컬 상태로 복원했는지 (이벤트 전환 감지용) */
   programsEventId: string | null;
+  suppliesEventId: string | null;
   matchesEventId: string | null;
   planEventId: string | null;
   uploaded: boolean;
   opMode: string;
   programs: ProgramItem[];
+  supplies: SupplyItem[];
   editIdx: number | null;
   editTime: string;
   editName: string;

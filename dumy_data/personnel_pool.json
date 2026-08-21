@@ -11,7 +11,7 @@
     "rating": 3.6,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 1040074,
+    "unit_rate": 480000,
     "contact_email": "pool0001@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -28,7 +28,7 @@
     "rating": 4.8,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 176482,
+    "unit_rate": 150000,
     "contact_email": "pool0002@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -45,7 +45,7 @@
     "rating": 3.9,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 167516,
+    "unit_rate": 150000,
     "contact_email": "pool0003@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -62,7 +62,7 @@
     "rating": 5.0,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 324582,
+    "unit_rate": 800000,
     "contact_email": "pool0004@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -79,7 +79,7 @@
     "rating": 4.3,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 186731,
+    "unit_rate": 150000,
     "contact_email": "pool0005@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -96,7 +96,7 @@
     "rating": 4.0,
     "activity_region": "전북",
     "available_type": "오프라인",
-    "unit_rate": 1381093,
+    "unit_rate": 800000,
     "contact_email": "pool0006@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -113,7 +113,7 @@
     "rating": 4.3,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 1363916,
+    "unit_rate": 800000,
     "contact_email": "pool0007@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -130,7 +130,7 @@
     "rating": 4.0,
     "activity_region": "전국",
     "available_type": "온오프라인",
-    "unit_rate": 636774,
+    "unit_rate": 600000,
     "contact_email": "pool0008@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -147,7 +147,7 @@
     "rating": 3.6,
     "activity_region": "강원",
     "available_type": "온라인",
-    "unit_rate": 488596,
+    "unit_rate": 200000,
     "contact_email": "pool0009@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -164,7 +164,7 @@
     "rating": 4.9,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 233104,
+    "unit_rate": 480000,
     "contact_email": "pool0010@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -181,7 +181,7 @@
     "rating": 4.7,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 1160623,
+    "unit_rate": 800000,
     "contact_email": "pool0011@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -198,7 +198,7 @@
     "rating": 4.3,
     "activity_region": "대전",
     "available_type": "온라인",
-    "unit_rate": 944395,
+    "unit_rate": 200000,
     "contact_email": "pool0012@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -215,7 +215,7 @@
     "rating": 4.9,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 707699,
+    "unit_rate": 800000,
     "contact_email": "pool0013@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -232,7 +232,7 @@
     "rating": 4.0,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 964882,
+    "unit_rate": 480000,
     "contact_email": "pool0014@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -249,7 +249,7 @@
     "rating": 3.6,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 607182,
+    "unit_rate": 600000,
     "contact_email": "pool0015@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -266,7 +266,7 @@
     "rating": 4.3,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 411883,
+    "unit_rate": 800000,
     "contact_email": "pool0016@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -283,7 +283,7 @@
     "rating": 4.9,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 406462,
+    "unit_rate": 480000,
     "contact_email": "pool0017@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -300,7 +300,7 @@
     "rating": 4.9,
     "activity_region": "경기",
     "available_type": "오프라인",
-    "unit_rate": 588289,
+    "unit_rate": 800000,
     "contact_email": "pool0018@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -317,7 +317,7 @@
     "rating": 3.6,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 549279,
+    "unit_rate": 200000,
     "contact_email": "pool0019@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -334,7 +334,7 @@
     "rating": 4.9,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 384327,
+    "unit_rate": 480000,
     "contact_email": "pool0020@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -351,7 +351,7 @@
     "rating": 3.7,
     "activity_region": "대전",
     "available_type": "오프라인",
-    "unit_rate": 1491102,
+    "unit_rate": 400000,
     "contact_email": "pool0021@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -368,7 +368,7 @@
     "rating": 3.8,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 690755,
+    "unit_rate": 480000,
     "contact_email": "pool0022@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -385,7 +385,7 @@
     "rating": 4.6,
     "activity_region": "경기",
     "available_type": "온오프라인",
-    "unit_rate": 1490723,
+    "unit_rate": 600000,
     "contact_email": "pool0023@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -402,7 +402,7 @@
     "rating": 3.8,
     "activity_region": "경기",
     "available_type": "오프라인",
-    "unit_rate": 207720,
+    "unit_rate": 150000,
     "contact_email": "pool0024@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -419,7 +419,7 @@
     "rating": 4.0,
     "activity_region": "전국",
     "available_type": "온오프라인",
-    "unit_rate": 479963,
+    "unit_rate": 480000,
     "contact_email": "pool0025@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -436,7 +436,7 @@
     "rating": 3.7,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 1276004,
+    "unit_rate": 400000,
     "contact_email": "pool0026@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -453,7 +453,7 @@
     "rating": 4.2,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 148721,
+    "unit_rate": 150000,
     "contact_email": "pool0027@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -470,7 +470,7 @@
     "rating": 4.5,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 219858,
+    "unit_rate": 150000,
     "contact_email": "pool0028@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -487,7 +487,7 @@
     "rating": 4.3,
     "activity_region": "충남",
     "available_type": "온라인",
-    "unit_rate": 264758,
+    "unit_rate": 800000,
     "contact_email": "pool0029@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -504,7 +504,7 @@
     "rating": 4.4,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 415379,
+    "unit_rate": 800000,
     "contact_email": "pool0030@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -521,7 +521,7 @@
     "rating": 4.3,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 791303,
+    "unit_rate": 800000,
     "contact_email": "pool0031@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -538,7 +538,7 @@
     "rating": 4.6,
     "activity_region": "충남",
     "available_type": "온라인",
-    "unit_rate": 694278,
+    "unit_rate": 200000,
     "contact_email": "pool0032@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -555,7 +555,7 @@
     "rating": 5.0,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 220378,
+    "unit_rate": 150000,
     "contact_email": "pool0033@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -572,7 +572,7 @@
     "rating": 4.5,
     "activity_region": "대전",
     "available_type": "온라인",
-    "unit_rate": 765497,
+    "unit_rate": 600000,
     "contact_email": "pool0034@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -589,7 +589,7 @@
     "rating": 3.5,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 307284,
+    "unit_rate": 800000,
     "contact_email": "pool0035@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -606,7 +606,7 @@
     "rating": 3.7,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 733000,
+    "unit_rate": 200000,
     "contact_email": "pool0036@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -623,7 +623,7 @@
     "rating": 3.7,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 147011,
+    "unit_rate": 150000,
     "contact_email": "pool0037@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -640,7 +640,7 @@
     "rating": 4.3,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 660285,
+    "unit_rate": 400000,
     "contact_email": "pool0038@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -657,7 +657,7 @@
     "rating": 4.0,
     "activity_region": "경기",
     "available_type": "온오프라인",
-    "unit_rate": 536241,
+    "unit_rate": 800000,
     "contact_email": "pool0039@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -674,7 +674,7 @@
     "rating": 4.5,
     "activity_region": "충남",
     "available_type": "오프라인",
-    "unit_rate": 383640,
+    "unit_rate": 800000,
     "contact_email": "pool0040@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -691,7 +691,7 @@
     "rating": 3.7,
     "activity_region": "광주",
     "available_type": "온라인",
-    "unit_rate": 1173096,
+    "unit_rate": 800000,
     "contact_email": "pool0041@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -708,7 +708,7 @@
     "rating": 4.3,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 239896,
+    "unit_rate": 150000,
     "contact_email": "pool0042@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -725,7 +725,7 @@
     "rating": 4.1,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 671635,
+    "unit_rate": 600000,
     "contact_email": "pool0043@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -742,7 +742,7 @@
     "rating": 3.8,
     "activity_region": "전북",
     "available_type": "온오프라인",
-    "unit_rate": 234507,
+    "unit_rate": 150000,
     "contact_email": "pool0044@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -759,7 +759,7 @@
     "rating": 3.8,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 472096,
+    "unit_rate": 200000,
     "contact_email": "pool0045@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -776,7 +776,7 @@
     "rating": 3.9,
     "activity_region": "대전",
     "available_type": "오프라인",
-    "unit_rate": 665898,
+    "unit_rate": 200000,
     "contact_email": "pool0046@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -793,7 +793,7 @@
     "rating": 4.2,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 737727,
+    "unit_rate": 600000,
     "contact_email": "pool0047@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -810,7 +810,7 @@
     "rating": 3.8,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 789849,
+    "unit_rate": 800000,
     "contact_email": "pool0048@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -827,7 +827,7 @@
     "rating": 3.8,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 711443,
+    "unit_rate": 600000,
     "contact_email": "pool0049@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -844,7 +844,7 @@
     "rating": 4.6,
     "activity_region": "대전",
     "available_type": "온라인",
-    "unit_rate": 683214,
+    "unit_rate": 800000,
     "contact_email": "pool0050@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -861,7 +861,7 @@
     "rating": 4.8,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 1398791,
+    "unit_rate": 800000,
     "contact_email": "pool0051@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -878,7 +878,7 @@
     "rating": 3.8,
     "activity_region": "강원",
     "available_type": "오프라인",
-    "unit_rate": 616732,
+    "unit_rate": 480000,
     "contact_email": "pool0052@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -895,7 +895,7 @@
     "rating": 4.3,
     "activity_region": "광주",
     "available_type": "온라인",
-    "unit_rate": 332991,
+    "unit_rate": 800000,
     "contact_email": "pool0053@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -912,7 +912,7 @@
     "rating": 4.9,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 1202977,
+    "unit_rate": 400000,
     "contact_email": "pool0054@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -929,7 +929,7 @@
     "rating": 3.9,
     "activity_region": "광주",
     "available_type": "온라인",
-    "unit_rate": 226851,
+    "unit_rate": 150000,
     "contact_email": "pool0055@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -946,7 +946,7 @@
     "rating": 4.7,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 514546,
+    "unit_rate": 800000,
     "contact_email": "pool0056@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -963,7 +963,7 @@
     "rating": 3.6,
     "activity_region": "서울",
     "available_type": "온오프라인",
-    "unit_rate": 192443,
+    "unit_rate": 150000,
     "contact_email": "pool0057@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -980,7 +980,7 @@
     "rating": 4.3,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 499988,
+    "unit_rate": 600000,
     "contact_email": "pool0058@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -997,7 +997,7 @@
     "rating": 4.3,
     "activity_region": "경남",
     "available_type": "온라인",
-    "unit_rate": 887984,
+    "unit_rate": 400000,
     "contact_email": "pool0059@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1014,7 +1014,7 @@
     "rating": 3.7,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 461349,
+    "unit_rate": 480000,
     "contact_email": "pool0060@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1031,7 +1031,7 @@
     "rating": 4.6,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 223612,
+    "unit_rate": 150000,
     "contact_email": "pool0061@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1048,7 +1048,7 @@
     "rating": 4.9,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 220795,
+    "unit_rate": 150000,
     "contact_email": "pool0062@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1065,7 +1065,7 @@
     "rating": 4.1,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 1459804,
+    "unit_rate": 480000,
     "contact_email": "pool0063@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1082,7 +1082,7 @@
     "rating": 3.7,
     "activity_region": "전국",
     "available_type": "온오프라인",
-    "unit_rate": 336023,
+    "unit_rate": 200000,
     "contact_email": "pool0064@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1099,7 +1099,7 @@
     "rating": 4.0,
     "activity_region": "대구",
     "available_type": "온라인",
-    "unit_rate": 946483,
+    "unit_rate": 400000,
     "contact_email": "pool0065@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1116,7 +1116,7 @@
     "rating": 3.5,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 1155730,
+    "unit_rate": 800000,
     "contact_email": "pool0066@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1133,7 +1133,7 @@
     "rating": 4.7,
     "activity_region": "전국",
     "available_type": "온오프라인",
-    "unit_rate": 1167822,
+    "unit_rate": 400000,
     "contact_email": "pool0067@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1150,7 +1150,7 @@
     "rating": 4.0,
     "activity_region": "강원",
     "available_type": "온라인",
-    "unit_rate": 138198,
+    "unit_rate": 150000,
     "contact_email": "pool0068@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1167,7 +1167,7 @@
     "rating": 4.9,
     "activity_region": "전국",
     "available_type": "온오프라인",
-    "unit_rate": 1057333,
+    "unit_rate": 800000,
     "contact_email": "pool0069@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1184,7 +1184,7 @@
     "rating": 4.0,
     "activity_region": "전북",
     "available_type": "오프라인",
-    "unit_rate": 207096,
+    "unit_rate": 480000,
     "contact_email": "pool0070@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1201,7 +1201,7 @@
     "rating": 4.4,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 159378,
+    "unit_rate": 150000,
     "contact_email": "pool0071@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1218,7 +1218,7 @@
     "rating": 4.1,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 454200,
+    "unit_rate": 800000,
     "contact_email": "pool0072@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1235,7 +1235,7 @@
     "rating": 4.2,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 356447,
+    "unit_rate": 480000,
     "contact_email": "pool0073@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1252,7 +1252,7 @@
     "rating": 4.0,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 345939,
+    "unit_rate": 800000,
     "contact_email": "pool0074@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1269,7 +1269,7 @@
     "rating": 4.1,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 1305028,
+    "unit_rate": 800000,
     "contact_email": "pool0075@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1286,7 +1286,7 @@
     "rating": 4.7,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 289110,
+    "unit_rate": 800000,
     "contact_email": "pool0076@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1303,7 +1303,7 @@
     "rating": 4.1,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 547704,
+    "unit_rate": 800000,
     "contact_email": "pool0077@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1320,7 +1320,7 @@
     "rating": 4.1,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 763537,
+    "unit_rate": 800000,
     "contact_email": "pool0078@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1337,7 +1337,7 @@
     "rating": 4.9,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 509783,
+    "unit_rate": 800000,
     "contact_email": "pool0079@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1354,7 +1354,7 @@
     "rating": 4.0,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 188303,
+    "unit_rate": 150000,
     "contact_email": "pool0080@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1371,7 +1371,7 @@
     "rating": 4.0,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 273682,
+    "unit_rate": 200000,
     "contact_email": "pool0081@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1388,7 +1388,7 @@
     "rating": 4.9,
     "activity_region": "부산",
     "available_type": "오프라인",
-    "unit_rate": 193380,
+    "unit_rate": 150000,
     "contact_email": "pool0082@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1405,7 +1405,7 @@
     "rating": 4.1,
     "activity_region": "서울",
     "available_type": "온오프라인",
-    "unit_rate": 721413,
+    "unit_rate": 200000,
     "contact_email": "pool0083@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1422,7 +1422,7 @@
     "rating": 4.8,
     "activity_region": "경기",
     "available_type": "오프라인",
-    "unit_rate": 513389,
+    "unit_rate": 400000,
     "contact_email": "pool0084@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1439,7 +1439,7 @@
     "rating": 4.1,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 528628,
+    "unit_rate": 800000,
     "contact_email": "pool0085@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1456,7 +1456,7 @@
     "rating": 3.7,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 477737,
+    "unit_rate": 800000,
     "contact_email": "pool0086@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1473,7 +1473,7 @@
     "rating": 3.7,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 638555,
+    "unit_rate": 800000,
     "contact_email": "pool0087@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1490,7 +1490,7 @@
     "rating": 3.9,
     "activity_region": "경기",
     "available_type": "오프라인",
-    "unit_rate": 649942,
+    "unit_rate": 480000,
     "contact_email": "pool0088@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1507,7 +1507,7 @@
     "rating": 4.1,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 145575,
+    "unit_rate": 150000,
     "contact_email": "pool0089@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1524,7 +1524,7 @@
     "rating": 3.6,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 762438,
+    "unit_rate": 200000,
     "contact_email": "pool0090@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1541,7 +1541,7 @@
     "rating": 4.7,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 1486254,
+    "unit_rate": 480000,
     "contact_email": "pool0091@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1558,7 +1558,7 @@
     "rating": 4.6,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 768373,
+    "unit_rate": 800000,
     "contact_email": "pool0092@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1575,7 +1575,7 @@
     "rating": 3.9,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 233796,
+    "unit_rate": 480000,
     "contact_email": "pool0093@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1592,7 +1592,7 @@
     "rating": 4.4,
     "activity_region": "광주",
     "available_type": "온라인",
-    "unit_rate": 232859,
+    "unit_rate": 150000,
     "contact_email": "pool0094@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1609,7 +1609,7 @@
     "rating": 3.9,
     "activity_region": "충남",
     "available_type": "온라인",
-    "unit_rate": 617856,
+    "unit_rate": 200000,
     "contact_email": "pool0095@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1626,7 +1626,7 @@
     "rating": 4.7,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 342175,
+    "unit_rate": 800000,
     "contact_email": "pool0096@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1643,7 +1643,7 @@
     "rating": 4.6,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 228590,
+    "unit_rate": 150000,
     "contact_email": "pool0097@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1660,7 +1660,7 @@
     "rating": 4.5,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 673947,
+    "unit_rate": 800000,
     "contact_email": "pool0098@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1677,7 +1677,7 @@
     "rating": 3.5,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 543187,
+    "unit_rate": 800000,
     "contact_email": "pool0099@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1694,7 +1694,7 @@
     "rating": 3.8,
     "activity_region": "광주",
     "available_type": "온라인",
-    "unit_rate": 810384,
+    "unit_rate": 200000,
     "contact_email": "pool0100@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1711,7 +1711,7 @@
     "rating": 4.8,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 336937,
+    "unit_rate": 800000,
     "contact_email": "pool0101@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1728,7 +1728,7 @@
     "rating": 3.7,
     "activity_region": "강원",
     "available_type": "온라인",
-    "unit_rate": 241822,
+    "unit_rate": 150000,
     "contact_email": "pool0102@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1745,7 +1745,7 @@
     "rating": 4.8,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 234612,
+    "unit_rate": 150000,
     "contact_email": "pool0103@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1762,7 +1762,7 @@
     "rating": 4.0,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 615594,
+    "unit_rate": 480000,
     "contact_email": "pool0104@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1779,7 +1779,7 @@
     "rating": 4.4,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 281724,
+    "unit_rate": 480000,
     "contact_email": "pool0105@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1796,7 +1796,7 @@
     "rating": 3.6,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 440068,
+    "unit_rate": 800000,
     "contact_email": "pool0106@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1813,7 +1813,7 @@
     "rating": 4.3,
     "activity_region": "전북",
     "available_type": "온오프라인",
-    "unit_rate": 271734,
+    "unit_rate": 480000,
     "contact_email": "pool0107@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1830,7 +1830,7 @@
     "rating": 4.5,
     "activity_region": "부산",
     "available_type": "온라인",
-    "unit_rate": 1163418,
+    "unit_rate": 800000,
     "contact_email": "pool0108@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1847,7 +1847,7 @@
     "rating": 4.0,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 246254,
+    "unit_rate": 150000,
     "contact_email": "pool0109@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1864,7 +1864,7 @@
     "rating": 4.9,
     "activity_region": "서울",
     "available_type": "온오프라인",
-    "unit_rate": 897522,
+    "unit_rate": 800000,
     "contact_email": "pool0110@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1881,7 +1881,7 @@
     "rating": 4.7,
     "activity_region": "부산",
     "available_type": "오프라인",
-    "unit_rate": 204694,
+    "unit_rate": 150000,
     "contact_email": "pool0111@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1898,7 +1898,7 @@
     "rating": 4.9,
     "activity_region": "경기",
     "available_type": "오프라인",
-    "unit_rate": 212653,
+    "unit_rate": 400000,
     "contact_email": "pool0112@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1915,7 +1915,7 @@
     "rating": 3.6,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 245102,
+    "unit_rate": 150000,
     "contact_email": "pool0113@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1932,7 +1932,7 @@
     "rating": 4.6,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 900808,
+    "unit_rate": 600000,
     "contact_email": "pool0114@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1949,7 +1949,7 @@
     "rating": 4.0,
     "activity_region": "충남",
     "available_type": "온라인",
-    "unit_rate": 540946,
+    "unit_rate": 200000,
     "contact_email": "pool0115@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1966,7 +1966,7 @@
     "rating": 4.6,
     "activity_region": "부산",
     "available_type": "온라인",
-    "unit_rate": 211576,
+    "unit_rate": 150000,
     "contact_email": "pool0116@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -1983,7 +1983,7 @@
     "rating": 4.6,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 948628,
+    "unit_rate": 800000,
     "contact_email": "pool0117@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2000,7 +2000,7 @@
     "rating": 4.3,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 1027093,
+    "unit_rate": 480000,
     "contact_email": "pool0118@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2017,7 +2017,7 @@
     "rating": 4.7,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 361564,
+    "unit_rate": 800000,
     "contact_email": "pool0119@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2034,7 +2034,7 @@
     "rating": 3.6,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 1371187,
+    "unit_rate": 800000,
     "contact_email": "pool0120@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2051,7 +2051,7 @@
     "rating": 4.8,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 202693,
+    "unit_rate": 480000,
     "contact_email": "pool0121@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2068,7 +2068,7 @@
     "rating": 4.9,
     "activity_region": "전국",
     "available_type": "온오프라인",
-    "unit_rate": 1459441,
+    "unit_rate": 480000,
     "contact_email": "pool0122@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2085,7 +2085,7 @@
     "rating": 4.1,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 281670,
+    "unit_rate": 600000,
     "contact_email": "pool0123@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2102,7 +2102,7 @@
     "rating": 4.8,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 234948,
+    "unit_rate": 150000,
     "contact_email": "pool0124@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2119,7 +2119,7 @@
     "rating": 4.4,
     "activity_region": "강원",
     "available_type": "오프라인",
-    "unit_rate": 937344,
+    "unit_rate": 600000,
     "contact_email": "pool0125@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2136,7 +2136,7 @@
     "rating": 4.1,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 206687,
+    "unit_rate": 480000,
     "contact_email": "pool0126@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2153,7 +2153,7 @@
     "rating": 3.8,
     "activity_region": "부산",
     "available_type": "오프라인",
-    "unit_rate": 522448,
+    "unit_rate": 800000,
     "contact_email": "pool0127@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2170,7 +2170,7 @@
     "rating": 4.8,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 442716,
+    "unit_rate": 400000,
     "contact_email": "pool0128@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2187,7 +2187,7 @@
     "rating": 4.1,
     "activity_region": "전북",
     "available_type": "온오프라인",
-    "unit_rate": 203521,
+    "unit_rate": 150000,
     "contact_email": "pool0129@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2204,7 +2204,7 @@
     "rating": 4.7,
     "activity_region": "대전",
     "available_type": "오프라인",
-    "unit_rate": 1124081,
+    "unit_rate": 600000,
     "contact_email": "pool0130@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2221,7 +2221,7 @@
     "rating": 3.7,
     "activity_region": "강원",
     "available_type": "오프라인",
-    "unit_rate": 362959,
+    "unit_rate": 800000,
     "contact_email": "pool0131@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2238,7 +2238,7 @@
     "rating": 4.8,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 685854,
+    "unit_rate": 800000,
     "contact_email": "pool0132@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2255,7 +2255,7 @@
     "rating": 4.0,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 229566,
+    "unit_rate": 150000,
     "contact_email": "pool0133@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2272,7 +2272,7 @@
     "rating": 5.0,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 845609,
+    "unit_rate": 800000,
     "contact_email": "pool0134@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2289,7 +2289,7 @@
     "rating": 3.7,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 225368,
+    "unit_rate": 150000,
     "contact_email": "pool0135@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2306,7 +2306,7 @@
     "rating": 4.9,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 196823,
+    "unit_rate": 150000,
     "contact_email": "pool0136@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2323,7 +2323,7 @@
     "rating": 4.9,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 136059,
+    "unit_rate": 150000,
     "contact_email": "pool0137@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2340,7 +2340,7 @@
     "rating": 3.8,
     "activity_region": "부산",
     "available_type": "온라인",
-    "unit_rate": 209550,
+    "unit_rate": 150000,
     "contact_email": "pool0138@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2357,7 +2357,7 @@
     "rating": 3.9,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 815448,
+    "unit_rate": 800000,
     "contact_email": "pool0139@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2374,7 +2374,7 @@
     "rating": 4.4,
     "activity_region": "충남",
     "available_type": "온라인",
-    "unit_rate": 751356,
+    "unit_rate": 800000,
     "contact_email": "pool0140@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2391,7 +2391,7 @@
     "rating": 4.1,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 185849,
+    "unit_rate": 150000,
     "contact_email": "pool0141@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2408,7 +2408,7 @@
     "rating": 4.0,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 694596,
+    "unit_rate": 600000,
     "contact_email": "pool0142@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2425,7 +2425,7 @@
     "rating": 4.4,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 220145,
+    "unit_rate": 150000,
     "contact_email": "pool0143@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2442,7 +2442,7 @@
     "rating": 4.6,
     "activity_region": "전북",
     "available_type": "온오프라인",
-    "unit_rate": 123697,
+    "unit_rate": 150000,
     "contact_email": "pool0144@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2459,7 +2459,7 @@
     "rating": 3.6,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 668169,
+    "unit_rate": 800000,
     "contact_email": "pool0145@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2476,7 +2476,7 @@
     "rating": 3.7,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 461250,
+    "unit_rate": 200000,
     "contact_email": "pool0146@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2493,7 +2493,7 @@
     "rating": 4.8,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 230949,
+    "unit_rate": 150000,
     "contact_email": "pool0147@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2510,7 +2510,7 @@
     "rating": 5.0,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 588273,
+    "unit_rate": 200000,
     "contact_email": "pool0148@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2527,7 +2527,7 @@
     "rating": 3.8,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 223152,
+    "unit_rate": 150000,
     "contact_email": "pool0149@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2544,7 +2544,7 @@
     "rating": 5.0,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 610623,
+    "unit_rate": 480000,
     "contact_email": "pool0150@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2561,7 +2561,7 @@
     "rating": 4.2,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 518334,
+    "unit_rate": 800000,
     "contact_email": "pool0151@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2578,7 +2578,7 @@
     "rating": 3.9,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 1236650,
+    "unit_rate": 400000,
     "contact_email": "pool0152@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2595,7 +2595,7 @@
     "rating": 4.6,
     "activity_region": "경기",
     "available_type": "오프라인",
-    "unit_rate": 1109368,
+    "unit_rate": 400000,
     "contact_email": "pool0153@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2612,7 +2612,7 @@
     "rating": 4.2,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 436540,
+    "unit_rate": 480000,
     "contact_email": "pool0154@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2629,7 +2629,7 @@
     "rating": 3.6,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 637441,
+    "unit_rate": 480000,
     "contact_email": "pool0155@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2646,7 +2646,7 @@
     "rating": 3.6,
     "activity_region": "대전",
     "available_type": "온라인",
-    "unit_rate": 655292,
+    "unit_rate": 800000,
     "contact_email": "pool0156@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2663,7 +2663,7 @@
     "rating": 3.9,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 206585,
+    "unit_rate": 150000,
     "contact_email": "pool0157@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2680,7 +2680,7 @@
     "rating": 3.6,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 204000,
+    "unit_rate": 400000,
     "contact_email": "pool0158@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2697,7 +2697,7 @@
     "rating": 4.8,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 335916,
+    "unit_rate": 200000,
     "contact_email": "pool0159@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2714,7 +2714,7 @@
     "rating": 4.8,
     "activity_region": "대전",
     "available_type": "온라인",
-    "unit_rate": 393862,
+    "unit_rate": 800000,
     "contact_email": "pool0160@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2731,7 +2731,7 @@
     "rating": 3.7,
     "activity_region": "전국",
     "available_type": "온오프라인",
-    "unit_rate": 791655,
+    "unit_rate": 480000,
     "contact_email": "pool0161@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2748,7 +2748,7 @@
     "rating": 3.6,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 777128,
+    "unit_rate": 800000,
     "contact_email": "pool0162@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2765,7 +2765,7 @@
     "rating": 3.6,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 699397,
+    "unit_rate": 800000,
     "contact_email": "pool0163@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2782,7 +2782,7 @@
     "rating": 4.2,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 326124,
+    "unit_rate": 800000,
     "contact_email": "pool0164@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2799,7 +2799,7 @@
     "rating": 3.7,
     "activity_region": "전북",
     "available_type": "오프라인",
-    "unit_rate": 227815,
+    "unit_rate": 150000,
     "contact_email": "pool0165@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2816,7 +2816,7 @@
     "rating": 4.0,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 616656,
+    "unit_rate": 600000,
     "contact_email": "pool0166@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2833,7 +2833,7 @@
     "rating": 4.1,
     "activity_region": "경기",
     "available_type": "온오프라인",
-    "unit_rate": 639976,
+    "unit_rate": 800000,
     "contact_email": "pool0167@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2850,7 +2850,7 @@
     "rating": 4.0,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 761652,
+    "unit_rate": 480000,
     "contact_email": "pool0168@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2867,7 +2867,7 @@
     "rating": 3.7,
     "activity_region": "전북",
     "available_type": "온오프라인",
-    "unit_rate": 488792,
+    "unit_rate": 400000,
     "contact_email": "pool0169@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2884,7 +2884,7 @@
     "rating": 4.2,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 301685,
+    "unit_rate": 200000,
     "contact_email": "pool0170@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2901,7 +2901,7 @@
     "rating": 4.0,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 778061,
+    "unit_rate": 800000,
     "contact_email": "pool0171@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2918,7 +2918,7 @@
     "rating": 4.9,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 177896,
+    "unit_rate": 150000,
     "contact_email": "pool0172@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2935,7 +2935,7 @@
     "rating": 4.6,
     "activity_region": "광주",
     "available_type": "온라인",
-    "unit_rate": 268804,
+    "unit_rate": 800000,
     "contact_email": "pool0173@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2952,7 +2952,7 @@
     "rating": 4.2,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 152701,
+    "unit_rate": 150000,
     "contact_email": "pool0174@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2969,7 +2969,7 @@
     "rating": 4.1,
     "activity_region": "전북",
     "available_type": "오프라인",
-    "unit_rate": 364095,
+    "unit_rate": 600000,
     "contact_email": "pool0175@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -2986,7 +2986,7 @@
     "rating": 4.7,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 842449,
+    "unit_rate": 600000,
     "contact_email": "pool0176@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3003,7 +3003,7 @@
     "rating": 3.8,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 772094,
+    "unit_rate": 480000,
     "contact_email": "pool0177@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3020,7 +3020,7 @@
     "rating": 3.9,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 208874,
+    "unit_rate": 800000,
     "contact_email": "pool0178@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3037,7 +3037,7 @@
     "rating": 4.0,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 148601,
+    "unit_rate": 150000,
     "contact_email": "pool0179@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3054,7 +3054,7 @@
     "rating": 4.5,
     "activity_region": "강원",
     "available_type": "온라인",
-    "unit_rate": 496408,
+    "unit_rate": 600000,
     "contact_email": "pool0180@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3071,7 +3071,7 @@
     "rating": 4.3,
     "activity_region": "부산",
     "available_type": "온라인",
-    "unit_rate": 397509,
+    "unit_rate": 800000,
     "contact_email": "pool0181@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3088,7 +3088,7 @@
     "rating": 5.0,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 205904,
+    "unit_rate": 150000,
     "contact_email": "pool0182@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3105,7 +3105,7 @@
     "rating": 4.6,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 559836,
+    "unit_rate": 800000,
     "contact_email": "pool0183@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3122,7 +3122,7 @@
     "rating": 4.3,
     "activity_region": "대구",
     "available_type": "온라인",
-    "unit_rate": 939558,
+    "unit_rate": 200000,
     "contact_email": "pool0184@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3139,7 +3139,7 @@
     "rating": 3.6,
     "activity_region": "대전",
     "available_type": "온라인",
-    "unit_rate": 551936,
+    "unit_rate": 800000,
     "contact_email": "pool0185@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3156,7 +3156,7 @@
     "rating": 4.2,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 864015,
+    "unit_rate": 200000,
     "contact_email": "pool0186@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3173,7 +3173,7 @@
     "rating": 3.7,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 707987,
+    "unit_rate": 400000,
     "contact_email": "pool0187@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3190,7 +3190,7 @@
     "rating": 5.0,
     "activity_region": "강원",
     "available_type": "온라인",
-    "unit_rate": 559315,
+    "unit_rate": 480000,
     "contact_email": "pool0188@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3207,7 +3207,7 @@
     "rating": 4.5,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 385413,
+    "unit_rate": 800000,
     "contact_email": "pool0189@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3224,7 +3224,7 @@
     "rating": 4.2,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 571383,
+    "unit_rate": 800000,
     "contact_email": "pool0190@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3241,7 +3241,7 @@
     "rating": 4.8,
     "activity_region": "충남",
     "available_type": "온라인",
-    "unit_rate": 591225,
+    "unit_rate": 800000,
     "contact_email": "pool0191@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3258,7 +3258,7 @@
     "rating": 3.7,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 954504,
+    "unit_rate": 480000,
     "contact_email": "pool0192@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3275,7 +3275,7 @@
     "rating": 4.3,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 745561,
+    "unit_rate": 600000,
     "contact_email": "pool0193@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3292,7 +3292,7 @@
     "rating": 3.8,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 122506,
+    "unit_rate": 150000,
     "contact_email": "pool0194@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3309,7 +3309,7 @@
     "rating": 4.5,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 643417,
+    "unit_rate": 200000,
     "contact_email": "pool0195@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3326,7 +3326,7 @@
     "rating": 4.2,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 542828,
+    "unit_rate": 400000,
     "contact_email": "pool0196@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3343,7 +3343,7 @@
     "rating": 4.5,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 931486,
+    "unit_rate": 800000,
     "contact_email": "pool0197@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3360,7 +3360,7 @@
     "rating": 3.7,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 546907,
+    "unit_rate": 480000,
     "contact_email": "pool0198@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3377,7 +3377,7 @@
     "rating": 3.7,
     "activity_region": "충남",
     "available_type": "오프라인",
-    "unit_rate": 1159321,
+    "unit_rate": 480000,
     "contact_email": "pool0199@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3394,7 +3394,7 @@
     "rating": 4.8,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 238866,
+    "unit_rate": 150000,
     "contact_email": "pool0200@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3411,7 +3411,7 @@
     "rating": 3.8,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 836644,
+    "unit_rate": 800000,
     "contact_email": "pool0201@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3428,7 +3428,7 @@
     "rating": 4.6,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 527897,
+    "unit_rate": 600000,
     "contact_email": "pool0202@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3445,7 +3445,7 @@
     "rating": 3.9,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 1217953,
+    "unit_rate": 600000,
     "contact_email": "pool0203@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3462,7 +3462,7 @@
     "rating": 4.1,
     "activity_region": "강원",
     "available_type": "오프라인",
-    "unit_rate": 485037,
+    "unit_rate": 600000,
     "contact_email": "pool0204@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3479,7 +3479,7 @@
     "rating": 4.1,
     "activity_region": "전북",
     "available_type": "오프라인",
-    "unit_rate": 417138,
+    "unit_rate": 200000,
     "contact_email": "pool0205@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3496,7 +3496,7 @@
     "rating": 4.5,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 123777,
+    "unit_rate": 150000,
     "contact_email": "pool0206@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3513,7 +3513,7 @@
     "rating": 4.5,
     "activity_region": "서울",
     "available_type": "온오프라인",
-    "unit_rate": 266412,
+    "unit_rate": 800000,
     "contact_email": "pool0207@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3530,7 +3530,7 @@
     "rating": 4.8,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 248174,
+    "unit_rate": 150000,
     "contact_email": "pool0208@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3547,7 +3547,7 @@
     "rating": 4.5,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 755339,
+    "unit_rate": 200000,
     "contact_email": "pool0209@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3564,7 +3564,7 @@
     "rating": 3.7,
     "activity_region": "강원",
     "available_type": "오프라인",
-    "unit_rate": 1339841,
+    "unit_rate": 800000,
     "contact_email": "pool0210@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3581,7 +3581,7 @@
     "rating": 3.9,
     "activity_region": "강원",
     "available_type": "오프라인",
-    "unit_rate": 1145733,
+    "unit_rate": 800000,
     "contact_email": "pool0211@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3598,7 +3598,7 @@
     "rating": 4.6,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 248538,
+    "unit_rate": 150000,
     "contact_email": "pool0212@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3615,7 +3615,7 @@
     "rating": 4.3,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 519394,
+    "unit_rate": 400000,
     "contact_email": "pool0213@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3632,7 +3632,7 @@
     "rating": 4.2,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 899863,
+    "unit_rate": 200000,
     "contact_email": "pool0214@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3649,7 +3649,7 @@
     "rating": 4.7,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 607938,
+    "unit_rate": 200000,
     "contact_email": "pool0215@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3666,7 +3666,7 @@
     "rating": 3.9,
     "activity_region": "부산",
     "available_type": "온라인",
-    "unit_rate": 629088,
+    "unit_rate": 800000,
     "contact_email": "pool0216@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3683,7 +3683,7 @@
     "rating": 4.1,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 526001,
+    "unit_rate": 480000,
     "contact_email": "pool0217@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3700,7 +3700,7 @@
     "rating": 4.3,
     "activity_region": "서울",
     "available_type": "온오프라인",
-    "unit_rate": 723059,
+    "unit_rate": 800000,
     "contact_email": "pool0218@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3717,7 +3717,7 @@
     "rating": 3.7,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 215747,
+    "unit_rate": 150000,
     "contact_email": "pool0219@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3734,7 +3734,7 @@
     "rating": 3.9,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 976155,
+    "unit_rate": 200000,
     "contact_email": "pool0220@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3751,7 +3751,7 @@
     "rating": 4.6,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 159179,
+    "unit_rate": 150000,
     "contact_email": "pool0221@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3768,7 +3768,7 @@
     "rating": 4.5,
     "activity_region": "경남",
     "available_type": "온라인",
-    "unit_rate": 999086,
+    "unit_rate": 200000,
     "contact_email": "pool0222@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3785,7 +3785,7 @@
     "rating": 4.3,
     "activity_region": "전북",
     "available_type": "온오프라인",
-    "unit_rate": 219716,
+    "unit_rate": 150000,
     "contact_email": "pool0223@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3802,7 +3802,7 @@
     "rating": 4.3,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 225946,
+    "unit_rate": 150000,
     "contact_email": "pool0224@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3819,7 +3819,7 @@
     "rating": 4.8,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 825464,
+    "unit_rate": 480000,
     "contact_email": "pool0225@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3836,7 +3836,7 @@
     "rating": 3.8,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 1478358,
+    "unit_rate": 480000,
     "contact_email": "pool0226@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3853,7 +3853,7 @@
     "rating": 4.1,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 249261,
+    "unit_rate": 800000,
     "contact_email": "pool0227@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3870,7 +3870,7 @@
     "rating": 3.8,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 664586,
+    "unit_rate": 600000,
     "contact_email": "pool0228@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3887,7 +3887,7 @@
     "rating": 4.6,
     "activity_region": "부산",
     "available_type": "오프라인",
-    "unit_rate": 456012,
+    "unit_rate": 200000,
     "contact_email": "pool0229@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3904,7 +3904,7 @@
     "rating": 3.6,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 325151,
+    "unit_rate": 800000,
     "contact_email": "pool0230@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3921,7 +3921,7 @@
     "rating": 4.9,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 1277967,
+    "unit_rate": 400000,
     "contact_email": "pool0231@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3938,7 +3938,7 @@
     "rating": 4.3,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 223534,
+    "unit_rate": 150000,
     "contact_email": "pool0232@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3955,7 +3955,7 @@
     "rating": 4.3,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 636135,
+    "unit_rate": 800000,
     "contact_email": "pool0233@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3972,7 +3972,7 @@
     "rating": 4.4,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 758112,
+    "unit_rate": 600000,
     "contact_email": "pool0234@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -3989,7 +3989,7 @@
     "rating": 4.4,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 238554,
+    "unit_rate": 150000,
     "contact_email": "pool0235@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4006,7 +4006,7 @@
     "rating": 3.9,
     "activity_region": "충남",
     "available_type": "오프라인",
-    "unit_rate": 190809,
+    "unit_rate": 150000,
     "contact_email": "pool0236@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4023,7 +4023,7 @@
     "rating": 3.6,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 535872,
+    "unit_rate": 600000,
     "contact_email": "pool0237@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4040,7 +4040,7 @@
     "rating": 4.1,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 233370,
+    "unit_rate": 150000,
     "contact_email": "pool0238@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4057,7 +4057,7 @@
     "rating": 4.2,
     "activity_region": "대전",
     "available_type": "온라인",
-    "unit_rate": 361223,
+    "unit_rate": 800000,
     "contact_email": "pool0239@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4074,7 +4074,7 @@
     "rating": 3.9,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 777407,
+    "unit_rate": 800000,
     "contact_email": "pool0240@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4091,7 +4091,7 @@
     "rating": 4.5,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 810814,
+    "unit_rate": 200000,
     "contact_email": "pool0241@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4108,7 +4108,7 @@
     "rating": 4.5,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 157989,
+    "unit_rate": 150000,
     "contact_email": "pool0242@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4125,7 +4125,7 @@
     "rating": 3.8,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 627834,
+    "unit_rate": 400000,
     "contact_email": "pool0243@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4142,7 +4142,7 @@
     "rating": 4.3,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 192551,
+    "unit_rate": 150000,
     "contact_email": "pool0244@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4159,7 +4159,7 @@
     "rating": 4.6,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 740512,
+    "unit_rate": 400000,
     "contact_email": "pool0245@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4176,7 +4176,7 @@
     "rating": 3.7,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 830037,
+    "unit_rate": 480000,
     "contact_email": "pool0246@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4193,7 +4193,7 @@
     "rating": 3.8,
     "activity_region": "전북",
     "available_type": "오프라인",
-    "unit_rate": 152858,
+    "unit_rate": 150000,
     "contact_email": "pool0247@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4210,7 +4210,7 @@
     "rating": 4.9,
     "activity_region": "대전",
     "available_type": "오프라인",
-    "unit_rate": 201201,
+    "unit_rate": 150000,
     "contact_email": "pool0248@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4227,7 +4227,7 @@
     "rating": 4.0,
     "activity_region": "대전",
     "available_type": "오프라인",
-    "unit_rate": 793024,
+    "unit_rate": 800000,
     "contact_email": "pool0249@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4244,7 +4244,7 @@
     "rating": 4.0,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 880239,
+    "unit_rate": 800000,
     "contact_email": "pool0250@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4261,7 +4261,7 @@
     "rating": 3.8,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 778469,
+    "unit_rate": 600000,
     "contact_email": "pool0251@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4278,7 +4278,7 @@
     "rating": 4.8,
     "activity_region": "경남",
     "available_type": "온라인",
-    "unit_rate": 236930,
+    "unit_rate": 150000,
     "contact_email": "pool0252@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4295,7 +4295,7 @@
     "rating": 4.8,
     "activity_region": "충남",
     "available_type": "오프라인",
-    "unit_rate": 154159,
+    "unit_rate": 150000,
     "contact_email": "pool0253@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4312,7 +4312,7 @@
     "rating": 4.3,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 390384,
+    "unit_rate": 200000,
     "contact_email": "pool0254@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4329,7 +4329,7 @@
     "rating": 4.2,
     "activity_region": "경기",
     "available_type": "온오프라인",
-    "unit_rate": 739111,
+    "unit_rate": 800000,
     "contact_email": "pool0255@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4346,7 +4346,7 @@
     "rating": 4.2,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 148681,
+    "unit_rate": 150000,
     "contact_email": "pool0256@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4363,7 +4363,7 @@
     "rating": 4.2,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 692489,
+    "unit_rate": 600000,
     "contact_email": "pool0257@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4380,7 +4380,7 @@
     "rating": 4.4,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 195842,
+    "unit_rate": 150000,
     "contact_email": "pool0258@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4397,7 +4397,7 @@
     "rating": 3.8,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 594609,
+    "unit_rate": 800000,
     "contact_email": "pool0259@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4414,7 +4414,7 @@
     "rating": 4.2,
     "activity_region": "부산",
     "available_type": "온라인",
-    "unit_rate": 235609,
+    "unit_rate": 150000,
     "contact_email": "pool0260@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4431,7 +4431,7 @@
     "rating": 3.8,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 324078,
+    "unit_rate": 480000,
     "contact_email": "pool0261@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4448,7 +4448,7 @@
     "rating": 3.9,
     "activity_region": "경기",
     "available_type": "온오프라인",
-    "unit_rate": 1161718,
+    "unit_rate": 800000,
     "contact_email": "pool0262@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4465,7 +4465,7 @@
     "rating": 3.9,
     "activity_region": "경기",
     "available_type": "온오프라인",
-    "unit_rate": 258627,
+    "unit_rate": 800000,
     "contact_email": "pool0263@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4482,7 +4482,7 @@
     "rating": 4.4,
     "activity_region": "강원",
     "available_type": "오프라인",
-    "unit_rate": 148389,
+    "unit_rate": 150000,
     "contact_email": "pool0264@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4499,7 +4499,7 @@
     "rating": 3.8,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 1371235,
+    "unit_rate": 800000,
     "contact_email": "pool0265@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4516,7 +4516,7 @@
     "rating": 3.8,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 134230,
+    "unit_rate": 150000,
     "contact_email": "pool0266@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4533,7 +4533,7 @@
     "rating": 4.7,
     "activity_region": "충남",
     "available_type": "온라인",
-    "unit_rate": 240932,
+    "unit_rate": 800000,
     "contact_email": "pool0267@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4550,7 +4550,7 @@
     "rating": 4.1,
     "activity_region": "서울",
     "available_type": "온오프라인",
-    "unit_rate": 1204914,
+    "unit_rate": 800000,
     "contact_email": "pool0268@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4567,7 +4567,7 @@
     "rating": 3.7,
     "activity_region": "강원",
     "available_type": "온라인",
-    "unit_rate": 302463,
+    "unit_rate": 600000,
     "contact_email": "pool0269@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4584,7 +4584,7 @@
     "rating": 4.6,
     "activity_region": "서울",
     "available_type": "온오프라인",
-    "unit_rate": 120716,
+    "unit_rate": 150000,
     "contact_email": "pool0270@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4601,7 +4601,7 @@
     "rating": 3.7,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 628705,
+    "unit_rate": 480000,
     "contact_email": "pool0271@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4618,7 +4618,7 @@
     "rating": 4.1,
     "activity_region": "부산",
     "available_type": "오프라인",
-    "unit_rate": 488946,
+    "unit_rate": 600000,
     "contact_email": "pool0272@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4635,7 +4635,7 @@
     "rating": 5.0,
     "activity_region": "전북",
     "available_type": "오프라인",
-    "unit_rate": 707259,
+    "unit_rate": 800000,
     "contact_email": "pool0273@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4652,7 +4652,7 @@
     "rating": 4.9,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 222643,
+    "unit_rate": 150000,
     "contact_email": "pool0274@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4669,7 +4669,7 @@
     "rating": 4.9,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 368546,
+    "unit_rate": 800000,
     "contact_email": "pool0275@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4686,7 +4686,7 @@
     "rating": 4.4,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 168606,
+    "unit_rate": 150000,
     "contact_email": "pool0276@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4703,7 +4703,7 @@
     "rating": 4.7,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 243956,
+    "unit_rate": 150000,
     "contact_email": "pool0277@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4720,7 +4720,7 @@
     "rating": 4.7,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 404206,
+    "unit_rate": 800000,
     "contact_email": "pool0278@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4737,7 +4737,7 @@
     "rating": 5.0,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 936837,
+    "unit_rate": 200000,
     "contact_email": "pool0279@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4754,7 +4754,7 @@
     "rating": 4.6,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 122014,
+    "unit_rate": 150000,
     "contact_email": "pool0280@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4771,7 +4771,7 @@
     "rating": 4.9,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 707948,
+    "unit_rate": 600000,
     "contact_email": "pool0281@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4788,7 +4788,7 @@
     "rating": 4.9,
     "activity_region": "충남",
     "available_type": "오프라인",
-    "unit_rate": 917090,
+    "unit_rate": 400000,
     "contact_email": "pool0282@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4805,7 +4805,7 @@
     "rating": 4.6,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 220921,
+    "unit_rate": 150000,
     "contact_email": "pool0283@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4822,7 +4822,7 @@
     "rating": 4.7,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 601261,
+    "unit_rate": 600000,
     "contact_email": "pool0284@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4839,7 +4839,7 @@
     "rating": 4.1,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 551244,
+    "unit_rate": 200000,
     "contact_email": "pool0285@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4856,7 +4856,7 @@
     "rating": 4.9,
     "activity_region": "경남",
     "available_type": "온라인",
-    "unit_rate": 864292,
+    "unit_rate": 480000,
     "contact_email": "pool0286@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4873,7 +4873,7 @@
     "rating": 4.8,
     "activity_region": "전북",
     "available_type": "오프라인",
-    "unit_rate": 440341,
+    "unit_rate": 600000,
     "contact_email": "pool0287@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4890,7 +4890,7 @@
     "rating": 4.8,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 313890,
+    "unit_rate": 800000,
     "contact_email": "pool0288@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4907,7 +4907,7 @@
     "rating": 4.9,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 391755,
+    "unit_rate": 600000,
     "contact_email": "pool0289@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4924,7 +4924,7 @@
     "rating": 4.3,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 1434072,
+    "unit_rate": 800000,
     "contact_email": "pool0290@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4941,7 +4941,7 @@
     "rating": 3.7,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 169732,
+    "unit_rate": 150000,
     "contact_email": "pool0291@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4958,7 +4958,7 @@
     "rating": 3.8,
     "activity_region": "광주",
     "available_type": "온라인",
-    "unit_rate": 164970,
+    "unit_rate": 150000,
     "contact_email": "pool0292@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4975,7 +4975,7 @@
     "rating": 3.7,
     "activity_region": "전북",
     "available_type": "온오프라인",
-    "unit_rate": 388627,
+    "unit_rate": 600000,
     "contact_email": "pool0293@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -4992,7 +4992,7 @@
     "rating": 4.1,
     "activity_region": "경기",
     "available_type": "온오프라인",
-    "unit_rate": 1206428,
+    "unit_rate": 480000,
     "contact_email": "pool0294@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5009,7 +5009,7 @@
     "rating": 4.0,
     "activity_region": "강원",
     "available_type": "오프라인",
-    "unit_rate": 1419842,
+    "unit_rate": 480000,
     "contact_email": "pool0295@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5026,7 +5026,7 @@
     "rating": 4.4,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 1299375,
+    "unit_rate": 480000,
     "contact_email": "pool0296@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5043,7 +5043,7 @@
     "rating": 3.7,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 220798,
+    "unit_rate": 600000,
     "contact_email": "pool0297@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5060,7 +5060,7 @@
     "rating": 4.5,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 1044717,
+    "unit_rate": 480000,
     "contact_email": "pool0298@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5077,7 +5077,7 @@
     "rating": 4.7,
     "activity_region": "대전",
     "available_type": "오프라인",
-    "unit_rate": 375715,
+    "unit_rate": 800000,
     "contact_email": "pool0299@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5094,7 +5094,7 @@
     "rating": 4.0,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 610317,
+    "unit_rate": 200000,
     "contact_email": "pool0300@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5111,7 +5111,7 @@
     "rating": 4.9,
     "activity_region": "광주",
     "available_type": "온라인",
-    "unit_rate": 865429,
+    "unit_rate": 200000,
     "contact_email": "pool0301@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5128,7 +5128,7 @@
     "rating": 3.8,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 467907,
+    "unit_rate": 800000,
     "contact_email": "pool0302@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5145,7 +5145,7 @@
     "rating": 3.9,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 474590,
+    "unit_rate": 600000,
     "contact_email": "pool0303@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5162,7 +5162,7 @@
     "rating": 3.7,
     "activity_region": "충남",
     "available_type": "온라인",
-    "unit_rate": 714687,
+    "unit_rate": 200000,
     "contact_email": "pool0304@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5179,7 +5179,7 @@
     "rating": 3.9,
     "activity_region": "강원",
     "available_type": "온라인",
-    "unit_rate": 1433687,
+    "unit_rate": 800000,
     "contact_email": "pool0305@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5196,7 +5196,7 @@
     "rating": 4.5,
     "activity_region": "충남",
     "available_type": "오프라인",
-    "unit_rate": 177013,
+    "unit_rate": 150000,
     "contact_email": "pool0306@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5213,7 +5213,7 @@
     "rating": 3.9,
     "activity_region": "대구",
     "available_type": "온라인",
-    "unit_rate": 167943,
+    "unit_rate": 150000,
     "contact_email": "pool0307@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5230,7 +5230,7 @@
     "rating": 4.2,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 1331655,
+    "unit_rate": 800000,
     "contact_email": "pool0308@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5247,7 +5247,7 @@
     "rating": 4.3,
     "activity_region": "광주",
     "available_type": "온라인",
-    "unit_rate": 173967,
+    "unit_rate": 150000,
     "contact_email": "pool0309@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5264,7 +5264,7 @@
     "rating": 4.4,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 466114,
+    "unit_rate": 480000,
     "contact_email": "pool0310@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5281,7 +5281,7 @@
     "rating": 4.8,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 174120,
+    "unit_rate": 150000,
     "contact_email": "pool0311@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5298,7 +5298,7 @@
     "rating": 4.0,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 1331790,
+    "unit_rate": 600000,
     "contact_email": "pool0312@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5315,7 +5315,7 @@
     "rating": 3.8,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 215303,
+    "unit_rate": 150000,
     "contact_email": "pool0313@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5332,7 +5332,7 @@
     "rating": 4.7,
     "activity_region": "대전",
     "available_type": "온라인",
-    "unit_rate": 686208,
+    "unit_rate": 800000,
     "contact_email": "pool0314@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5349,7 +5349,7 @@
     "rating": 3.8,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 181623,
+    "unit_rate": 150000,
     "contact_email": "pool0315@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5366,7 +5366,7 @@
     "rating": 3.8,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 216681,
+    "unit_rate": 150000,
     "contact_email": "pool0316@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5383,7 +5383,7 @@
     "rating": 4.6,
     "activity_region": "전국",
     "available_type": "온오프라인",
-    "unit_rate": 366316,
+    "unit_rate": 600000,
     "contact_email": "pool0317@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5400,7 +5400,7 @@
     "rating": 4.5,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 254617,
+    "unit_rate": 480000,
     "contact_email": "pool0318@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5417,7 +5417,7 @@
     "rating": 4.7,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 375461,
+    "unit_rate": 200000,
     "contact_email": "pool0319@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5434,7 +5434,7 @@
     "rating": 3.6,
     "activity_region": "전북",
     "available_type": "오프라인",
-    "unit_rate": 365358,
+    "unit_rate": 400000,
     "contact_email": "pool0320@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5451,7 +5451,7 @@
     "rating": 3.7,
     "activity_region": "부산",
     "available_type": "오프라인",
-    "unit_rate": 223739,
+    "unit_rate": 150000,
     "contact_email": "pool0321@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5468,7 +5468,7 @@
     "rating": 4.0,
     "activity_region": "경기",
     "available_type": "오프라인",
-    "unit_rate": 210341,
+    "unit_rate": 150000,
     "contact_email": "pool0322@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5485,7 +5485,7 @@
     "rating": 3.8,
     "activity_region": "대전",
     "available_type": "오프라인",
-    "unit_rate": 144874,
+    "unit_rate": 150000,
     "contact_email": "pool0323@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5502,7 +5502,7 @@
     "rating": 4.2,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 806937,
+    "unit_rate": 200000,
     "contact_email": "pool0324@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5519,7 +5519,7 @@
     "rating": 4.8,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 219629,
+    "unit_rate": 600000,
     "contact_email": "pool0325@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5536,7 +5536,7 @@
     "rating": 3.9,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 361618,
+    "unit_rate": 800000,
     "contact_email": "pool0326@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5553,7 +5553,7 @@
     "rating": 3.5,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 387316,
+    "unit_rate": 400000,
     "contact_email": "pool0327@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5570,7 +5570,7 @@
     "rating": 4.6,
     "activity_region": "대구",
     "available_type": "온라인",
-    "unit_rate": 1402727,
+    "unit_rate": 800000,
     "contact_email": "pool0328@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5587,7 +5587,7 @@
     "rating": 4.3,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 263648,
+    "unit_rate": 400000,
     "contact_email": "pool0329@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5604,7 +5604,7 @@
     "rating": 3.6,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 229373,
+    "unit_rate": 150000,
     "contact_email": "pool0330@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5621,7 +5621,7 @@
     "rating": 3.9,
     "activity_region": "경남",
     "available_type": "온라인",
-    "unit_rate": 1403504,
+    "unit_rate": 480000,
     "contact_email": "pool0331@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5638,7 +5638,7 @@
     "rating": 4.2,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 575351,
+    "unit_rate": 800000,
     "contact_email": "pool0332@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5655,7 +5655,7 @@
     "rating": 4.3,
     "activity_region": "전북",
     "available_type": "오프라인",
-    "unit_rate": 206184,
+    "unit_rate": 150000,
     "contact_email": "pool0333@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5672,7 +5672,7 @@
     "rating": 4.3,
     "activity_region": "부산",
     "available_type": "오프라인",
-    "unit_rate": 199745,
+    "unit_rate": 150000,
     "contact_email": "pool0334@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5689,7 +5689,7 @@
     "rating": 5.0,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 215199,
+    "unit_rate": 150000,
     "contact_email": "pool0335@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5706,7 +5706,7 @@
     "rating": 4.7,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 222755,
+    "unit_rate": 480000,
     "contact_email": "pool0336@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5723,7 +5723,7 @@
     "rating": 3.7,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 180341,
+    "unit_rate": 150000,
     "contact_email": "pool0337@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5740,7 +5740,7 @@
     "rating": 4.9,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 172402,
+    "unit_rate": 150000,
     "contact_email": "pool0338@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5757,7 +5757,7 @@
     "rating": 4.5,
     "activity_region": "서울",
     "available_type": "온오프라인",
-    "unit_rate": 349996,
+    "unit_rate": 200000,
     "contact_email": "pool0339@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5774,7 +5774,7 @@
     "rating": 4.8,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 174594,
+    "unit_rate": 150000,
     "contact_email": "pool0340@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5791,7 +5791,7 @@
     "rating": 4.3,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 306757,
+    "unit_rate": 200000,
     "contact_email": "pool0341@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5808,7 +5808,7 @@
     "rating": 4.6,
     "activity_region": "전북",
     "available_type": "온오프라인",
-    "unit_rate": 611967,
+    "unit_rate": 480000,
     "contact_email": "pool0342@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5825,7 +5825,7 @@
     "rating": 4.2,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 1004995,
+    "unit_rate": 480000,
     "contact_email": "pool0343@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5842,7 +5842,7 @@
     "rating": 4.3,
     "activity_region": "강원",
     "available_type": "오프라인",
-    "unit_rate": 341422,
+    "unit_rate": 800000,
     "contact_email": "pool0344@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5859,7 +5859,7 @@
     "rating": 3.9,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 504085,
+    "unit_rate": 200000,
     "contact_email": "pool0345@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5876,7 +5876,7 @@
     "rating": 3.8,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 633010,
+    "unit_rate": 200000,
     "contact_email": "pool0346@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5893,7 +5893,7 @@
     "rating": 3.6,
     "activity_region": "부산",
     "available_type": "온라인",
-    "unit_rate": 402901,
+    "unit_rate": 200000,
     "contact_email": "pool0347@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5910,7 +5910,7 @@
     "rating": 4.9,
     "activity_region": "대구",
     "available_type": "온라인",
-    "unit_rate": 504854,
+    "unit_rate": 200000,
     "contact_email": "pool0348@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5927,7 +5927,7 @@
     "rating": 4.3,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 419162,
+    "unit_rate": 400000,
     "contact_email": "pool0349@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5944,7 +5944,7 @@
     "rating": 4.4,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 219281,
+    "unit_rate": 800000,
     "contact_email": "pool0350@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5961,7 +5961,7 @@
     "rating": 4.2,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 868918,
+    "unit_rate": 800000,
     "contact_email": "pool0351@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5978,7 +5978,7 @@
     "rating": 4.8,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 220005,
+    "unit_rate": 600000,
     "contact_email": "pool0352@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -5995,7 +5995,7 @@
     "rating": 3.8,
     "activity_region": "충남",
     "available_type": "오프라인",
-    "unit_rate": 1414763,
+    "unit_rate": 600000,
     "contact_email": "pool0353@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6012,7 +6012,7 @@
     "rating": 4.1,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 549773,
+    "unit_rate": 800000,
     "contact_email": "pool0354@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6029,7 +6029,7 @@
     "rating": 3.6,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 489279,
+    "unit_rate": 480000,
     "contact_email": "pool0355@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6046,7 +6046,7 @@
     "rating": 4.3,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 215668,
+    "unit_rate": 150000,
     "contact_email": "pool0356@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6063,7 +6063,7 @@
     "rating": 4.9,
     "activity_region": "대전",
     "available_type": "오프라인",
-    "unit_rate": 247210,
+    "unit_rate": 150000,
     "contact_email": "pool0357@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6080,7 +6080,7 @@
     "rating": 4.5,
     "activity_region": "충남",
     "available_type": "온라인",
-    "unit_rate": 344818,
+    "unit_rate": 800000,
     "contact_email": "pool0358@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6097,7 +6097,7 @@
     "rating": 4.3,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 271108,
+    "unit_rate": 480000,
     "contact_email": "pool0359@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6114,7 +6114,7 @@
     "rating": 4.2,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 1162457,
+    "unit_rate": 600000,
     "contact_email": "pool0360@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6131,7 +6131,7 @@
     "rating": 4.4,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 859651,
+    "unit_rate": 400000,
     "contact_email": "pool0361@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6148,7 +6148,7 @@
     "rating": 4.8,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 581200,
+    "unit_rate": 800000,
     "contact_email": "pool0362@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6165,7 +6165,7 @@
     "rating": 3.5,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 452647,
+    "unit_rate": 200000,
     "contact_email": "pool0363@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6182,7 +6182,7 @@
     "rating": 4.8,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 241517,
+    "unit_rate": 150000,
     "contact_email": "pool0364@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6199,7 +6199,7 @@
     "rating": 4.0,
     "activity_region": "전북",
     "available_type": "온오프라인",
-    "unit_rate": 598851,
+    "unit_rate": 400000,
     "contact_email": "pool0365@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6216,7 +6216,7 @@
     "rating": 4.2,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 314626,
+    "unit_rate": 400000,
     "contact_email": "pool0366@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6233,7 +6233,7 @@
     "rating": 3.9,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 251690,
+    "unit_rate": 600000,
     "contact_email": "pool0367@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6250,7 +6250,7 @@
     "rating": 4.9,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 210433,
+    "unit_rate": 150000,
     "contact_email": "pool0368@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6267,7 +6267,7 @@
     "rating": 4.1,
     "activity_region": "강원",
     "available_type": "온라인",
-    "unit_rate": 341879,
+    "unit_rate": 800000,
     "contact_email": "pool0369@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6284,7 +6284,7 @@
     "rating": 4.5,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 824460,
+    "unit_rate": 800000,
     "contact_email": "pool0370@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6301,7 +6301,7 @@
     "rating": 4.6,
     "activity_region": "전국",
     "available_type": "온오프라인",
-    "unit_rate": 339450,
+    "unit_rate": 200000,
     "contact_email": "pool0371@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6318,7 +6318,7 @@
     "rating": 4.8,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 601475,
+    "unit_rate": 200000,
     "contact_email": "pool0372@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6335,7 +6335,7 @@
     "rating": 3.7,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 202110,
+    "unit_rate": 150000,
     "contact_email": "pool0373@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6352,7 +6352,7 @@
     "rating": 4.8,
     "activity_region": "부산",
     "available_type": "온라인",
-    "unit_rate": 312059,
+    "unit_rate": 800000,
     "contact_email": "pool0374@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6369,7 +6369,7 @@
     "rating": 4.8,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 206892,
+    "unit_rate": 400000,
     "contact_email": "pool0375@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6386,7 +6386,7 @@
     "rating": 4.8,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 288504,
+    "unit_rate": 200000,
     "contact_email": "pool0376@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6403,7 +6403,7 @@
     "rating": 4.5,
     "activity_region": "전북",
     "available_type": "온오프라인",
-    "unit_rate": 143363,
+    "unit_rate": 150000,
     "contact_email": "pool0377@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6420,7 +6420,7 @@
     "rating": 4.9,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 857090,
+    "unit_rate": 200000,
     "contact_email": "pool0378@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6437,7 +6437,7 @@
     "rating": 4.2,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 268079,
+    "unit_rate": 800000,
     "contact_email": "pool0379@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6454,7 +6454,7 @@
     "rating": 4.4,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 127626,
+    "unit_rate": 150000,
     "contact_email": "pool0380@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6471,7 +6471,7 @@
     "rating": 4.4,
     "activity_region": "전북",
     "available_type": "오프라인",
-    "unit_rate": 154034,
+    "unit_rate": 150000,
     "contact_email": "pool0381@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6488,7 +6488,7 @@
     "rating": 4.8,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 225903,
+    "unit_rate": 150000,
     "contact_email": "pool0382@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6505,7 +6505,7 @@
     "rating": 4.4,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 734804,
+    "unit_rate": 800000,
     "contact_email": "pool0383@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6522,7 +6522,7 @@
     "rating": 3.9,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 721920,
+    "unit_rate": 480000,
     "contact_email": "pool0384@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6539,7 +6539,7 @@
     "rating": 4.6,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 557943,
+    "unit_rate": 480000,
     "contact_email": "pool0385@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6556,7 +6556,7 @@
     "rating": 4.5,
     "activity_region": "강원",
     "available_type": "온라인",
-    "unit_rate": 224497,
+    "unit_rate": 150000,
     "contact_email": "pool0386@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6573,7 +6573,7 @@
     "rating": 4.3,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 796384,
+    "unit_rate": 200000,
     "contact_email": "pool0387@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6590,7 +6590,7 @@
     "rating": 3.9,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 269429,
+    "unit_rate": 600000,
     "contact_email": "pool0388@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6607,7 +6607,7 @@
     "rating": 3.7,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 144560,
+    "unit_rate": 150000,
     "contact_email": "pool0389@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6624,7 +6624,7 @@
     "rating": 4.7,
     "activity_region": "대구",
     "available_type": "온라인",
-    "unit_rate": 168704,
+    "unit_rate": 150000,
     "contact_email": "pool0390@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6641,7 +6641,7 @@
     "rating": 4.3,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 297102,
+    "unit_rate": 400000,
     "contact_email": "pool0391@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6658,7 +6658,7 @@
     "rating": 4.8,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 600511,
+    "unit_rate": 600000,
     "contact_email": "pool0392@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6675,7 +6675,7 @@
     "rating": 4.9,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 120538,
+    "unit_rate": 150000,
     "contact_email": "pool0393@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6692,7 +6692,7 @@
     "rating": 4.6,
     "activity_region": "경남",
     "available_type": "온라인",
-    "unit_rate": 122946,
+    "unit_rate": 150000,
     "contact_email": "pool0394@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6709,7 +6709,7 @@
     "rating": 3.7,
     "activity_region": "대구",
     "available_type": "온라인",
-    "unit_rate": 323365,
+    "unit_rate": 600000,
     "contact_email": "pool0395@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6726,7 +6726,7 @@
     "rating": 4.0,
     "activity_region": "경기",
     "available_type": "온오프라인",
-    "unit_rate": 1034670,
+    "unit_rate": 480000,
     "contact_email": "pool0396@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6743,7 +6743,7 @@
     "rating": 3.6,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 190854,
+    "unit_rate": 150000,
     "contact_email": "pool0397@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6760,7 +6760,7 @@
     "rating": 4.4,
     "activity_region": "전북",
     "available_type": "온오프라인",
-    "unit_rate": 143459,
+    "unit_rate": 150000,
     "contact_email": "pool0398@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6777,7 +6777,7 @@
     "rating": 4.5,
     "activity_region": "충남",
     "available_type": "온라인",
-    "unit_rate": 213441,
+    "unit_rate": 150000,
     "contact_email": "pool0399@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6794,7 +6794,7 @@
     "rating": 4.5,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 179714,
+    "unit_rate": 150000,
     "contact_email": "pool0400@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6811,7 +6811,7 @@
     "rating": 4.5,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 611122,
+    "unit_rate": 600000,
     "contact_email": "pool0401@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6828,7 +6828,7 @@
     "rating": 3.9,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 230856,
+    "unit_rate": 150000,
     "contact_email": "pool0402@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6845,7 +6845,7 @@
     "rating": 3.6,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 783165,
+    "unit_rate": 480000,
     "contact_email": "pool0403@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6862,7 +6862,7 @@
     "rating": 4.1,
     "activity_region": "대전",
     "available_type": "온라인",
-    "unit_rate": 366744,
+    "unit_rate": 480000,
     "contact_email": "pool0404@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6879,7 +6879,7 @@
     "rating": 3.8,
     "activity_region": "경남",
     "available_type": "온라인",
-    "unit_rate": 210981,
+    "unit_rate": 150000,
     "contact_email": "pool0405@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6896,7 +6896,7 @@
     "rating": 4.0,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 875030,
+    "unit_rate": 200000,
     "contact_email": "pool0406@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6913,7 +6913,7 @@
     "rating": 4.2,
     "activity_region": "경남",
     "available_type": "온라인",
-    "unit_rate": 1094633,
+    "unit_rate": 800000,
     "contact_email": "pool0407@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6930,7 +6930,7 @@
     "rating": 3.7,
     "activity_region": "충남",
     "available_type": "오프라인",
-    "unit_rate": 607705,
+    "unit_rate": 800000,
     "contact_email": "pool0408@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6947,7 +6947,7 @@
     "rating": 4.7,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 514295,
+    "unit_rate": 800000,
     "contact_email": "pool0409@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6964,7 +6964,7 @@
     "rating": 4.8,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 231101,
+    "unit_rate": 150000,
     "contact_email": "pool0410@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6981,7 +6981,7 @@
     "rating": 3.9,
     "activity_region": "전국",
     "available_type": "온오프라인",
-    "unit_rate": 233466,
+    "unit_rate": 150000,
     "contact_email": "pool0411@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -6998,7 +6998,7 @@
     "rating": 4.5,
     "activity_region": "강원",
     "available_type": "온라인",
-    "unit_rate": 771598,
+    "unit_rate": 600000,
     "contact_email": "pool0412@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7015,7 +7015,7 @@
     "rating": 4.5,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 904967,
+    "unit_rate": 800000,
     "contact_email": "pool0413@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7032,7 +7032,7 @@
     "rating": 3.7,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 584742,
+    "unit_rate": 800000,
     "contact_email": "pool0414@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7049,7 +7049,7 @@
     "rating": 4.3,
     "activity_region": "강원",
     "available_type": "오프라인",
-    "unit_rate": 186770,
+    "unit_rate": 150000,
     "contact_email": "pool0415@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7066,7 +7066,7 @@
     "rating": 4.3,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 448250,
+    "unit_rate": 800000,
     "contact_email": "pool0416@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7083,7 +7083,7 @@
     "rating": 4.2,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 318661,
+    "unit_rate": 800000,
     "contact_email": "pool0417@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7100,7 +7100,7 @@
     "rating": 4.3,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 1384121,
+    "unit_rate": 600000,
     "contact_email": "pool0418@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7117,7 +7117,7 @@
     "rating": 3.6,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 955359,
+    "unit_rate": 400000,
     "contact_email": "pool0419@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7134,7 +7134,7 @@
     "rating": 3.9,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 166257,
+    "unit_rate": 150000,
     "contact_email": "pool0420@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7151,7 +7151,7 @@
     "rating": 4.2,
     "activity_region": "경기",
     "available_type": "온오프라인",
-    "unit_rate": 314401,
+    "unit_rate": 200000,
     "contact_email": "pool0421@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7168,7 +7168,7 @@
     "rating": 4.8,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 1360311,
+    "unit_rate": 400000,
     "contact_email": "pool0422@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7185,7 +7185,7 @@
     "rating": 4.4,
     "activity_region": "경기",
     "available_type": "온오프라인",
-    "unit_rate": 666191,
+    "unit_rate": 400000,
     "contact_email": "pool0423@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7202,7 +7202,7 @@
     "rating": 4.3,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 389592,
+    "unit_rate": 480000,
     "contact_email": "pool0424@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7219,7 +7219,7 @@
     "rating": 4.2,
     "activity_region": "경남",
     "available_type": "온라인",
-    "unit_rate": 151188,
+    "unit_rate": 150000,
     "contact_email": "pool0425@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7236,7 +7236,7 @@
     "rating": 3.8,
     "activity_region": "광주",
     "available_type": "오프라인",
-    "unit_rate": 543257,
+    "unit_rate": 800000,
     "contact_email": "pool0426@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7253,7 +7253,7 @@
     "rating": 3.9,
     "activity_region": "충남",
     "available_type": "오프라인",
-    "unit_rate": 609018,
+    "unit_rate": 480000,
     "contact_email": "pool0427@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7270,7 +7270,7 @@
     "rating": 4.1,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 1042031,
+    "unit_rate": 480000,
     "contact_email": "pool0428@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7287,7 +7287,7 @@
     "rating": 4.7,
     "activity_region": "전국",
     "available_type": "온라인",
-    "unit_rate": 610154,
+    "unit_rate": 800000,
     "contact_email": "pool0429@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7304,7 +7304,7 @@
     "rating": 3.5,
     "activity_region": "서울",
     "available_type": "온라인",
-    "unit_rate": 578487,
+    "unit_rate": 200000,
     "contact_email": "pool0430@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7321,7 +7321,7 @@
     "rating": 3.9,
     "activity_region": "부산",
     "available_type": "온라인",
-    "unit_rate": 760149,
+    "unit_rate": 800000,
     "contact_email": "pool0431@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7338,7 +7338,7 @@
     "rating": 4.9,
     "activity_region": "인천",
     "available_type": "온오프라인",
-    "unit_rate": 555412,
+    "unit_rate": 480000,
     "contact_email": "pool0432@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7355,7 +7355,7 @@
     "rating": 3.8,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 532458,
+    "unit_rate": 800000,
     "contact_email": "pool0433@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7372,7 +7372,7 @@
     "rating": 4.7,
     "activity_region": "대구",
     "available_type": "온라인",
-    "unit_rate": 519836,
+    "unit_rate": 200000,
     "contact_email": "pool0434@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7389,7 +7389,7 @@
     "rating": 5.0,
     "activity_region": "부산",
     "available_type": "온오프라인",
-    "unit_rate": 272769,
+    "unit_rate": 480000,
     "contact_email": "pool0435@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7406,7 +7406,7 @@
     "rating": 4.5,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 428994,
+    "unit_rate": 800000,
     "contact_email": "pool0436@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7423,7 +7423,7 @@
     "rating": 4.8,
     "activity_region": "경기",
     "available_type": "온오프라인",
-    "unit_rate": 1235082,
+    "unit_rate": 800000,
     "contact_email": "pool0437@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7440,7 +7440,7 @@
     "rating": 3.5,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 660339,
+    "unit_rate": 200000,
     "contact_email": "pool0438@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7457,7 +7457,7 @@
     "rating": 4.1,
     "activity_region": "전국",
     "available_type": "오프라인",
-    "unit_rate": 436817,
+    "unit_rate": 400000,
     "contact_email": "pool0439@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7474,7 +7474,7 @@
     "rating": 5.0,
     "activity_region": "경남",
     "available_type": "온라인",
-    "unit_rate": 415751,
+    "unit_rate": 600000,
     "contact_email": "pool0440@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7491,7 +7491,7 @@
     "rating": 3.6,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 385197,
+    "unit_rate": 800000,
     "contact_email": "pool0441@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7508,7 +7508,7 @@
     "rating": 4.8,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 1320271,
+    "unit_rate": 800000,
     "contact_email": "pool0442@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7525,7 +7525,7 @@
     "rating": 3.6,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 1325995,
+    "unit_rate": 800000,
     "contact_email": "pool0443@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7542,7 +7542,7 @@
     "rating": 3.7,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 244894,
+    "unit_rate": 400000,
     "contact_email": "pool0444@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7559,7 +7559,7 @@
     "rating": 4.6,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 275532,
+    "unit_rate": 800000,
     "contact_email": "pool0445@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7576,7 +7576,7 @@
     "rating": 4.4,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 657961,
+    "unit_rate": 480000,
     "contact_email": "pool0446@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7593,7 +7593,7 @@
     "rating": 4.8,
     "activity_region": "전국",
     "available_type": "온오프라인",
-    "unit_rate": 553729,
+    "unit_rate": 480000,
     "contact_email": "pool0447@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7610,7 +7610,7 @@
     "rating": 3.6,
     "activity_region": "경기",
     "available_type": "오프라인",
-    "unit_rate": 423589,
+    "unit_rate": 480000,
     "contact_email": "pool0448@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7627,7 +7627,7 @@
     "rating": 4.2,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 1460580,
+    "unit_rate": 480000,
     "contact_email": "pool0449@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7644,7 +7644,7 @@
     "rating": 3.5,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 1321244,
+    "unit_rate": 480000,
     "contact_email": "pool0450@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7661,7 +7661,7 @@
     "rating": 4.5,
     "activity_region": "충남",
     "available_type": "오프라인",
-    "unit_rate": 466174,
+    "unit_rate": 200000,
     "contact_email": "pool0451@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7678,7 +7678,7 @@
     "rating": 4.7,
     "activity_region": "대구",
     "available_type": "오프라인",
-    "unit_rate": 292296,
+    "unit_rate": 800000,
     "contact_email": "pool0452@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7695,7 +7695,7 @@
     "rating": 4.6,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 579481,
+    "unit_rate": 800000,
     "contact_email": "pool0453@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7712,7 +7712,7 @@
     "rating": 3.7,
     "activity_region": "강원",
     "available_type": "오프라인",
-    "unit_rate": 536305,
+    "unit_rate": 400000,
     "contact_email": "pool0454@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7729,7 +7729,7 @@
     "rating": 3.9,
     "activity_region": "전북",
     "available_type": "오프라인",
-    "unit_rate": 739541,
+    "unit_rate": 600000,
     "contact_email": "pool0455@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7746,7 +7746,7 @@
     "rating": 4.3,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 360954,
+    "unit_rate": 480000,
     "contact_email": "pool0456@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7763,7 +7763,7 @@
     "rating": 3.7,
     "activity_region": "부산",
     "available_type": "온라인",
-    "unit_rate": 491238,
+    "unit_rate": 200000,
     "contact_email": "pool0457@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7780,7 +7780,7 @@
     "rating": 4.8,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 1315876,
+    "unit_rate": 400000,
     "contact_email": "pool0458@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7797,7 +7797,7 @@
     "rating": 5.0,
     "activity_region": "부산",
     "available_type": "오프라인",
-    "unit_rate": 202840,
+    "unit_rate": 150000,
     "contact_email": "pool0459@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7814,7 +7814,7 @@
     "rating": 4.1,
     "activity_region": "대전",
     "available_type": "온라인",
-    "unit_rate": 1276296,
+    "unit_rate": 480000,
     "contact_email": "pool0460@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7831,7 +7831,7 @@
     "rating": 4.8,
     "activity_region": "인천",
     "available_type": "오프라인",
-    "unit_rate": 195775,
+    "unit_rate": 150000,
     "contact_email": "pool0461@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7848,7 +7848,7 @@
     "rating": 4.6,
     "activity_region": "부산",
     "available_type": "온라인",
-    "unit_rate": 215684,
+    "unit_rate": 150000,
     "contact_email": "pool0462@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7865,7 +7865,7 @@
     "rating": 5.0,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 205324,
+    "unit_rate": 480000,
     "contact_email": "pool0463@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7882,7 +7882,7 @@
     "rating": 3.6,
     "activity_region": "강원",
     "available_type": "온라인",
-    "unit_rate": 980494,
+    "unit_rate": 200000,
     "contact_email": "pool0464@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7899,7 +7899,7 @@
     "rating": 3.9,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 1051631,
+    "unit_rate": 480000,
     "contact_email": "pool0465@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7916,7 +7916,7 @@
     "rating": 4.2,
     "activity_region": "경기",
     "available_type": "온오프라인",
-    "unit_rate": 225599,
+    "unit_rate": 800000,
     "contact_email": "pool0466@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7933,7 +7933,7 @@
     "rating": 4.8,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 274132,
+    "unit_rate": 800000,
     "contact_email": "pool0467@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7950,7 +7950,7 @@
     "rating": 4.9,
     "activity_region": "충남",
     "available_type": "온오프라인",
-    "unit_rate": 1004002,
+    "unit_rate": 480000,
     "contact_email": "pool0468@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7967,7 +7967,7 @@
     "rating": 4.0,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 242859,
+    "unit_rate": 800000,
     "contact_email": "pool0469@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -7984,7 +7984,7 @@
     "rating": 3.7,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 500224,
+    "unit_rate": 200000,
     "contact_email": "pool0470@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8001,7 +8001,7 @@
     "rating": 3.9,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 166230,
+    "unit_rate": 150000,
     "contact_email": "pool0471@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8018,7 +8018,7 @@
     "rating": 3.7,
     "activity_region": "전국",
     "available_type": "온오프라인",
-    "unit_rate": 1404533,
+    "unit_rate": 800000,
     "contact_email": "pool0472@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8035,7 +8035,7 @@
     "rating": 4.8,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 447503,
+    "unit_rate": 200000,
     "contact_email": "pool0473@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8052,7 +8052,7 @@
     "rating": 3.7,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 317466,
+    "unit_rate": 480000,
     "contact_email": "pool0474@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8069,7 +8069,7 @@
     "rating": 4.6,
     "activity_region": "서울",
     "available_type": "오프라인",
-    "unit_rate": 640538,
+    "unit_rate": 800000,
     "contact_email": "pool0475@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8086,7 +8086,7 @@
     "rating": 4.0,
     "activity_region": "경남",
     "available_type": "오프라인",
-    "unit_rate": 1163380,
+    "unit_rate": 800000,
     "contact_email": "pool0476@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8103,7 +8103,7 @@
     "rating": 3.7,
     "activity_region": "대구",
     "available_type": "온라인",
-    "unit_rate": 518853,
+    "unit_rate": 800000,
     "contact_email": "pool0477@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8120,7 +8120,7 @@
     "rating": 4.9,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 157274,
+    "unit_rate": 150000,
     "contact_email": "pool0478@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8137,7 +8137,7 @@
     "rating": 3.7,
     "activity_region": "대전",
     "available_type": "온오프라인",
-    "unit_rate": 419087,
+    "unit_rate": 200000,
     "contact_email": "pool0479@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8154,7 +8154,7 @@
     "rating": 3.7,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 964679,
+    "unit_rate": 800000,
     "contact_email": "pool0480@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8171,7 +8171,7 @@
     "rating": 4.9,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 244228,
+    "unit_rate": 150000,
     "contact_email": "pool0481@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8188,7 +8188,7 @@
     "rating": 5.0,
     "activity_region": "전북",
     "available_type": "온오프라인",
-    "unit_rate": 237437,
+    "unit_rate": 150000,
     "contact_email": "pool0482@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8205,7 +8205,7 @@
     "rating": 3.6,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 1304496,
+    "unit_rate": 600000,
     "contact_email": "pool0483@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8222,7 +8222,7 @@
     "rating": 3.6,
     "activity_region": "경남",
     "available_type": "온라인",
-    "unit_rate": 493946,
+    "unit_rate": 800000,
     "contact_email": "pool0484@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8239,7 +8239,7 @@
     "rating": 4.3,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 223643,
+    "unit_rate": 600000,
     "contact_email": "pool0485@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8256,7 +8256,7 @@
     "rating": 4.3,
     "activity_region": "서울",
     "available_type": "온오프라인",
-    "unit_rate": 882471,
+    "unit_rate": 200000,
     "contact_email": "pool0486@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8273,7 +8273,7 @@
     "rating": 3.9,
     "activity_region": "대전",
     "available_type": "오프라인",
-    "unit_rate": 590941,
+    "unit_rate": 600000,
     "contact_email": "pool0487@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8290,7 +8290,7 @@
     "rating": 4.7,
     "activity_region": "광주",
     "available_type": "온오프라인",
-    "unit_rate": 157831,
+    "unit_rate": 150000,
     "contact_email": "pool0488@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8307,7 +8307,7 @@
     "rating": 5.0,
     "activity_region": "충남",
     "available_type": "오프라인",
-    "unit_rate": 159745,
+    "unit_rate": 150000,
     "contact_email": "pool0489@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8324,7 +8324,7 @@
     "rating": 3.8,
     "activity_region": "강원",
     "available_type": "온오프라인",
-    "unit_rate": 873212,
+    "unit_rate": 400000,
     "contact_email": "pool0490@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8341,7 +8341,7 @@
     "rating": 4.7,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 714416,
+    "unit_rate": 600000,
     "contact_email": "pool0491@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8358,7 +8358,7 @@
     "rating": 4.0,
     "activity_region": "경남",
     "available_type": "온오프라인",
-    "unit_rate": 361505,
+    "unit_rate": 400000,
     "contact_email": "pool0492@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8375,7 +8375,7 @@
     "rating": 4.5,
     "activity_region": "부산",
     "available_type": "온라인",
-    "unit_rate": 715780,
+    "unit_rate": 800000,
     "contact_email": "pool0493@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8392,7 +8392,7 @@
     "rating": 4.2,
     "activity_region": "대구",
     "available_type": "온오프라인",
-    "unit_rate": 1307651,
+    "unit_rate": 800000,
     "contact_email": "pool0494@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8409,7 +8409,7 @@
     "rating": 3.9,
     "activity_region": "전북",
     "available_type": "온라인",
-    "unit_rate": 268397,
+    "unit_rate": 200000,
     "contact_email": "pool0495@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8426,7 +8426,7 @@
     "rating": 4.1,
     "activity_region": "대전",
     "available_type": "온라인",
-    "unit_rate": 871831,
+    "unit_rate": 480000,
     "contact_email": "pool0496@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8443,7 +8443,7 @@
     "rating": 4.6,
     "activity_region": "충남",
     "available_type": "오프라인",
-    "unit_rate": 498199,
+    "unit_rate": 800000,
     "contact_email": "pool0497@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8460,7 +8460,7 @@
     "rating": 4.0,
     "activity_region": "경기",
     "available_type": "온라인",
-    "unit_rate": 190047,
+    "unit_rate": 150000,
     "contact_email": "pool0498@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8477,7 +8477,7 @@
     "rating": 3.8,
     "activity_region": "충남",
     "available_type": "온라인",
-    "unit_rate": 641896,
+    "unit_rate": 800000,
     "contact_email": "pool0499@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"
@@ -8494,7 +8494,7 @@
     "rating": 4.9,
     "activity_region": "인천",
     "available_type": "온라인",
-    "unit_rate": 174702,
+    "unit_rate": 150000,
     "contact_email": "pool0500@example-mail.com",
     "is_active": 1,
     "created_at": "2026-06-10 09:00:00"

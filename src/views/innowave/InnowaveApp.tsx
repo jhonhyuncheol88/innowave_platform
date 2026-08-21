@@ -8,6 +8,7 @@ import { Step1Screen } from './screens/Step1Screen.js';
 import { Step2Screen } from './screens/Step2Screen.js';
 import { Step3Screen } from './screens/Step3Screen.js';
 import { Step4Screen } from './screens/Step4Screen.js';
+import { Step5Screen } from './screens/Step5Screen.js';
 import { ProposalScreen } from './screens/ProposalScreen.js';
 import { ProgressScreen } from './screens/ProgressScreen.js';
 import { DashboardScreen } from './screens/DashboardScreen.js';
@@ -23,6 +24,7 @@ const SCREENS: Record<ScreenId, ComponentType> = {
   step2: Step2Screen,
   step3: Step3Screen,
   step4: Step4Screen,
+  step5: Step5Screen,
   proposal: ProposalScreen,
   progress: ProgressScreen,
   dashboard: DashboardScreen,

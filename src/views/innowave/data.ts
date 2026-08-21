@@ -121,27 +121,27 @@ export const OP_MODES = ['오프라인', '온라인', '하이브리드'];
 
 export const PEOPLE_DATA: Record<string, MatchPerson[]> = {
   '강사': [
-    { name: '박서연', tags: 'AI 서비스 기획 · 창업 교육', summary: '스타트업 액셀러레이터 출신, 공공 해커톤 기조강연 32회.', fit: 94, rating: '4.9', region: '서울', c: '#0D3B8F' },
-    { name: '이준호', tags: '프로덕트 전략 · 린 스타트업', summary: '대기업 사내벤처 프로그램 총괄, 실습형 워크숍 전문.', fit: 89, rating: '4.8', region: '서울·경기', c: '#1463F3' },
-    { name: '최민아', tags: 'UX 리서치 · 디자인 씽킹', summary: '디자인 씽킹 퍼실리테이션 8년, 청년 대상 강의 다수.', fit: 85, rating: '4.7', region: '전국', c: '#26B8CE' },
-    { name: '정태윤', tags: '데이터 분석 · 그로스', summary: '공공데이터 활용 교육 파트너, 실전 데이터 커리큘럼 보유.', fit: 81, rating: '4.6', region: '대전', c: '#3A4358' },
+    { name: '박서연', tags: 'AI 서비스 기획 · 창업 교육', summary: '스타트업 액셀러레이터 출신, 공공 해커톤 기조강연 32회.', fit: 94, rating: '4.9', region: '서울', c: '#0D3B8F', rate: 800000 },
+    { name: '이준호', tags: '프로덕트 전략 · 린 스타트업', summary: '대기업 사내벤처 프로그램 총괄, 실습형 워크숍 전문.', fit: 89, rating: '4.8', region: '서울·경기', c: '#1463F3', rate: 600000 },
+    { name: '최민아', tags: 'UX 리서치 · 디자인 씽킹', summary: '디자인 씽킹 퍼실리테이션 8년, 청년 대상 강의 다수.', fit: 85, rating: '4.7', region: '전국', c: '#26B8CE', rate: 480000 },
+    { name: '정태윤', tags: '데이터 분석 · 그로스', summary: '공공데이터 활용 교육 파트너, 실전 데이터 커리큘럼 보유.', fit: 81, rating: '4.6', region: '대전', c: '#3A4358', rate: 480000 },
   ],
   '멘토': [
-    { name: '한지원', tags: '초기 투자 · 사업화 전략', summary: 'VC 심사역 6년, 시드 단계 멘토링 140팀 이상.', fit: 92, rating: '4.9', region: '서울', c: '#0D3B8F' },
-    { name: '오세훈', tags: '기술 창업 · MVP 개발', summary: 'CTO 출신 기술 멘토, 해커톤 팀별 코칭 경험 풍부.', fit: 88, rating: '4.8', region: '서울·인천', c: '#1463F3' },
-    { name: '김다혜', tags: '마케팅 · 브랜딩', summary: '스타트업 CMO 출신, 피칭 스토리라인 코칭 전문.', fit: 84, rating: '4.7', region: '전국', c: '#26B8CE' },
-    { name: '유현석', tags: '법무 · 지식재산', summary: '창업 법률 자문 변호사, 공공사업 규정 검토 경험.', fit: 78, rating: '4.5', region: '서울', c: '#3A4358' },
+    { name: '한지원', tags: '초기 투자 · 사업화 전략', summary: 'VC 심사역 6년, 시드 단계 멘토링 140팀 이상.', fit: 92, rating: '4.9', region: '서울', c: '#0D3B8F', rate: 600000 },
+    { name: '오세훈', tags: '기술 창업 · MVP 개발', summary: 'CTO 출신 기술 멘토, 해커톤 팀별 코칭 경험 풍부.', fit: 88, rating: '4.8', region: '서울·인천', c: '#1463F3', rate: 600000 },
+    { name: '김다혜', tags: '마케팅 · 브랜딩', summary: '스타트업 CMO 출신, 피칭 스토리라인 코칭 전문.', fit: 84, rating: '4.7', region: '전국', c: '#26B8CE', rate: 480000 },
+    { name: '유현석', tags: '법무 · 지식재산', summary: '창업 법률 자문 변호사, 공공사업 규정 검토 경험.', fit: 78, rating: '4.5', region: '서울', c: '#3A4358', rate: 480000 },
   ],
   '심사위원': [
-    { name: '서정민', tags: '공공혁신 · 정책 평가', summary: '정부 R&D 과제 평가위원, 공정성 기준 수립 경험.', fit: 93, rating: '4.9', region: '세종·서울', c: '#0D3B8F' },
-    { name: '임수진', tags: '투자 심사 · IR 평가', summary: '액셀러레이터 파트너, 데모데이 심사 60회 이상.', fit: 87, rating: '4.8', region: '서울', c: '#1463F3' },
-    { name: '황보람', tags: '기술 평가 · 특허', summary: '기술보증기금 출신, 기술성 평가 전문.', fit: 82, rating: '4.6', region: '부산', c: '#26B8CE' },
+    { name: '서정민', tags: '공공혁신 · 정책 평가', summary: '정부 R&D 과제 평가위원, 공정성 기준 수립 경험.', fit: 93, rating: '4.9', region: '세종·서울', c: '#0D3B8F', rate: 200000 },
+    { name: '임수진', tags: '투자 심사 · IR 평가', summary: '액셀러레이터 파트너, 데모데이 심사 60회 이상.', fit: 87, rating: '4.8', region: '서울', c: '#1463F3', rate: 200000 },
+    { name: '황보람', tags: '기술 평가 · 특허', summary: '기술보증기금 출신, 기술성 평가 전문.', fit: 82, rating: '4.6', region: '부산', c: '#26B8CE', rate: 200000 },
   ],
   '운영인력': [
-    { name: '노아윤', tags: '행사 총괄 · 무대 운영', summary: '500명 규모 컨퍼런스 현장 총괄 12회, 안전 관리 자격 보유.', fit: 95, rating: '4.9', region: '서울·경기', c: '#0D3B8F' },
-    { name: '배성우', tags: '등록·안내 데스크', summary: '대형 박람회 등록 운영 리드, 다국어 응대 가능.', fit: 90, rating: '4.8', region: '서울', c: '#1463F3' },
-    { name: '문채린', tags: '영상·중계 오퍼레이터', summary: '하이브리드 행사 실시간 중계 운영 전문.', fit: 86, rating: '4.7', region: '전국', c: '#26B8CE' },
-    { name: '권도현', tags: '케이터링 · 물류', summary: '식음·물류 동선 설계, 공공 행사 정산 서류 경험.', fit: 80, rating: '4.6', region: '경기', c: '#3A4358' },
+    { name: '노아윤', tags: '행사 총괄 · 무대 운영', summary: '500명 규모 컨퍼런스 현장 총괄 12회, 안전 관리 자격 보유.', fit: 95, rating: '4.9', region: '서울·경기', c: '#0D3B8F', rate: 150000 },
+    { name: '배성우', tags: '등록·안내 데스크', summary: '대형 박람회 등록 운영 리드, 다국어 응대 가능.', fit: 90, rating: '4.8', region: '서울', c: '#1463F3', rate: 150000 },
+    { name: '문채린', tags: '영상·중계 오퍼레이터', summary: '하이브리드 행사 실시간 중계 운영 전문.', fit: 86, rating: '4.7', region: '전국', c: '#26B8CE', rate: 150000 },
+    { name: '권도현', tags: '케이터링 · 물류', summary: '식음·물류 동선 설계, 공공 행사 정산 서류 경험.', fit: 80, rating: '4.6', region: '경기', c: '#3A4358', rate: 150000 },
   ],
 };
 
@@ -232,37 +232,107 @@ export const PROJ_STATUS_MAP: Record<string, [string, string, string]> = {
   done: ['완료', '#071A3E', '#FFFFFF'],
 };
 
-export const PROJ_DATA = [
-  { name: '2026 청년 창업 해커톤', type: '해커톤', st: 'in_progress', prog: 62, updated: '2026. 7. 3.' },
-  { name: '지역혁신 데모데이 IR 피칭', type: '데모데이', st: 'quoted', prog: 0, updated: '2026. 7. 1.' },
-  { name: '스마트시티 포럼 2026', type: '포럼·컨퍼런스', st: 'matching', prog: 0, updated: '2026. 6. 28.' },
-  { name: '글로벌 창업 부트캠프 3기', type: '부트캠프', st: 'confirmed', prog: 0, updated: '2026. 6. 24.' },
-  { name: '공공데이터 활용 경진대회', type: '경진대회', st: 'draft', prog: 0, updated: '2026. 6. 19.' },
-  { name: '2025 산학협력 네트워킹 데이', type: '네트워킹', st: 'done', prog: 100, updated: '2025. 12. 12.' },
+export const PROJ_FILTERS = ['전체', '작성 중', '진행 중', '완료'];
+
+/* ── 단계별 AI 지침 가이드 ─────────────────────────── */
+
+/** 지침 작성 공통 요령 */
+export const INSTRUCTION_TIPS = [
+  '한 문장에 하나의 요청만 담아 주세요. 여러 요청은 줄을 바꿔 나열하면 반영 정확도가 올라갑니다.',
+  '"많이", "적당히" 대신 숫자·날짜·이름을 구체적으로 적어 주세요.',
+  '바꾸지 말아야 할 항목이 있다면 "○○은 그대로 유지"라고 명시해 주세요.',
 ];
 
-export const PROJ_FILTERS = ['전체', '작성 중', '진행 중', '완료'];
+/** 대상 단계별 지침 예시 — toStep2: 프로그램, toStep3: 비품, toStep4: 인력, toStep5: 견적 */
+export const INSTRUCTION_EXAMPLES: Record<'toStep2' | 'toStep3' | 'toStep4' | 'toStep5', string[]> = {
+  toStep2: [
+    '지금 이 문서는 2025년 문서입니다. 2026년도에 맞게 작성해 주세요.',
+    '점심 시간은 12시부터 1시간으로 고정하고, 네트워킹 세션을 마지막에 넣어 주세요.',
+    '개회식은 30분 이내로 짧게, 멘토링 시간을 2시간 이상 확보해 주세요.',
+  ],
+  toStep3: [
+    '홍보물 비중을 줄이고 전문가 섭외 비중을 늘려 주세요.',
+    '케이터링은 참가 인원의 80% 기준으로 잡아 주세요.',
+    '무대·음향 장비는 최소 구성으로 잡아 주세요.',
+  ],
+  toStep4: [
+    '멘토링 경험이 많은 인력을 우선 추천해 주세요.',
+    'AI·데이터 분야 전문가 위주로 구성해 주세요.',
+    '행사 개최 지역에서 활동 가능한 인력을 우선해 주세요.',
+  ],
+  toStep5: [
+    'Premium 옵션도 예산 한도를 넘지 않게 구성해 주세요.',
+    '예비비 5%를 고려해 수량을 보수적으로 잡아 주세요.',
+    '홍보물 수량은 그대로 유지해 주세요.',
+  ],
+};
 
 export const ADMIN_MENU = ['사용자 관리', '고객문의', '레이트카드', '인력풀', '케이스 데이터', '진행현황 관리', '견적 파라미터'];
 
 export const RATE_CATEGORIES = [
-  '장소·공간', '케이터링', '인쇄·디자인', '장비·시스템', '인력',
-  '마케팅', '굿즈', '운영', '안전', '온라인',
+  '장소·공간', '케이터링·다과', '인쇄·디자인', '장비·시스템', '인력',
+  '마케팅·홍보', '기념품·굿즈', '운영·행정', '안전·보험',
 ];
 
+/** 레이트카드 — 실측 견적(건국대 IR 피칭 2026-08 · 아산 CEO아카데미 2026-07) + 시장조사 단가 + 인건비는 전문가활용기준표(강사료·자문료 등 기준) 적용. dumy_data/rate_cards.json과 동일 원천 */
 export const INITIAL_RATE_LIST: RateItem[] = [
-  { name: '대관료 (메인홀, 500석)', cat: '장소·공간', unit: '일', price: 1800000, margin: 10, active: true },
-  { name: '대관료 (세미나실)', cat: '장소·공간', unit: '일', price: 450000, margin: 10, active: true },
-  { name: '중식 도시락 (프리미엄)', cat: '케이터링', unit: '인', price: 18000, margin: 12, active: true },
-  { name: '커피 브레이크 세트', cat: '케이터링', unit: '인', price: 6500, margin: 12, active: true },
-  { name: '현수막 (대형)', cat: '인쇄·디자인', unit: '개', price: 150000, margin: 15, active: true },
-  { name: '리플렛 (4p, 풀컬러)', cat: '인쇄·디자인', unit: '부', price: 1200, margin: 15, active: true },
-  { name: '무대·음향 기본 패키지', cat: '장비·시스템', unit: '식', price: 4200000, margin: 10, active: true },
-  { name: 'LED 스크린 (P3)', cat: '장비·시스템', unit: '㎡', price: 90000, margin: 10, active: false },
-  { name: '행사 운영 요원', cat: '인력', unit: '인/일', price: 180000, margin: 8, active: true },
-  { name: '동시통역사 (영어)', cat: '인력', unit: '인/일', price: 900000, margin: 8, active: true },
-  { name: 'SNS 광고 집행', cat: '마케팅', unit: '식', price: 1500000, margin: 12, active: true },
-  { name: '기념품 키트 (기본)', cat: '굿즈', unit: '개', price: 22000, margin: 15, active: true },
+  { name: '키비주얼 제작 및 디자인', cat: '인쇄·디자인', unit: '식', price: 1000000, margin: 10, active: true },
+  { name: '홍보용 포스터 제작 및 SNS 홍보', cat: '마케팅·홍보', unit: '회', price: 500000, margin: 10, active: true },
+  { name: '리플렛 제작', cat: '인쇄·디자인', unit: '개', price: 10000, margin: 10, active: true },
+  { name: '행사용 백그라운드 화면 제작', cat: '인쇄·디자인', unit: '식', price: 500000, margin: 10, active: true },
+  { name: '현수막', cat: '인쇄·디자인', unit: '개', price: 120000, margin: 10, active: true },
+  { name: '배너', cat: '인쇄·디자인', unit: '개', price: 80000, margin: 10, active: true },
+  { name: '포디움 타이틀', cat: '인쇄·디자인', unit: '개', price: 25000, margin: 10, active: true },
+  { name: '참가기업 A0 현황판(제작 및 수정)', cat: '인쇄·디자인', unit: '개', price: 100000, margin: 10, active: true },
+  { name: '기념품', cat: '기념품·굿즈', unit: '개', price: 20000, margin: 10, active: true },
+  { name: '명찰', cat: '인쇄·디자인', unit: '개', price: 2500, margin: 10, active: true },
+  { name: '시상식 폼보드', cat: '인쇄·디자인', unit: '개', price: 30000, margin: 10, active: true },
+  { name: '포토존 설치', cat: '장비·시스템', unit: '식', price: 2000000, margin: 10, active: true },
+  { name: '스카시', cat: '장비·시스템', unit: '개', price: 1300000, margin: 10, active: true },
+  { name: '무대 임대', cat: '장비·시스템', unit: '식', price: 3000000, margin: 10, active: true },
+  { name: '프린터 임대 및 로비 구성비 및 명찰 제작 시스템', cat: '장비·시스템', unit: '식', price: 500000, margin: 10, active: true },
+  { name: '영상 스위칭 시스템', cat: '장비·시스템', unit: '식', price: 1000000, margin: 10, active: true },
+  { name: '음향 시스템', cat: '장비·시스템', unit: '식', price: 1000000, margin: 10, active: true },
+  { name: '사무용 비품 구입비', cat: '운영·행정', unit: '식', price: 300000, margin: 10, active: true },
+  { name: '촬영·기록 장비 및 촬영기사', cat: '장비·시스템', unit: '식', price: 500000, margin: 10, active: true },
+  { name: '스케치영상 제작', cat: '마케팅·홍보', unit: '회', price: 1500000, margin: 10, active: true },
+  { name: '케이터링', cat: '케이터링·다과', unit: '인', price: 20000, margin: 10, active: true },
+  { name: '아나운서', cat: '인력', unit: '명', price: 800000, margin: 10, active: true },
+  { name: 'PM', cat: '인력', unit: '인·일', price: 200000, margin: 10, active: true },
+  { name: '운영요원', cat: '인력', unit: '인·일', price: 150000, margin: 10, active: true },
+  { name: '다과 및 푸드(석식)', cat: '케이터링·다과', unit: '회', price: 1000000, margin: 6, active: true },
+  { name: '디자인 비용(메인 키비주얼)', cat: '인쇄·디자인', unit: '식', price: 1500000, margin: 6, active: true },
+  { name: '인쇄비', cat: '인쇄·디자인', unit: '식', price: 3400000, margin: 6, active: true },
+  { name: '운영인건비', cat: '인력', unit: '개월', price: 2000000, margin: 6, active: true },
+  { name: '교재 및 워크시트 제작', cat: '인쇄·디자인', unit: '식', price: 660000, margin: 6, active: true },
+  { name: '대관료(교육장)', cat: '장소·공간', unit: '일', price: 800000, margin: 6, active: true },
+  { name: '숙박', cat: '장소·공간', unit: '박', price: 150000, margin: 6, active: true },
+  { name: '다과', cat: '케이터링·다과', unit: '인·일', price: 5000, margin: 6, active: true },
+  { name: '식대', cat: '케이터링·다과', unit: '식', price: 20000, margin: 6, active: true },
+  { name: '여행자보험·안전관리비', cat: '안전·보험', unit: '인', price: 18000, margin: 6, active: true },
+  { name: 'AX Discovery 2급 과정', cat: '운영·행정', unit: '인', price: 600000, margin: 6, active: true },
+  { name: '버스 임차 및 운행 제반경비(45인승)', cat: '운영·행정', unit: '회', price: 1475977, margin: 6, active: true },
+  { name: '버스 임차 및 운행 제반경비(25인승)', cat: '운영·행정', unit: '회', price: 867318, margin: 6, active: true },
+  { name: '인건비(현장 운영)', cat: '인력', unit: '인·일', price: 100000, margin: 6, active: true },
+  { name: '강사료·자문료(1급 기관장·저명인사)', cat: '인력', unit: '시간', price: 200000, margin: 10, active: true },
+  { name: '강사료·자문료(2급 책임급)', cat: '인력', unit: '시간', price: 150000, margin: 10, active: true },
+  { name: '강사료·자문료(3급 선임급)', cat: '인력', unit: '시간', price: 120000, margin: 10, active: true },
+  { name: '강사료·자문료(4급 원급·내부강사)', cat: '인력', unit: '시간', price: 100000, margin: 10, active: true },
+  { name: '원고료', cat: '인력', unit: '매', price: 20000, margin: 10, active: true },
+  { name: '번역료(한국어↔외국어)', cat: '인력', unit: '매', price: 50000, margin: 10, active: true },
+  { name: '수행통역', cat: '인력', unit: '인·일', price: 300000, margin: 10, active: true },
+  { name: '국제회의 통역', cat: '인력', unit: '인·일', price: 300000, margin: 10, active: true },
+  { name: '위원수당(외부위원)', cat: '인력', unit: '인·일', price: 200000, margin: 10, active: true },
+  { name: '세미나실 대관(100~200인)', cat: '장소·공간', unit: '일', price: 1500000, margin: 10, active: true },
+  { name: '컨벤션홀 대관(300~500인)', cat: '장소·공간', unit: '일', price: 3500000, margin: 10, active: true },
+  { name: 'LED 스크린 임대(200인치)', cat: '장비·시스템', unit: '일', price: 1500000, margin: 10, active: true },
+  { name: '동시통역 부스·장비', cat: '장비·시스템', unit: '식', price: 700000, margin: 10, active: true },
+  { name: '온라인 생중계(유튜브 라이브)', cat: '온라인·플랫폼', unit: '회', price: 1000000, margin: 10, active: true },
+  { name: '하이브리드 웨비나 운영', cat: '온라인·플랫폼', unit: '회', price: 500000, margin: 10, active: true },
+  { name: '행사배상책임보험', cat: '안전·보험', unit: '인', price: 2000, margin: 10, active: true },
+  { name: '행사장 안전관리 요원', cat: '안전·보험', unit: '인·일', price: 150000, margin: 10, active: true },
+  { name: '커피브레이크 세트', cat: '케이터링·다과', unit: '인', price: 10000, margin: 10, active: true },
+  { name: '출장 뷔페', cat: '케이터링·다과', unit: '인', price: 30000, margin: 10, active: true },
 ];
 
 export const INITIAL_POOL_LIST: PoolPerson[] = [
@@ -305,7 +375,7 @@ export const ABOUT_FEATURES = [
   },
   {
     title: '표준 레이트카드 견적',
-    desc: '120개 표준 단가를 기준으로 Basic·Standard·Premium 3가지 예산 옵션을 실시간 산출하고, 예산 한도에 맞춰 구성을 자동 조정합니다.',
+    desc: '실제 수행 견적과 시장조사 단가를 기준으로 Basic·Standard·Premium 3가지 예산 옵션을 실시간 산출하고, 예산 한도에 맞춰 구성을 자동 조정합니다.',
     icon: 'calc',
   },
   {

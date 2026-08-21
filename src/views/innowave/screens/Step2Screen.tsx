@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { CARD_SHADOW, GROTESK, INPUT_STYLE, LABEL_STYLE, Loading, Notice, Stepper } from '../components.js';
-import { programDraftFor } from '../data.js';
-import { errMessage, savePrograms, saveWorkflowStep, useEvent, usePrograms } from '../hooks.js';
+import { CARD_SHADOW, GROTESK, INPUT_STYLE, InstructionBox, LABEL_STYLE, Loading, Notice, Stepper } from '../components.js';
+import { INSTRUCTION_EXAMPLES, INSTRUCTION_TIPS, programDraftFor } from '../data.js';
+import {
+  applyStepInstruction, errMessage, loadStepInstruction, markInstructionApplied, savePrograms, saveStepInstruction,
+  saveWorkflowStep, useEvent, usePrograms, type ProgramInstructionResult,
+} from '../hooks.js';
 import { useAuth } from '../../../hooks/useAuth.js';
 import { useIw } from '../state.js';
 
@@ -20,6 +23,13 @@ export function Step2Screen() {
   const [isDraft, setIsDraft] = useState(false);
   const chipTimer = useRef<number | null>(null);
   const totalMin = s.programs.reduce((a, p) => a + p.dur, 0);
+
+  // ── 단계별 AI 지침 ──
+  const [instr3, setInstr3] = useState('');          // 3단계(인력 매칭)용 지침 입력
+  const instrHydratedRef = useRef<string | null>(null);
+  const [aiApplying, setAiApplying] = useState(false); // 1단계 지침을 반영한 초안 생성 중
+  const [aiNote, setAiNote] = useState<string | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
 
   // ── 기존 프로젝트 수정: 저장된 프로그램(events/{id}/programs)으로 로컬 상태 복원 ──
   const { programs: savedPrograms, loading: savedLoading } = usePrograms(user ? s.currentEventId : null);
@@ -43,12 +53,47 @@ export function Step2Screen() {
       setDirty(false);
     } else if (event) {
       // 저장본이 없는 프로젝트 — 행사 유형에 맞는 AI 초안으로 시작 (저장 전까지 프로젝트에 기록되지 않음)
-      set({ programs: programDraftFor(event.basicInfo.eventType), programsEventId: s.currentEventId });
+      const draft = programDraftFor(event.basicInfo.eventType);
+      set({ programs: draft, programsEventId: s.currentEventId });
       setIsDraft(true);
       setDirty(false);
+      // 1단계에서 입력한 지침 문서(events/{id}/instructions/toStep2)가 있으면 AI가 초안을 지침에 맞게 조정
+      if (user && s.currentEventId) {
+        const eventId = s.currentEventId;
+        void loadStepInstruction(eventId, 'toStep2')
+          .then((instruction) => {
+            if (!instruction) return;
+            setAiApplying(true);
+            setAiError(null);
+            applyStepInstruction<ProgramInstructionResult>(
+              'programs', instruction, event.basicInfo,
+              draft.map((p) => ({ time: p.time, name: p.name, dur: p.dur })),
+            )
+              .then((r) => {
+                if (!r.programs?.length) return;
+                set({
+                  programs: r.programs.map((p) => ({
+                    time: p.time, name: p.name, dur: Math.max(5, p.dur || 30), ai: true,
+                  })),
+                });
+                setAiNote(r.note || null);
+                void markInstructionApplied(eventId, 'toStep2', r.note || '').catch(() => {});
+              })
+              .catch((e) => setAiError(errMessage(e)))
+              .finally(() => setAiApplying(false));
+          })
+          .catch(() => {});
+      }
     }
     // event가 아직 로딩 중이면 다음 렌더에서 이어서 처리
-  }, [needsHydration, savedLoading, savedPrograms, event, s.currentEventId, set]);
+  }, [needsHydration, savedLoading, savedPrograms, event, s.currentEventId, set, user]);
+
+  // 기존 이벤트의 3단계용 지침 문서 프리필
+  useEffect(() => {
+    if (!event?.id || instrHydratedRef.current === event.id) return;
+    instrHydratedRef.current = event.id;
+    void loadStepInstruction(event.id, 'toStep3').then(setInstr3).catch(() => {});
+  }, [event]);
 
   const markDirty = () => { setDirty(true); setSavedChip(false); };
 
@@ -71,6 +116,7 @@ export function Step2Screen() {
     try {
       await savePrograms(s.currentEventId!, s.programs);
       await saveWorkflowStep(s.currentEventId!, 'composing', 2);
+      await saveStepInstruction(s.currentEventId!, 'toStep3', instr3);
       setDirty(false);
       setIsDraft(false);
       setSavedChip(true);
@@ -94,7 +140,8 @@ export function Step2Screen() {
     try {
       await savePrograms(s.currentEventId, s.programs);
       // ① 상태 회귀 방지 — 확정/진행 중 프로젝트는 상태를 되돌리지 않고 데이터만 저장
-      await saveWorkflowStep(s.currentEventId, 'matching', 3);
+      await saveWorkflowStep(s.currentEventId, 'composing', 3);
+      await saveStepInstruction(s.currentEventId, 'toStep3', instr3);
       setDirty(false);
       setIsDraft(false);
       go('step3');
@@ -142,6 +189,14 @@ export function Step2Screen() {
             아직 저장된 프로그램 구성이 없어 &lsquo;{eventType || '해커톤·아이디어톤'}&rsquo; 유형의 AI 초안을 보여드립니다. 저장을 눌러야 프로젝트에 기록됩니다.
           </Notice>
         )}
+        {aiApplying && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#E5F0FF', borderRadius: '14px', padding: '13px 18px', marginBottom: '14px' }}>
+            <span style={{ width: '18px', height: '18px', borderRadius: '999px', border: '3px solid #FFFFFF', borderTopColor: '#1463F3', animation: 'iwSpin .8s linear infinite', display: 'inline-block', flexShrink: 0 }} />
+            <span style={{ fontSize: '13.5px', fontWeight: 600, color: '#0D3B8F' }}>AI가 1단계 지침을 반영해 프로그램 초안을 구성하고 있어요…</span>
+          </div>
+        )}
+        {aiNote && !aiApplying && <Notice tone="success">AI 지침 반영 — {aiNote}</Notice>}
+        {aiError && !aiApplying && <Notice tone="error">지침 반영에 실패해 기본 초안을 표시합니다: {aiError}</Notice>}
 
         {needsHydration && (savedLoading || (savedPrograms.length === 0 && !event)) ? (
           <Loading label="저장된 프로그램 구성을 불러오는 중…" />
@@ -185,6 +240,18 @@ export function Step2Screen() {
           </button>
         </div>
         )}
+
+        <div style={{ marginTop: '20px' }}>
+          <InstructionBox
+            title="다음 단계 AI 지침"
+            description="3단계 비품 선택에서 AI가 추천 구성을 만들 때 이 지침을 참고합니다."
+            value={instr3}
+            onChange={setInstr3}
+            examples={INSTRUCTION_EXAMPLES.toStep3}
+            tips={INSTRUCTION_TIPS}
+            disabled={!user}
+          />
+        </div>
 
         {saveError && <div style={{ marginTop: '18px' }}><Notice tone="error">{saveError}</Notice></div>}
 

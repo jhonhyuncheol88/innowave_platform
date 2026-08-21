@@ -221,7 +221,7 @@ export function LandingScreen() {
         </div>
         <div style={{ textAlign: 'center', marginTop: '34px' }}>
           <button onClick={() => go('step1')} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '14px 34px', fontSize: '15.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 8px 24px rgba(20,99,243,0.35)' }}>지금 무료로 시작하기</button>
-          <p style={{ margin: '10px 0 0', fontSize: '12.5px', color: '#9AA3B8' }}>로그인 없이 3단계까지 체험할 수 있어요</p>
+          <p style={{ margin: '10px 0 0', fontSize: '12.5px', color: '#9AA3B8' }}>로그인 없이 4단계까지 체험할 수 있어요</p>
         </div>
       </section>
 

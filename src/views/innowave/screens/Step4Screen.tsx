@@ -1,129 +1,157 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { CARD_SHADOW, GROTESK, Loading, Notice, Stepper } from '../components.js';
-import { buildOptionQuote, buildQuoteItems, errMessage, invalidateCache, saveWorkflowStep, useEvent, useLatestQuote, useQuoteParams, useRateCards } from '../hooks.js';
-import { fmt, mkQuote, useIw } from '../state.js';
-import type { PlanId } from '../types.js';
+import { CARD_SHADOW, GROTESK, InstructionBox, Loading, Notice, Stepper } from '../components.js';
+import { INSTRUCTION_EXAMPLES, INSTRUCTION_TIPS, PEOPLE_DATA } from '../data.js';
+import {
+  applyStepInstruction, errMessage, loadStepInstruction, markInstructionApplied, saveMatches, saveStepInstruction,
+  saveWorkflowStep, startDocumentPregeneration, useEvent, useMatches, usePersonnel,
+  type MatchSelection, type MatchingInstructionResult,
+} from '../hooks.js';
+import { fmt, selectionSummary, useIw } from '../state.js';
 import { useAuth } from '../../../hooks/useAuth.js';
 import { Event } from '../../../models/Event.js';
-import type { QuoteOptionValue } from '../../../models/Quote.js';
-import { eventRepository } from '../../../repositories/EventRepository.js';
+import { Personnel } from '../../../models/Personnel.js';
 
-const TH_STYLE = {
-  padding: '10px 8px', fontWeight: 700, color: '#5A6478',
-  borderBottom: '1px solid rgba(112,115,124,0.22)', fontSize: '12.5px',
-} as const;
+const ROLES = ['강사', '멘토', '심사위원', '운영인력'];
+const AVATAR_COLORS = ['#0D3B8F', '#1463F3', '#26B8CE', '#3A4358'];
 
-const BUDGET_MIN = 1000;
-const BUDGET_MAX = 20000;
+/** 선택 시점의 매칭 정보 스냅샷 — 화면 재마운트에도 유지되도록 모듈 수준에 보관 */
+const selectionInfo = new Map<string, MatchSelection>();
 
 function Step4Body() {
   const { s, set, go } = useIw();
-  const { user, role, approval, signInWithGoogle } = useAuth();
-  const canOperate = role === 'admin' || approval === 'approved';
-  const { cards, loading: cardsLoading, error: cardsError } = useRateCards(!!user);
-  const { event } = useEvent(s.currentEventId);
-  const { params } = useQuoteParams();
-  const [shareError, setShareError] = useState<string | null>(null);
-  const [sharing, setSharing] = useState(false);
-  const [signingIn, setSigningIn] = useState(false);
+  const { user } = useAuth();
+  const { event: loadedEvent } = useEvent(s.currentEventId);
+  const { people, loading, error } = usePersonnel(s.roleTab, 60, !!user);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  // 이벤트(또는 게스트 입력) 예산 한도로 슬라이더 1회 초기화
-  const budgetInitFor = useRef<string | null>(null);
+  // ── 기존 프로젝트 수정: 저장된 인력 선택(events/{id}/matches) 복원 ──
+  const { matches: savedMatches, loading: matchesLoading } = useMatches(user ? s.currentEventId : null);
   useEffect(() => {
-    const src = event?.id ?? (s.guestInfo ? 'guest' : null);
-    const limit = event?.basicInfo.budgetLimit ?? s.guestInfo?.budgetLimit ?? 0;
-    if (!src || budgetInitFor.current === src) return;
-    budgetInitFor.current = src;
-    if (limit > 0) {
-      const man = Math.round(limit / 10000 / 500) * 500;
-      set({ budget: Math.min(BUDGET_MAX, Math.max(BUDGET_MIN, man)) });
-    }
-  }, [event, s.guestInfo, set]);
-
-  // ── 기존 프로젝트 수정: 저장된 최신 견적의 옵션(Basic/Standard/Premium) 복원 ──
-  const { quote: savedQuote, loading: savedQuoteLoading } = useLatestQuote(user ? s.currentEventId : null);
-  useEffect(() => {
-    if (!user || !s.currentEventId || s.planEventId === s.currentEventId || savedQuoteLoading) return;
-    set({
-      ...(savedQuote ? { plan: savedQuote.optionType as PlanId } : {}),
-      planEventId: s.currentEventId,
+    if (!user || !s.currentEventId || s.matchesEventId === s.currentEventId || matchesLoading) return;
+    const selected: Record<string, boolean> = {};
+    savedMatches.forEach((m) => {
+      const key = `${m.role}:${m.personnelId}`;
+      selected[key] = true;
+      selectionInfo.set(key, m);
     });
-  }, [user, s.currentEventId, s.planEventId, savedQuoteLoading, savedQuote, set]);
+    set({ selected, matchesEventId: s.currentEventId });
+  }, [user, s.currentEventId, s.matchesEventId, matchesLoading, savedMatches, set]);
 
-  const signIn = () => {
-    setSigningIn(true);
-    setShareError(null);
-    signInWithGoogle()
-      .catch((e) => setShareError((e as Error).message))
-      .finally(() => setSigningIn(false));
-  };
-
-  const items = useMemo(() => buildQuoteItems(cards, event), [cards, event]);
-  const cardCategory = useMemo(() => {
-    const m = new Map<string, string>();
-    cards.forEach((c) => { if (c.id) m.set(c.id, c.category); });
-    return m;
-  }, [cards]);
-
-  const planDefs: { id: PlanId; name: string; desc: string; mult: number }[] = [
-    { id: 'basic', name: 'Basic', desc: '핵심 프로그램 중심의 실속 구성', mult: params.multBasic },
-    { id: 'standard', name: 'Standard', desc: '권장 구성 — 예산 한도 기준 최적화', mult: 1.0 },
-    { id: 'premium', name: 'Premium', desc: '브랜딩·중계까지 포함한 확장 구성', mult: params.multPremium },
-  ];
-  const budgetWon = s.budget * 10000;
-  const quotes = useMemo(
-    () => Object.fromEntries(planDefs.map((d) => [d.id, buildOptionQuote(items, d.id as QuoteOptionValue, d.mult, budgetWon)])),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [items, budgetWon, params.multBasic, params.multPremium],
+  // 매칭 점수 산정 대상 — 이벤트가 없으면 게스트 입력값 → 기본 조건 순으로 채점
+  const event = useMemo(
+    () => loadedEvent
+      ?? new Event({ ownerUid: '', basicInfo: s.guestInfo ?? { region: '서울', operationType: '오프라인' } }),
+    [loadedEvent, s.guestInfo],
   );
-  const selectedQuote = quotes[s.plan];
 
-  // 게스트: 실제 레이트카드 없이 예산 기반 데모 수치를 만들어 블러 처리로만 노출
-  const figuresFor = (id: PlanId, mult: number) => {
-    if (user) {
-      const q = quotes[id];
-      return { supply: q.subtotal, margin: q.marginTotal, vat: q.vat, total: q.total };
+  const ranked = useMemo(() => {
+    // 비로그인 게스트: rules상 인력풀 조회가 불가하므로 데모 인력으로 추천 흐름 제공
+    if (!user) {
+      return (PEOPLE_DATA[s.roleTab] ?? []).map((d, i) => ({
+        p: new Personnel({
+          id: `demo-${s.roleTab}-${i}`,
+          name: d.name,
+          role: s.roleTab,
+          expertiseField: d.tags,
+          careerSummary: d.summary,
+          rating: Number(d.rating),
+          activityRegion: d.region,
+          unitRate: d.rate,
+        }),
+        fit: d.fit,
+      }));
     }
-    return mkQuote(s.budget, mult, s.qpMargin, s.qpVat);
-  };
-  const amountStyle = user ? {} : { filter: 'blur(9px)', userSelect: 'none' as const };
+    return people
+      .map((p) => ({ p, fit: Math.round(p.matchScoreFor(event)) }))
+      .sort((a, b) => b.fit - a.fit)
+      .slice(0, 8);
+  }, [user, s.roleTab, people, event]);
 
-  /** 견적 확정 → (프로젝트 없으면 생성) → 견적 저장 → 발주처 공유 문서로 이동 */
-  const share = async () => {
-    setShareError(null);
-    if (!user) { go('proposal'); return; }
-    if (!canOperate) {
-      setShareError('관리자 승인 후 프로젝트를 만들 수 있습니다. 승인 전에는 견적 확인만 가능해요.');
-      return;
-    }
-    setSharing(true);
+  const selSummary = selectionSummary(s.selected);
+  /** 선택 인력의 계약 단가 합계 (1일 기준) — 선택 시점 스냅샷 기준 */
+  const selectedRateTotal = Object.keys(s.selected)
+    .reduce((a, k) => a + (selectionInfo.get(k)?.unitRateSnapshot || 0), 0);
+
+  // ── 단계별 AI 지침 ──
+  const [instr5, setInstr5] = useState('');            // 5단계(견적)용 지침 입력
+  const instrHydratedRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!user || !loadedEvent?.id || instrHydratedRef.current === loadedEvent.id) return;
+    instrHydratedRef.current = loadedEvent.id;
+    void loadStepInstruction(loadedEvent.id, 'toStep5').then(setInstr5).catch(() => {});
+  }, [user, loadedEvent]);
+
+  // 3단계에서 입력한 지침 문서(events/{id}/instructions/toStep4)를 반영해 현재 역할 탭의 추천 인력 산출
+  const [matchInstruction, setMatchInstruction] = useState('');
+  const matchInstrLoadedRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!user || !loadedEvent?.id || matchInstrLoadedRef.current === loadedEvent.id) return;
+    matchInstrLoadedRef.current = loadedEvent.id;
+    void loadStepInstruction(loadedEvent.id, 'toStep4').then(setMatchInstruction).catch(() => {});
+  }, [user, loadedEvent]);
+  const [recs, setRecs] = useState<Record<string, MatchingInstructionResult>>({});
+  const [recLoading, setRecLoading] = useState(false);
+  const [recError, setRecError] = useState<string | null>(null);
+  const recRequestedRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!user || !matchInstruction || loading || ranked.length === 0) return;
+    const key = `${loadedEvent?.id ?? ''}:${s.roleTab}`;
+    if (recRequestedRef.current.has(key)) return;
+    recRequestedRef.current.add(key);
+    setRecLoading(true);
+    setRecError(null);
+    applyStepInstruction<MatchingInstructionResult>(
+      'matching', matchInstruction, event.basicInfo,
+      ranked.map(({ p, fit }) => ({
+        id: p.id ?? '', name: p.name, role: s.roleTab, field: p.expertiseField,
+        career: p.careerSummary, region: p.activityRegion, rating: p.rating, fit,
+      })),
+    )
+      .then((r) => {
+        setRecs((m) => ({ ...m, [s.roleTab]: r }));
+        if (loadedEvent?.id) void markInstructionApplied(loadedEvent.id, 'toStep4', r.note || '').catch(() => {});
+      })
+      .catch((e) => setRecError(errMessage(e)))
+      .finally(() => setRecLoading(false));
+  }, [user, matchInstruction, loading, ranked, s.roleTab, loadedEvent?.id, event]);
+
+  const roleRec = recs[s.roleTab];
+
+  const goNext = async () => {
+    setSaveError(null);
+    // 프로젝트가 없거나 로그아웃 상태면 저장 없이 게스트로 진행
+    if (!s.currentEventId || !user) { go('step5'); return; }
+    setBusy(true);
     try {
-      let eventId = s.currentEventId;
-      // 1~3단계를 게스트/미저장 상태로 지나온 경우 — 입력값으로 프로젝트를 먼저 생성
-      if (!eventId) {
-        if (!s.guestInfo?.name) {
-          setShareError('행사 정보가 없습니다. 1단계에서 행사명과 유형을 입력해 주세요.');
-          setSharing(false);
-          return;
-        }
-        const created = await eventRepository.create(new Event({
-          ownerUid: user.uid,
-          basicInfo: s.guestInfo,
-          status: 'quoted',
-          currentStep: 4,
-        }));
-        eventId = created.id;
-        set({ currentEventId: eventId });
+      const selections: MatchSelection[] = Object.keys(s.selected).map((key) => {
+        const stashed = selectionInfo.get(key);
+        if (stashed) return stashed;
+        const [role, ...rest] = key.split(':');
+        return { personnelId: rest.join(':'), role, matchScore: 0, unitRateSnapshot: 0 };
+      });
+      await saveMatches(s.currentEventId, selections);
+      // 상태·currentStep은 앞으로만 — 진행 중 프로젝트 수정 시 회귀 방지
+      await saveWorkflowStep(s.currentEventId, 'matching', 5);
+      await saveStepInstruction(s.currentEventId, 'toStep5', instr5);
+      // 5단계 산출 문서(제안서·과업지시서) 사전 생성 — 이동 후 백그라운드에서 이어짐
+      if (loadedEvent) {
+        const roleCounts = selections.reduce<Record<string, number>>((a, m) => ({ ...a, [m.role]: (a[m.role] || 0) + 1 }), {});
+        startDocumentPregeneration(s.currentEventId, {
+          eventInfo: loadedEvent.basicInfo,
+          programs: s.programs.map((p) => ({ time: p.time, name: p.name, dur: p.dur })),
+          supplies: s.supplies.map((it) => ({ name: it.name, cat: it.cat, qty: it.qty, unit: it.unit })),
+          personnel: Object.entries(roleCounts).map(([role, count]) => ({ role, count })),
+          quote: { total: loadedEvent.basicInfo.budgetLimit || null, note: '예산 한도 기준 (상세 예산안 별첨)' },
+          instruction: instr5 || null,
+        });
       }
-      await eventRepository.quoteRepo(eventId!).create(selectedQuote);
-      // 상태·currentStep은 앞으로만 — confirmed/in_progress 프로젝트의 재견적 시 회귀 방지
-      await saveWorkflowStep(eventId!, 'quoted', 4);
-      invalidateCache(`quote:${eventId}`);
-      go('proposal');
+      go('step5');
     } catch (e) {
-      setShareError(errMessage(e));
+      setSaveError(errMessage(e));
     } finally {
-      setSharing(false);
+      setBusy(false);
     }
   };
 
@@ -131,129 +159,131 @@ function Step4Body() {
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px clamp(16px,5vw,32px) 0' }}>
       <Stepper current={4} />
 
-      <h1 style={{ margin: '0 0 6px', fontSize: '26px', fontWeight: 800, color: '#071A3E', letterSpacing: '-0.01em' }}>견적 옵션을 비교해 보세요</h1>
-      <p style={{ margin: '0 0 26px', fontSize: '15px', color: '#5A6478' }}>
-        표준 레이트카드 {cards.length > 0 ? `${cards.length}개` : ''} 항목을 기준으로 산출한 3가지 예산 옵션입니다.
-        {event ? ` — ${event.basicInfo.name}` : ''}
-      </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '16px', flexWrap: 'wrap', marginBottom: '20px' }}>
+        <div>
+          <h1 style={{ margin: '0 0 6px', fontSize: '26px', fontWeight: 800, color: '#071A3E', letterSpacing: '-0.01em' }}>전문가·운영 인력을 선택하세요</h1>
+          <p style={{ margin: 0, fontSize: '15px', color: '#5A6478' }}>
+            {loadedEvent ? `‘${loadedEvent.basicInfo.name}’에 맞춰 ` : '행사 목적과 프로그램에 맞춰 '}적합도가 높은 순으로 추천해 드립니다.
+          </p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#5A6478' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 6h18M6 12h12M10 18h4" /></svg>
+          적합도 높은 순
+        </div>
+      </div>
 
-      {cardsError && <Notice tone="error">{cardsError}</Notice>}
-      {user && cardsLoading ? (
-        <Loading label="레이트카드를 불러오는 중…" />
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
+        {ROLES.map((r) => {
+          const active = s.roleTab === r;
+          return (
+            <button key={r} onClick={() => set({ roleTab: r })} style={{ border: `1px solid ${active ? '#1463F3' : 'rgba(112,115,124,0.28)'}`, cursor: 'pointer', borderRadius: '999px', padding: '10px 22px', fontSize: '14px', fontWeight: 700, fontFamily: 'inherit', transition: 'all .16s', background: active ? '#1463F3' : '#FFFFFF', color: active ? '#FFFFFF' : '#3A4358' }}>{r}</button>
+          );
+        })}
+      </div>
+
+      {!user && (
+        <Notice tone="info">지금은 데모 추천입니다. 로그인하면 검증된 인력풀 500명을 행사 조건에 맞춰 추천해 드려요.</Notice>
+      )}
+      {error && <Notice tone="error">{error}</Notice>}
+      {recLoading && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#E5F0FF', borderRadius: '14px', padding: '13px 18px', marginBottom: '14px' }}>
+          <span style={{ width: '18px', height: '18px', borderRadius: '999px', border: '3px solid #FFFFFF', borderTopColor: '#1463F3', animation: 'iwSpin .8s linear infinite', display: 'inline-block', flexShrink: 0 }} />
+          <span style={{ fontSize: '13.5px', fontWeight: 600, color: '#0D3B8F' }}>AI가 3단계 지침을 반영해 추천 인력을 고르고 있어요…</span>
+        </div>
+      )}
+      {roleRec && !recLoading && <Notice tone="success">AI 지침 반영 추천 — {roleRec.note}</Notice>}
+      {recError && !recLoading && <Notice tone="error">지침 반영 추천에 실패했습니다 (적합도순 기본 추천 표시): {recError}</Notice>}
+      {user && loading ? (
+        <Loading label="인력풀을 불러오는 중…" />
       ) : (
-        <>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,270px),1fr))', gap: '18px', alignItems: 'stretch' }}>
-            {planDefs.map((d) => {
-              const f = figuresFor(d.id, d.mult);
-              const sel = s.plan === d.id;
-              const rec = d.id === 'standard';
-              return (
-                <div key={d.id} style={{ position: 'relative', background: '#FFFFFF', borderRadius: '20px', padding: '28px 26px', border: rec ? '2px solid #1463F3' : '2px solid transparent', boxShadow: CARD_SHADOW, display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  {rec && (
-                    <span style={{ position: 'absolute', top: '-11px', left: '26px', background: '#1463F3', color: '#FFFFFF', borderRadius: '999px', padding: '4px 14px', fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.02em' }}>권장</span>
-                  )}
-                  <div>
-                    <div style={{ fontFamily: GROTESK, fontWeight: 700, fontSize: '17px', color: '#071A3E' }}>{d.name}</div>
-                    <div style={{ fontSize: '13.5px', color: '#5A6478', marginTop: '3px' }}>{d.desc}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontFamily: GROTESK, fontWeight: 700, fontSize: '34px', letterSpacing: '-0.02em', color: rec ? '#1463F3' : '#071A3E' }}>
-                      ₩<span style={amountStyle}>{fmt(f.total)}</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(min(100%,260px),1fr))', gap: '18px' }}>
+          {ranked.map(({ p, fit }, i) => {
+            const key = `${s.roleTab}:${p.id}`;
+            const sel = !!s.selected[key];
+            const toggle = () => {
+              const next = { ...s.selected };
+              if (next[key]) {
+                delete next[key];
+                selectionInfo.delete(key);
+              } else {
+                next[key] = true;
+                selectionInfo.set(key, {
+                  personnelId: p.id ?? '',
+                  role: s.roleTab,
+                  matchScore: fit,
+                  unitRateSnapshot: p.unitRate,
+                });
+              }
+              set({ selected: next });
+            };
+            const aiPick = !!roleRec?.recommendedIds?.includes(p.id ?? '');
+            return (
+              <div key={p.id ?? p.name} style={{ background: '#FFFFFF', borderRadius: '20px', padding: '22px', border: aiPick ? '2px solid rgba(20,99,243,0.55)' : i === 0 ? '2px solid rgba(79,216,235,0.6)' : '2px solid transparent', boxShadow: CARD_SHADOW, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '46px', height: '46px', borderRadius: '999px', background: AVATAR_COLORS[i % AVATAR_COLORS.length], color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '16px', flexShrink: 0 }}>{p.name[0]}</div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: '16px', fontWeight: 700, color: '#071A3E' }}>{p.name}</span>
+                      <span style={{ background: '#E5F0FF', color: '#1463F3', borderRadius: '999px', padding: '3px 10px', fontSize: '11.5px', fontWeight: 700, whiteSpace: 'nowrap' }}>적합도 <span style={{ fontFamily: GROTESK }}>{fit}</span>점</span>
+                      {aiPick && <span style={{ background: '#1463F3', color: '#FFFFFF', borderRadius: '999px', padding: '3px 10px', fontSize: '11.5px', fontWeight: 700, whiteSpace: 'nowrap' }}>지침 추천</span>}
                     </div>
-                    <div style={{ fontSize: '12.5px', color: '#9AA3B8', marginTop: '2px' }}>{user ? '부가세 포함' : '로그인 후 확인 가능'}</div>
+                    <div style={{ fontSize: '12.5px', color: '#5A6478', marginTop: '2px' }}>{p.expertiseField}</div>
                   </div>
-                  <div style={{ borderTop: '1px solid rgba(112,115,124,0.22)', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '7px', fontSize: '13.5px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#5A6478' }}>공급가</span><span style={{ fontFamily: GROTESK, fontWeight: 600, color: '#3A4358', ...amountStyle }}>₩{fmt(f.supply)}</span></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#5A6478' }}>마진</span><span style={{ fontFamily: GROTESK, fontWeight: 600, color: '#3A4358', ...amountStyle }}>₩{fmt(f.margin)}</span></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#5A6478' }}>부가세 (10%)</span><span style={{ fontFamily: GROTESK, fontWeight: 600, color: '#3A4358', ...amountStyle }}>₩{fmt(f.vat)}</span></div>
+                </div>
+                <p style={{ margin: 0, fontSize: '13.5px', lineHeight: 1.55, color: '#3A4358' }}>{p.careerSummary || p.affiliation || '경력 정보 준비 중'}</p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', fontSize: '13px', color: '#5A6478' }}>
+                  <span style={{ color: '#F5A623', fontWeight: 700 }}>★ <span style={{ fontFamily: GROTESK }}>{p.rating.toFixed(1)}</span></span>
+                  <span>{p.activityRegion}</span>
+                </div>
+                {p.unitRate > 0 && (
+                  <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '8px', background: '#F6F9FF', borderRadius: '11px', padding: '9px 13px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 600, color: '#5A6478' }}>계약 단가</span>
+                    <span style={{ fontSize: '14.5px', fontWeight: 700, color: '#0D3B8F', fontFamily: GROTESK }}>₩{fmt(p.unitRate)}<span style={{ fontSize: '11.5px', fontFamily: "'Pretendard Variable',Pretendard,sans-serif", fontWeight: 600, color: '#9AA3B8' }}> /일</span></span>
                   </div>
-                  <button onClick={() => set({ plan: d.id })} className="iw-press" style={{ marginTop: 'auto', border: `1px solid ${sel ? '#1463F3' : 'rgba(20,99,243,0.4)'}`, background: sel ? '#1463F3' : '#FFFFFF', color: sel ? '#FFFFFF' : '#1463F3', borderRadius: '999px', padding: '12px 0', fontSize: '14.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', transition: 'all .16s' }}>{sel ? '선택된 옵션 ✓' : '이 옵션으로 진행'}</button>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* 예산 시뮬레이션 */}
-          <div style={{ marginTop: '24px', background: '#FFFFFF', borderRadius: '20px', boxShadow: CARD_SHADOW, padding: '26px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '16px', flexWrap: 'wrap', marginBottom: '14px' }}>
-              <div style={{ fontSize: '16px', fontWeight: 700, color: '#071A3E' }}>예산 시뮬레이션</div>
-              <div style={{ fontSize: '13.5px', color: '#5A6478' }}>
-                예산 한도 <span style={{ fontFamily: GROTESK, fontWeight: 700, fontSize: '19px', color: '#1463F3' }}>{s.budget.toLocaleString('ko-KR')}</span> 만 원
+                )}
+                <button onClick={toggle} className="iw-press" style={{ border: `1px solid ${sel ? '#1463F3' : 'rgba(20,99,243,0.4)'}`, background: sel ? '#1463F3' : '#FFFFFF', color: sel ? '#FFFFFF' : '#1463F3', borderRadius: '999px', padding: '10px 0', fontSize: '14px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', transition: 'all .16s' }}>{sel ? '선택됨 ✓' : '선택'}</button>
               </div>
-            </div>
-            <input type="range" min={BUDGET_MIN} max={BUDGET_MAX} step={500} value={s.budget} onChange={(e) => set({ budget: Number(e.target.value) })} style={{ width: '100%', accentColor: '#1463F3', cursor: 'pointer' }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#9AA3B8', marginTop: '6px', fontFamily: GROTESK }}>
-              <span>{BUDGET_MIN.toLocaleString('ko-KR')}</span><span>{BUDGET_MAX.toLocaleString('ko-KR')}</span>
-            </div>
-            <p style={{ margin: '12px 0 0', fontSize: '13px', color: '#5A6478' }}>한도를 조정하면 세 옵션의 구성 수량이 예산 안으로 실시간 재계산됩니다.</p>
-          </div>
-
-          {/* 게스트: 최종 견적 로그인 게이트 */}
-          {!user && (
-            <div style={{ marginTop: '24px', background: '#071A3E', borderRadius: '20px', padding: '30px clamp(16px,5vw,32px)', display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-              <div style={{ width: '46px', height: '46px', borderRadius: '14px', background: 'rgba(79,216,235,0.14)', border: '1px solid rgba(79,216,235,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4FD8EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-              </div>
-              <div style={{ flex: 1, minWidth: '220px' }}>
-                <div style={{ fontSize: '17px', fontWeight: 800, color: '#FFFFFF' }}>최종 견적은 로그인 후 확인할 수 있어요</div>
-                <p style={{ margin: '4px 0 0', fontSize: '13.5px', lineHeight: 1.6, color: 'rgba(255,255,255,0.65)' }}>로그인하면 표준 레이트카드 120개 항목 기준의 실제 견적과 상세 내역, 통합 기획안까지 바로 받아볼 수 있습니다. 입력하신 내용은 그대로 유지돼요.</p>
-              </div>
-              <button onClick={signIn} disabled={signingIn} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '14px 30px', fontSize: '15px', fontWeight: 700, cursor: signingIn ? 'wait' : 'pointer', fontFamily: 'inherit', boxShadow: '0 8px 24px rgba(20,99,243,0.4)', flexShrink: 0, opacity: signingIn ? 0.7 : 1 }}>
-                {signingIn ? '로그인 중…' : 'Google로 로그인하고 견적 보기'}
-              </button>
-            </div>
-          )}
-
-          {/* 상세 내역 (로그인 전용) */}
-          {user && (
-          <div style={{ marginTop: '24px', background: '#FFFFFF', borderRadius: '20px', boxShadow: CARD_SHADOW, overflow: 'hidden' }}>
-            <button onClick={() => set({ detailOpen: !s.detailOpen })} className="iw-accordion-head" style={{ width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', padding: '20px 26px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'inherit' }}>
-              <span style={{ fontSize: '16px', fontWeight: 700, color: '#071A3E' }}>{planDefs.find((d) => d.id === s.plan)?.name} 상세 내역</span>
-              <span style={{ color: '#5A6478', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                레이트카드 기준 {selectedQuote.items.length}개 항목
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: s.detailOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform .18s' }}><polyline points="6 9 12 15 18 9" /></svg>
-              </span>
-            </button>
-            {s.detailOpen && (
-              <div style={{ padding: '0 26px 22px', overflowX: 'auto' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 0.7fr 1fr 1fr', gap: 0, minWidth: '560px', fontSize: '13.5px' }}>
-                  <div style={TH_STYLE}>항목</div>
-                  <div style={TH_STYLE}>카테고리</div>
-                  <div style={{ ...TH_STYLE, textAlign: 'right' }}>수량</div>
-                  <div style={{ ...TH_STYLE, textAlign: 'right' }}>단가</div>
-                  <div style={{ ...TH_STYLE, textAlign: 'right' }}>금액</div>
-                  {selectedQuote.items.map((it) => (
-                    <div key={it.rateCardId || it.itemName} style={{ display: 'contents' }}>
-                      <div style={{ padding: '11px 8px', color: '#071A3E', fontWeight: 600, borderBottom: '1px solid rgba(112,115,124,0.12)' }}>{it.itemName}</div>
-                      <div style={{ padding: '11px 8px', color: '#5A6478', borderBottom: '1px solid rgba(112,115,124,0.12)' }}>{cardCategory.get(it.rateCardId) ?? '-'}</div>
-                      <div style={{ padding: '11px 8px', color: '#3A4358', borderBottom: '1px solid rgba(112,115,124,0.12)', textAlign: 'right', fontFamily: GROTESK }}>{it.qty.toLocaleString('ko-KR')} {it.unit}</div>
-                      <div style={{ padding: '11px 8px', color: '#3A4358', borderBottom: '1px solid rgba(112,115,124,0.12)', textAlign: 'right', fontFamily: GROTESK }}>{fmt(it.unitPrice)}</div>
-                      <div style={{ padding: '11px 8px', color: '#071A3E', fontWeight: 700, borderBottom: '1px solid rgba(112,115,124,0.12)', textAlign: 'right', fontFamily: GROTESK }}>{fmt(it.amount)}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-          )}
-        </>
+            );
+          })}
+        </div>
       )}
 
-      {shareError && <Notice tone="error">{shareError}</Notice>}
+      {selSummary.length > 0 && (
+        <div style={{ marginTop: '24px', background: '#071A3E', borderRadius: '20px', padding: '16px 26px', display: 'flex', alignItems: 'center', gap: '18px', flexWrap: 'wrap' }}>
+          <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13.5px', fontWeight: 600 }}>선택된 인력</span>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            {selSummary.map((ss) => (
+              <span key={ss.role} style={{ background: 'rgba(79,216,235,0.14)', border: '1px solid rgba(79,216,235,0.35)', color: '#4FD8EB', borderRadius: '999px', padding: '6px 14px', fontSize: '13px', fontWeight: 700 }}>
+                {ss.role} <span style={{ fontFamily: GROTESK }}>{ss.count}</span>명
+              </span>
+            ))}
+          </div>
+          {selectedRateTotal > 0 && (
+            <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
+              <div style={{ fontSize: '11.5px', color: 'rgba(255,255,255,0.5)' }}>예상 인건비 (1일 기준)</div>
+              <div style={{ fontSize: '17px', fontWeight: 700, color: '#4FD8EB', fontFamily: GROTESK }}>₩{fmt(selectedRateTotal)}</div>
+            </div>
+          )}
+        </div>
+      )}
+
+      <div style={{ marginTop: '24px' }}>
+        <InstructionBox
+          title="다음 단계 AI 지침"
+          description="5단계 견적 옵션을 산출할 때 AI가 이 지침을 참고합니다."
+          value={instr5}
+          onChange={setInstr5}
+          examples={INSTRUCTION_EXAMPLES.toStep5}
+          tips={INSTRUCTION_TIPS}
+          disabled={!user}
+        />
+      </div>
+
+      {saveError && <Notice tone="error">{saveError}</Notice>}
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginTop: '30px', flexWrap: 'wrap' }}>
         <button onClick={() => go('step3')} className="iw-btn-outline-navy" style={{ background: 'transparent', color: '#0D3B8F', border: '1px solid rgba(13,59,143,0.25)', borderRadius: '999px', padding: '13px 30px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>이전</button>
-        {user ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '12.5px', color: '#9AA3B8' }}>공유 문서에서 링크 복사·견적서 PDF 다운로드가 가능합니다</span>
-            <button onClick={share} disabled={sharing || cardsLoading} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '13px clamp(16px,5vw,32px)', fontSize: '15px', fontWeight: 700, cursor: sharing ? 'wait' : 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 18px rgba(20,99,243,0.3)', display: 'flex', alignItems: 'center', gap: '9px', opacity: sharing ? 0.7 : 1 }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
-              {sharing ? '저장 중…' : s.currentEventId ? '발주처에 공유' : '프로젝트로 생성하고 발주처에 공유'}
-            </button>
-          </div>
-        ) : (
-          <span style={{ fontSize: '12.5px', color: '#9AA3B8' }}>공유·PDF 다운로드는 로그인 후 이용할 수 있습니다</span>
-        )}
+        <button onClick={goNext} disabled={busy} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '13px clamp(16px,5vw,32px)', fontSize: '15px', fontWeight: 700, cursor: busy ? 'wait' : 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 18px rgba(20,99,243,0.3)', opacity: busy ? 0.7 : 1 }}>{busy ? '저장 중…' : '다음 단계로'}</button>
       </div>
     </div>
   );

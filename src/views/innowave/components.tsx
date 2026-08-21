@@ -51,7 +51,7 @@ export function Logo({ dark = false, size = 21, suffix }: { dark?: boolean; size
 
 /* ── 워크플로우 스텝퍼 ────────────────────────────── */
 
-const STEP_LABELS = ['행사 정보', '프로그램 구성', '인력 매칭', '견적·기획안'];
+const STEP_LABELS = ['행사 정보', '프로그램 구성', '비품 선택', '인력 매칭', '견적·기획안'];
 
 export function Stepper({ current }: { current: number }) {
   return (
@@ -76,7 +76,7 @@ export function Stepper({ current }: { current: number }) {
                 color: active ? '#071A3E' : done ? '#5A6478' : '#9AA3B8',
               }}>{label}</span>
             </div>
-            {n < 4 && (
+            {n < STEP_LABELS.length && (
               <div style={{
                 flex: 1, minWidth: '16px', height: '2px', borderRadius: '2px',
                 background: n < current ? '#1463F3' : 'rgba(13,59,143,0.12)',
@@ -150,7 +150,7 @@ export function AppHeader() {
 
 const NAV_SCREENS: [ScreenId, string][] = [
   ['landing', '랜딩'], ['auth', '로그인'], ['step1', '① 정보'], ['step2', '② 프로그램'],
-  ['step3', '③ 매칭'], ['step4', '④ 견적'], ['proposal', '기획안 확인'], ['progress', '진행 입력'],
+  ['step3', '③ 비품'], ['step4', '④ 매칭'], ['step5', '⑤ 견적'], ['proposal', '기획안 확인'], ['progress', '진행 입력'],
   ['dashboard', '발주처 현황'], ['projects', '내 프로젝트'], ['admin', '관리자'],
 ];
 
@@ -260,6 +260,78 @@ export function ScreenNav() {
         >{label}</button>
       ))}
       <button onClick={() => setOpen(false)} title="접기" style={{ border: 'none', cursor: 'pointer', borderRadius: '999px', width: '28px', height: '28px', fontSize: '12px', fontFamily: 'inherit', background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.8)', flexShrink: 0 }}>✕</button>
+    </div>
+  );
+}
+
+/* ── 단계별 AI 지침 입력 카드 ─────────────────────── */
+
+export function InstructionBox({
+  title, description, value, onChange, examples, tips, disabled = false, disabledHint,
+}: {
+  title: string;
+  description: string;
+  value: string;
+  onChange: (v: string) => void;
+  examples: string[];
+  tips: string[];
+  disabled?: boolean;
+  disabledHint?: string;
+}) {
+  const [guideOpen, setGuideOpen] = useState(false);
+  return (
+    <div style={{ background: '#FFFFFF', borderRadius: '20px', boxShadow: CARD_SHADOW, padding: '22px 24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '6px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+          <span style={{ width: '28px', height: '28px', borderRadius: '9px', background: '#E5F0FF', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1463F3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z" /></svg>
+          </span>
+          <span style={{ fontSize: '15.5px', fontWeight: 700, color: '#071A3E' }}>{title}</span>
+          <span style={{ background: '#EEF1F6', color: '#5A6478', borderRadius: '999px', padding: '2px 9px', fontSize: '11px', fontWeight: 700 }}>선택</span>
+        </div>
+        <button
+          onClick={() => setGuideOpen((o) => !o)}
+          style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12.5px', fontWeight: 700, color: '#1463F3', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: '4px' }}
+        >
+          지침 작성 가이드
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: guideOpen ? 'rotate(180deg)' : 'none', transition: 'transform .16s' }}><polyline points="6 9 12 15 18 9" /></svg>
+        </button>
+      </div>
+      <p style={{ margin: '0 0 12px', fontSize: '13px', color: '#5A6478', lineHeight: 1.55 }}>{description}</p>
+
+      {guideOpen && (
+        <div style={{ background: '#F6F9FF', borderRadius: '14px', padding: '14px 16px', marginBottom: '12px' }}>
+          <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#0D3B8F', marginBottom: '6px' }}>작성 요령</div>
+          <ul style={{ margin: '0 0 12px', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+            {tips.map((t) => <li key={t} style={{ fontSize: '12.5px', color: '#3A4358', lineHeight: 1.55 }}>{t}</li>)}
+          </ul>
+          <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#0D3B8F', marginBottom: '6px' }}>예시 — 클릭하면 입력됩니다</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            {examples.map((ex) => (
+              <button
+                key={ex}
+                onClick={() => { if (!disabled) onChange(value.trim() ? `${value.replace(/\s+$/, '')}\n${ex}` : ex); }}
+                disabled={disabled}
+                style={{ textAlign: 'left', background: '#FFFFFF', border: '1px solid rgba(20,99,243,0.22)', borderRadius: '10px', padding: '8px 12px', fontSize: '12.5px', color: '#3A4358', cursor: disabled ? 'not-allowed' : 'pointer', fontFamily: 'inherit', lineHeight: 1.5 }}
+              >“{ex}”</button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+        maxLength={1000}
+        placeholder={disabled ? (disabledHint ?? '로그인하면 AI 지침을 사용할 수 있어요.') : '예: 지금 이 문서는 2025년 문서입니다. 2026년도에 맞게 작성해 주세요.'}
+        className="iw-input"
+        style={{ width: '100%', minHeight: '76px', resize: 'vertical', border: '1px solid rgba(112,115,124,0.28)', borderRadius: '12px', padding: '12px 14px', fontSize: '13.5px', lineHeight: 1.6, color: '#071A3E', fontFamily: 'inherit', background: disabled ? '#F6F8FB' : '#FFFFFF', boxSizing: 'border-box' }}
+      />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
+        <span style={{ fontSize: '11.5px', color: '#9AA3B8' }}>다음 단계로 이동할 때 저장되고, AI가 초안을 만들 때 참고합니다.</span>
+        <span style={{ fontSize: '11.5px', color: '#9AA3B8' }}>{value.length}/1,000</span>
+      </div>
     </div>
   );
 }

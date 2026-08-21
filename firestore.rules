@@ -108,7 +108,7 @@ service cloud.firestore {
         && validEventStatus(request.resource.data.status)
         && request.resource.data.currentStep is int
         && request.resource.data.currentStep >= 1
-        && request.resource.data.currentStep <= 4;
+        && request.resource.data.currentStep <= 5;
 
       allow update: if canWriteEvent(eventId)
         && validEventStatus(request.resource.data.status)
@@ -128,6 +128,18 @@ service cloud.firestore {
       }
 
       match /matches/{matchId} {
+        allow read: if canReadEvent(eventId);
+        allow write: if canWriteEvent(eventId);
+      }
+
+      // 단계별 AI 지침 (toStep2/toStep3/toStep4/toStep5)
+      match /instructions/{instructionId} {
+        allow read: if canReadEvent(eventId);
+        allow write: if canWriteEvent(eventId);
+      }
+
+      // 3단계 비품 선택 (레이트카드 스냅샷 + 수량)
+      match /supplies/{supplyId} {
         allow read: if canReadEvent(eventId);
         allow write: if canWriteEvent(eventId);
       }

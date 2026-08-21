@@ -23,7 +23,7 @@ export function ProjectsScreen() {
 
 function ProjectsInner() {
   const { s, set, go } = useIw();
-  const { user, role, approval } = useAuth();
+  const { role, approval } = useAuth();
   const { events, loading, error } = useMyEvents();
   const [search, setSearch] = useState('');
   const canOperate = role === 'admin' || approval === 'approved';
@@ -125,12 +125,6 @@ function ProjectsInner() {
                 style={{ background: canOperate ? '#1463F3' : '#B9C6E4', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '14px 34px', fontSize: '15.5px', fontWeight: 700, cursor: canOperate ? 'pointer' : 'not-allowed', fontFamily: 'inherit', boxShadow: canOperate ? '0 8px 24px rgba(20,99,243,0.35)' : 'none' }}
               >{canOperate ? '새 기획 시작' : '관리자 승인 대기 중'}</button>
             </div>
-            {events.length === 0 && role !== 'admin' && (
-              <Notice tone="info">
-                시드 데이터의 프로젝트(events)는 ownerUid가 &lsquo;seed-demo-owner&rsquo;라 일반 계정에는 보이지 않습니다.
-                Firestore 콘솔에서 users/{user?.uid} 문서의 role을 &ldquo;admin&rdquo;으로 바꾸면 전체 프로젝트가 보입니다.
-              </Notice>
-            )}
           </>
         )}
       </div>

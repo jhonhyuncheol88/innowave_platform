@@ -39,7 +39,6 @@ export interface ProgressSummary {
   currentStage: string;
   nextMilestone: string;
 }
-
 export interface EventInit {
   id?: string | null;
   ownerUid: string;
@@ -100,14 +99,14 @@ export class Event extends BaseModel {
     this.updatedAt = updatedAt;
   }
 
-  /** 다음 단계 진입 가능 여부 — 단계별 필수값 검증 */
+  /** 다음 단계 진입 가능 여부 — 단계별 필수값 검증 (1 정보 → 2 프로그램 → 3 비품 → 4 인력 → 5 견적) */
   canAdvanceTo(step: number): boolean {
     if (step === 2) {
       const b = this.basicInfo;
       return Boolean(b.name && b.eventType && b.periodStart && b.participantScale > 0);
     }
-    if (step === 3) return this.status !== EventStatus.DRAFT;
-    if (step === 4) {
+    if (step === 3 || step === 4) return this.status !== EventStatus.DRAFT;
+    if (step === 5) {
       return (this.status === EventStatus.MATCHING || this.status === EventStatus.QUOTED);
     }
     return step === 1;

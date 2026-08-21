@@ -32,39 +32,6 @@ function parseTs(value) {
   return Timestamp.fromDate(new Date(value.replace(' ', 'T') + '+09:00'));
 }
 
-const EVENT_STATUS_MAP = {
-  draft: 'draft',
-  in_progress: 'in_progress',
-  quoted: 'quoted',
-  confirmed: 'confirmed',
-};
-
-const STAGE_STATUS_MAP = {
-  '완료': 'done',
-  '진행중': 'active',
-  '예정': 'pending',
-};
-
-function eventCurrentStep(status) {
-  if (status === 'draft') return 1;
-  if (status === 'in_progress') return 4;
-  if (status === 'quoted') return 4;
-  if (status === 'confirmed') return 4;
-  return 1;
-}
-
-function summarizeStages(stages) {
-  const sorted = [...stages].sort((a, b) => a.stageOrder - b.stageOrder);
-  const rate = Math.round(sorted.reduce((s, st) => s + st.progressRate, 0) / (sorted.length || 1));
-  const active = sorted.find((s) => s.status === 'active');
-  const next = sorted.find((s) => s.status === 'pending');
-  return {
-    rate,
-    currentStage: active?.stageName ?? (rate === 100 ? '완료' : sorted[0]?.stageName ?? '-'),
-    nextMilestone: next?.stageName ?? '-',
-  };
-}
-
 function mapRateCard(row) {
   return {
     category: row.category,
@@ -127,52 +94,13 @@ function mapCaseData(row) {
   };
 }
 
-function mapEvent(row, progressSummary = null) {
-  const status = EVENT_STATUS_MAP[row.status] ?? 'draft';
-  const hasProgress = progressSummary !== null;
-  return {
-    ownerUid: DEMO_OWNER_UID,
-    clientOrgId: hasProgress ? DEMO_CLIENT_ORG : null,
-    basicInfo: {
-      name: row.event_name,
-      organizer: row.organizer,
-      eventType: row.event_type,
-      periodStart: row.period_start,
-      periodEnd: row.period_end,
-      region: row.region,
-      operationType: row.operation_type,
-      participantScale: row.participant_scale,
-      budgetLimit: row.budget_limit,
-      purpose: row.purpose,
-    },
-    parsedFromDoc: Boolean(row.uploaded_document_name),
-    status,
-    currentStep: eventCurrentStep(row.status),
-    progressSummary,
-    createdAt: FieldValue.serverTimestamp(),
-    updatedAt: FieldValue.serverTimestamp(),
-  };
-}
-
-function mapProgress(row) {
-  return {
-    stageName: row.stage_name,
-    stageOrder: row.stage_order,
-    status: STAGE_STATUS_MAP[row.status] ?? 'pending',
-    progressRate: row.progress_rate,
-    note: row.updated_note || '',
-    deliverablePath: row.deliverable_name || null,
-    updatedAt: parseTs(row.updated_at),
-    updatedBy: DEMO_OWNER_UID,
-  };
-}
-
 async function commitBatches(db, writes) {
   const CHUNK = 400;
   for (let i = 0; i < writes.length; i += CHUNK) {
     const batch = db.batch();
-    for (const { ref, data } of writes.slice(i, i + CHUNK)) {
-      batch.set(ref, data, { merge: false });
+    for (const { ref, data, delete: del } of writes.slice(i, i + CHUNK)) {
+      if (del) batch.delete(ref);
+      else batch.set(ref, data, { merge: false });
     }
     await batch.commit();
   }
@@ -187,8 +115,18 @@ async function main() {
   const rateCards = loadJson('rate_cards.json');
   const personnelPool = loadJson('personnel_pool.json');
   const caseData = loadJson('case_data.json');
-  const sampleEvents = loadJson('sample_events.json');
-  const projectProgress = loadJson('project_progress.json');
+
+  // 기존 rateCards 중 새 데이터에 없는 문서 삭제 (목업 120건 → 실데이터 교체 시 잔여분 정리)
+  const newRateIds = new Set(rateCards.map((row) => `rc-${row.id}`));
+  const existingRates = await db.collection('rateCards').get();
+  let staleCount = 0;
+  for (const docSnap of existingRates.docs) {
+    if (!newRateIds.has(docSnap.id)) {
+      writes.push({ ref: docSnap.ref, delete: true });
+      staleCount += 1;
+    }
+  }
+  if (staleCount) console.log(`🧹 기존 rateCards ${staleCount}건 삭제 예정 (새 데이터에 없음)`);
 
   for (const row of rateCards) {
     writes.push({ ref: db.collection('rateCards').doc(`rc-${row.id}`), data: mapRateCard(row) });
@@ -226,32 +164,15 @@ async function main() {
     },
   });
 
-  // 진행 현황을 이벤트별로 그룹핑
-  const progressByEvent = new Map();
-  for (const row of projectProgress) {
-    const eventId = row.sample_event_id;
-    if (!progressByEvent.has(eventId)) progressByEvent.set(eventId, []);
-    progressByEvent.get(eventId).push(mapProgress(row));
+  // 목업 프로젝트 제거: 과거 시드로 올라간 데모 이벤트(evt-*, ownerUid=seed-demo-owner) 삭제
+  // 서브컬렉션(progress)은 부모 삭제로 지워지지 않으므로 먼저 삭제
+  const seededEvents = await db.collection('events').where('ownerUid', '==', DEMO_OWNER_UID).get();
+  for (const evtSnap of seededEvents.docs) {
+    const progress = await evtSnap.ref.collection('progress').get();
+    for (const stageSnap of progress.docs) writes.push({ ref: stageSnap.ref, delete: true });
+    writes.push({ ref: evtSnap.ref, delete: true });
   }
-
-  for (const row of sampleEvents) {
-    const evtId = `evt-${row.id}`;
-    const stages = progressByEvent.get(row.id);
-    let summary = null;
-    if (stages) {
-      summary = summarizeStages(stages);
-      for (const stage of stages) {
-        writes.push({
-          ref: db.collection('events').doc(evtId).collection('progress').doc(`stage-${stage.stageOrder}`),
-          data: stage,
-        });
-      }
-    }
-    writes.push({
-      ref: db.collection('events').doc(evtId),
-      data: mapEvent(row, summary),
-    });
-  }
+  if (seededEvents.size) console.log(`🧹 데모 프로젝트 ${seededEvents.size}건 삭제 예정 (목업 이벤트 제거)`);
 
   // 견적 파라미터 (기존 유지)
   const quoteParams = [
@@ -273,8 +194,6 @@ async function main() {
   console.log(`   rateCards:      ${rateCards.length}건`);
   console.log(`   personnelPool:  ${personnelPool.length}건`);
   console.log(`   caseData:       ${caseData.length}건`);
-  console.log(`   events:         ${sampleEvents.length}건`);
-  console.log(`   progress:       ${projectProgress.length}건 (서브컬렉션)`);
   console.log(`   users:          2건 (데모 owner/client)`);
   console.log(`   quoteParams:    ${quoteParams.length}건`);
 }
