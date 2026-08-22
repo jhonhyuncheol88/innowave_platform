@@ -181,7 +181,7 @@ function Step4Body() {
   };
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px clamp(16px,5vw,32px) 0' }}>
+    <div style={{ maxWidth: '1380px', margin: '0 auto', padding: '32px clamp(16px,5vw,32px) 0' }}>
       <Stepper current={4} />
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '16px', flexWrap: 'wrap', marginBottom: '20px' }}>
@@ -197,6 +197,25 @@ function Step4Body() {
         </div>
       </div>
 
+      <div className="iw-chat-layout">
+        <div className="iw-chat-side">
+          <StepChat
+            title="AI 어시스턴트"
+            description="대화로 추천 인력을 조정하세요. 보내는 즉시 현재 역할 탭 추천에 반영되고, 5단계 문서·견적 생성에도 참고됩니다."
+            eventId={user ? s.currentEventId : null}
+            stepKey="step4"
+            instructionKey="toStep5"
+            examples={[
+              '멘토링 경험이 많은 인력을 우선 추천해줘.',
+              'AI·데이터 분야 전문가 위주로 골라줘.',
+              '행사 개최 지역에서 활동 가능한 인력을 우선해줘.',
+            ]}
+            tips={INSTRUCTION_TIPS}
+            disabled={!user}
+            onApply={chatApply}
+          />
+        </div>
+        <div style={{ minWidth: 0 }}>
       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
         {ROLES.map((r) => {
           const active = s.roleTab === r;
@@ -292,29 +311,14 @@ function Step4Body() {
         </div>
       )}
 
-      <div style={{ marginTop: '24px' }}>
-        <StepChat
-          title="AI 어시스턴트"
-          description="대화로 추천 인력을 조정하세요. 보내는 즉시 현재 역할 탭 추천에 반영되고, 5단계 문서·견적 생성에도 참고됩니다."
-          eventId={user ? s.currentEventId : null}
-          stepKey="step4"
-          instructionKey="toStep5"
-          examples={[
-            '멘토링 경험이 많은 인력을 우선 추천해줘.',
-            'AI·데이터 분야 전문가 위주로 골라줘.',
-            '행사 개최 지역에서 활동 가능한 인력을 우선해줘.',
-          ]}
-          tips={INSTRUCTION_TIPS}
-          disabled={!user}
-          onApply={chatApply}
-        />
-      </div>
 
       {saveError && <Notice tone="error">{saveError}</Notice>}
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginTop: '30px', flexWrap: 'wrap' }}>
         <button onClick={() => go('step3')} className="iw-btn-outline-navy" style={{ background: 'transparent', color: '#0D3B8F', border: '1px solid rgba(13,59,143,0.25)', borderRadius: '999px', padding: '13px 30px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>이전</button>
         <button onClick={goNext} disabled={busy} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '13px clamp(16px,5vw,32px)', fontSize: '15px', fontWeight: 700, cursor: busy ? 'wait' : 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 18px rgba(20,99,243,0.3)', opacity: busy ? 0.7 : 1 }}>{busy ? '저장 중…' : '다음 단계로'}</button>
+      </div>
+        </div>
       </div>
 
       {/* 5단계 입장 게이트 팝업 — 제안서·과업지시서 생성 대기 */}

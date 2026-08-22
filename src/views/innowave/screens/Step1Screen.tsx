@@ -330,7 +330,7 @@ function Step1Inner() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F6F9FF', paddingBottom: '100px' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px clamp(16px,5vw,32px) 0' }}>
+      <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '32px clamp(16px,5vw,32px) 0' }}>
         <Stepper current={1} />
 
         <h1 style={{ margin: '0 0 6px', fontSize: '26px', fontWeight: 800, color: '#071A3E', letterSpacing: '-0.01em' }}>행사 기본 정보를 알려주세요</h1>
@@ -344,6 +344,26 @@ function Step1Inner() {
           <Loading label="행사 정보를 불러오는 중…" />
         ) : (
           <>
+            <div className="iw-chat-layout">
+              <div className="iw-chat-side">
+                <StepChat
+                  title="AI 어시스턴트"
+                  description="대화로 행사 정보를 바로 수정하세요. 보내는 즉시 위 입력란에 반영되고, 2단계 프로그램 초안에도 참고됩니다."
+                  eventId={user ? s.currentEventId : null}
+                  stepKey="step1"
+                  instructionKey="toStep2"
+                  examples={[
+                    '강화군에서 진행하는 것으로 바꿔줘. 시기는 27년 3월이야.',
+                    '참가 규모를 250명, 예산은 8,000만 원으로 조정해줘.',
+                    '행사 목적을 지역 창업 생태계 활성화 중심으로 다듬어줘.',
+                  ]}
+                  tips={INSTRUCTION_TIPS}
+                  disabled={!user}
+                  onApply={chatApply}
+                  onHistoryChange={(m) => { chatHistoryRef.current = m; }}
+                />
+              </div>
+              <div style={{ minWidth: 0 }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))', gap: '24px', alignItems: 'start' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <input
@@ -481,22 +501,6 @@ function Step1Inner() {
                   </div>
                 </div>
 
-                <StepChat
-                  title="AI 어시스턴트"
-                  description="대화로 행사 정보를 바로 수정하세요. 보내는 즉시 위 입력란에 반영되고, 2단계 프로그램 초안에도 참고됩니다."
-                  eventId={user ? s.currentEventId : null}
-                  stepKey="step1"
-                  instructionKey="toStep2"
-                  examples={[
-                    '강화군에서 진행하는 것으로 바꿔줘. 시기는 27년 3월이야.',
-                    '참가 규모를 250명, 예산은 8,000만 원으로 조정해줘.',
-                    '행사 목적을 지역 창업 생태계 활성화 중심으로 다듬어줘.',
-                  ]}
-                  tips={INSTRUCTION_TIPS}
-                  disabled={!user}
-                  onApply={chatApply}
-                  onHistoryChange={(m) => { chatHistoryRef.current = m; }}
-                />
               </div>
 
               <div className="iw-sticky-panel" style={{ background: '#FFFFFF', borderRadius: '20px', boxShadow: CARD_SHADOW, padding: '26px', position: 'sticky', top: '86px' }}>
@@ -557,6 +561,8 @@ function Step1Inner() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
                 <span style={{ fontSize: '13px', color: invalid ? '#E5484D' : '#9AA3B8', fontWeight: invalid ? 700 : 400 }}>행사명과 행사 유형은 꼭 입력해 주세요</span>
                 <button onClick={submit} disabled={busy} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '13px clamp(16px,5vw,32px)', fontSize: '15px', fontWeight: 700, cursor: busy ? 'wait' : 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 18px rgba(20,99,243,0.3)', opacity: busy ? 0.7 : 1 }}>{busy ? '저장 중…' : '다음 단계로'}</button>
+              </div>
+            </div>
               </div>
             </div>
           </>

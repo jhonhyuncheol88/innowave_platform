@@ -157,7 +157,7 @@ export function Step2Screen() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F6F9FF', paddingBottom: '100px' }}>
-      <div style={{ maxWidth: '960px', margin: '0 auto', padding: '32px clamp(16px,5vw,32px) 0' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '32px clamp(16px,5vw,32px) 0' }}>
         <Stepper current={2} />
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '16px', flexWrap: 'wrap', marginBottom: '22px' }}>
@@ -187,6 +187,25 @@ export function Step2Screen() {
           </div>
         </div>
 
+        <div className="iw-chat-layout">
+          <div className="iw-chat-side">
+            <StepChat
+              title="AI 어시스턴트"
+              description="대화로 프로그램 구성을 바로 수정하세요. 보내는 즉시 위 목록에 반영되고, 3단계 비품 추천에도 참고됩니다."
+              eventId={user ? s.currentEventId : null}
+              stepKey="step2"
+              instructionKey="toStep3"
+              examples={[
+                '점심 시간은 12시부터 1시간으로 고정하고, 네트워킹 세션을 마지막에 넣어줘.',
+                '개회식은 30분 이내로 짧게, 멘토링 시간을 2시간 이상 확보해줘.',
+                '전체 일정을 오후 1시 시작 기준으로 당겨줘.',
+              ]}
+              tips={INSTRUCTION_TIPS}
+              disabled={!user}
+              onApply={chatApply}
+            />
+          </div>
+          <div style={{ minWidth: 0 }}>
         {isDraft && s.currentEventId && (
           <Notice tone="info">
             아직 저장된 프로그램 구성이 없어 &lsquo;{eventType || '해커톤·아이디어톤'}&rsquo; 유형의 AI 초안을 보여드립니다. 저장을 눌러야 프로젝트에 기록됩니다.
@@ -244,23 +263,6 @@ export function Step2Screen() {
         </div>
         )}
 
-        <div style={{ marginTop: '20px' }}>
-          <StepChat
-            title="AI 어시스턴트"
-            description="대화로 프로그램 구성을 바로 수정하세요. 보내는 즉시 위 목록에 반영되고, 3단계 비품 추천에도 참고됩니다."
-            eventId={user ? s.currentEventId : null}
-            stepKey="step2"
-            instructionKey="toStep3"
-            examples={[
-              '점심 시간은 12시부터 1시간으로 고정하고, 네트워킹 세션을 마지막에 넣어줘.',
-              '개회식은 30분 이내로 짧게, 멘토링 시간을 2시간 이상 확보해줘.',
-              '전체 일정을 오후 1시 시작 기준으로 당겨줘.',
-            ]}
-            tips={INSTRUCTION_TIPS}
-            disabled={!user}
-            onApply={chatApply}
-          />
-        </div>
 
         {saveError && <div style={{ marginTop: '18px' }}><Notice tone="error">{saveError}</Notice></div>}
 
@@ -288,6 +290,8 @@ export function Step2Screen() {
               >{saving ? '저장 중…' : '저장'}</button>
             )}
             <button onClick={goNext} disabled={busy} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '13px clamp(16px,5vw,32px)', fontSize: '15px', fontWeight: 700, cursor: busy ? 'wait' : 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 18px rgba(20,99,243,0.3)', opacity: busy ? 0.7 : 1 }}>{busy ? '저장 중…' : '다음 단계로'}</button>
+          </div>
+        </div>
           </div>
         </div>
       </div>

@@ -151,3 +151,19 @@
 @media (max-width: 640px) {
   html, body { overflow-x: hidden; }
 }
+
+/* ── AI 어시스턴트 좌측 레이아웃 ── */
+.iw-chat-layout {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.iw-chat-side {
+  position: sticky;
+  top: 86px;
+}
+@media (max-width: 980px) {
+  .iw-chat-layout { grid-template-columns: 1fr; }
+  .iw-chat-side { position: static; }
+}

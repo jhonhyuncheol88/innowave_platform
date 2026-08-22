@@ -187,7 +187,7 @@ function Step3Body() {
   const loadingList = !!user && !!s.currentEventId && (savedLoading || cardsLoading) && s.supplies.length === 0;
 
   return (
-    <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px clamp(16px,5vw,32px) 0' }}>
+    <div style={{ maxWidth: '1380px', margin: '0 auto', padding: '32px clamp(16px,5vw,32px) 0' }}>
       <Stepper current={3} />
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '16px', flexWrap: 'wrap', marginBottom: '22px' }}>
@@ -211,6 +211,25 @@ function Step3Body() {
         </div>
       </div>
 
+      <div className="iw-chat-layout">
+        <div className="iw-chat-side">
+          <StepChat
+            title="AI 어시스턴트"
+            description="대화로 비품 구성을 바로 수정하세요. 보내는 즉시 위 목록에 반영되고, 4단계 인력 추천에도 참고됩니다."
+            eventId={user ? s.currentEventId : null}
+            stepKey="step3"
+            instructionKey="toStep4"
+            examples={[
+              '홍보물 비중을 줄이고 전문가 섭외 비중을 늘려줘.',
+              '케이터링은 참가 인원의 80% 기준으로 잡아줘.',
+              '무대·음향 장비는 최소 구성으로 잡아줘.',
+            ]}
+            tips={INSTRUCTION_TIPS}
+            disabled={!user}
+            onApply={chatApply}
+          />
+        </div>
+        <div style={{ minWidth: 0 }}>
       {!user && (
         <Notice tone="info">지금은 데모 추천 구성입니다. 로그인하면 실측 견적·시장조사 기반 레이트카드로 실제 추천을 받아요.</Notice>
       )}
@@ -283,29 +302,14 @@ function Step3Body() {
         </div>
       )}
 
-      <div style={{ marginTop: '20px' }}>
-        <StepChat
-          title="AI 어시스턴트"
-          description="대화로 비품 구성을 바로 수정하세요. 보내는 즉시 위 목록에 반영되고, 4단계 인력 추천에도 참고됩니다."
-          eventId={user ? s.currentEventId : null}
-          stepKey="step3"
-          instructionKey="toStep4"
-          examples={[
-            '홍보물 비중을 줄이고 전문가 섭외 비중을 늘려줘.',
-            '케이터링은 참가 인원의 80% 기준으로 잡아줘.',
-            '무대·음향 장비는 최소 구성으로 잡아줘.',
-          ]}
-          tips={INSTRUCTION_TIPS}
-          disabled={!user}
-          onApply={chatApply}
-        />
-      </div>
 
       {saveError && <div style={{ marginTop: '18px' }}><Notice tone="error">{saveError}</Notice></div>}
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginTop: '30px', flexWrap: 'wrap' }}>
         <button onClick={() => go('step2')} className="iw-btn-outline-navy" style={{ background: 'transparent', color: '#0D3B8F', border: '1px solid rgba(13,59,143,0.25)', borderRadius: '999px', padding: '13px 30px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>이전</button>
         <button onClick={goNext} disabled={busy} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '13px clamp(16px,5vw,32px)', fontSize: '15px', fontWeight: 700, cursor: busy ? 'wait' : 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 18px rgba(20,99,243,0.3)', opacity: busy ? 0.7 : 1 }}>{busy ? '저장 중…' : '다음 단계로'}</button>
+      </div>
+        </div>
       </div>
 
       {/* 비품 추가 모달 */}
