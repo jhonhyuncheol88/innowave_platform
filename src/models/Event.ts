@@ -48,6 +48,8 @@ export interface EventInit {
   status?: EventStatusValue;
   currentStep?: number;
   progressSummary?: ProgressSummary | null;
+  /** 휴지통 이동 시각 — null이면 정상, 값이 있으면 휴지통 상태 */
+  deletedAt?: Timestamp | FieldValue | null;
   createdAt?: Timestamp | FieldValue | null;
   updatedAt?: Timestamp | FieldValue | null;
 }
@@ -60,6 +62,7 @@ export class Event extends BaseModel {
   status: EventStatusValue;
   currentStep: number;
   progressSummary: ProgressSummary | null;
+  deletedAt: Timestamp | FieldValue | null;
   createdAt: Timestamp | FieldValue | null;
   updatedAt: Timestamp | FieldValue | null;
 
@@ -72,6 +75,7 @@ export class Event extends BaseModel {
     status = EventStatus.DRAFT,
     currentStep = 1,
     progressSummary = null,
+    deletedAt = null,
     createdAt = null,
     updatedAt = null,
   }: EventInit) {
@@ -95,6 +99,7 @@ export class Event extends BaseModel {
     this.status = status;
     this.currentStep = currentStep;
     this.progressSummary = progressSummary;
+    this.deletedAt = deletedAt;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -129,6 +134,7 @@ export class Event extends BaseModel {
       status: this.status,
       currentStep: this.currentStep,
       progressSummary: this.progressSummary,
+      deletedAt: this.deletedAt,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

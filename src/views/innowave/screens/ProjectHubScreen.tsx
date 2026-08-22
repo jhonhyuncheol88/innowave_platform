@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CARD_SHADOW, GROTESK, Loading, Notice, RequireAuth } from '../components.js';
 import { PROJ_STATUS_MAP } from '../data.js';
-import { deleteEvent, errMessage, loadWorkflowDocument, tsLabel, useEvent, useLatestQuote, wonLabel } from '../hooks.js';
+import { errMessage, loadWorkflowDocument, trashEvent, tsLabel, useEvent, useLatestQuote, wonLabel } from '../hooks.js';
 import { fmt, useIw } from '../state.js';
 import type { ScreenId } from '../types.js';
 
@@ -74,7 +74,7 @@ function ProjectHubBody() {
     setDeleting(true);
     setDeleteError(null);
     try {
-      await deleteEvent(event.id);
+      await trashEvent(event.id);
       set({ currentEventId: null });
       go('projects');
     } catch (e) {
@@ -211,12 +211,12 @@ function ProjectHubBody() {
       <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '12px', marginTop: '22px' }}>
         {confirmDelete ? (
           <>
-            <span style={{ fontSize: '13px', fontWeight: 700, color: '#B3261E' }}>정말 삭제할까요? 되돌릴 수 없습니다.</span>
-            <button onClick={() => void removeProject()} disabled={deleting} style={{ background: '#E5484D', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '9px 18px', fontSize: '13px', fontWeight: 700, cursor: deleting ? 'wait' : 'pointer', fontFamily: 'inherit', opacity: deleting ? 0.7 : 1 }}>{deleting ? '삭제 중…' : '삭제 확정'}</button>
+            <span style={{ fontSize: '13px', fontWeight: 700, color: '#B3261E' }}>휴지통으로 이동할까요? 내 프로젝트의 휴지통에서 복원할 수 있습니다.</span>
+            <button onClick={() => void removeProject()} disabled={deleting} style={{ background: '#E5484D', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '9px 18px', fontSize: '13px', fontWeight: 700, cursor: deleting ? 'wait' : 'pointer', fontFamily: 'inherit', opacity: deleting ? 0.7 : 1 }}>{deleting ? '이동 중…' : '휴지통으로 이동'}</button>
             <button onClick={() => setConfirmDelete(false)} disabled={deleting} className="iw-btn-soft" style={{ background: 'transparent', color: '#5A6478', border: '1px solid rgba(112,115,124,0.28)', borderRadius: '999px', padding: '9px 18px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>취소</button>
           </>
         ) : (
-          <button onClick={() => setConfirmDelete(true)} className="iw-text-delete" style={{ background: 'transparent', border: 'none', color: '#9AA3B8', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline' }}>프로젝트 삭제</button>
+          <button onClick={() => setConfirmDelete(true)} className="iw-text-delete" style={{ background: 'transparent', border: 'none', color: '#9AA3B8', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline' }}>프로젝트 삭제 (휴지통)</button>
         )}
       </div>
     </div>

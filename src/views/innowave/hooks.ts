@@ -280,6 +280,20 @@ export async function deleteEvent(eventId: string): Promise<void> {
   invalidateCache(`quote:${eventId}`);
 }
 
+/** 휴지통 이동 (소프트 삭제) — deletedAt 마킹, 목록에서 숨김 */
+export async function trashEvent(eventId: string): Promise<void> {
+  await eventRepository.patch(eventId, { deletedAt: serverTimestamp() });
+  invalidateCache('events');
+  invalidateCache(`event:${eventId}`);
+}
+
+/** 휴지통 복원 */
+export async function restoreEvent(eventId: string): Promise<void> {
+  await eventRepository.patch(eventId, { deletedAt: null });
+  invalidateCache('events');
+  invalidateCache(`event:${eventId}`);
+}
+
 /** 이벤트 문서 수정 후 관련 캐시 무효화 — 화면들이 patch 후 호출 */
 export function invalidateEvent(eventId: string | null): void {
   invalidateCache('events');
