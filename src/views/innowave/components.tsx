@@ -376,7 +376,7 @@ export function StepChat({
       )}
 
       {/* 대화 영역 */}
-      <div ref={listRef} style={{ background: '#F6F9FF', borderRadius: '14px', padding: '14px', maxHeight: '280px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '10px' }}>
+      <div ref={listRef} style={{ background: '#F6F9FF', borderRadius: '14px', padding: '14px', minHeight: '260px', maxHeight: 'min(58vh, 560px)', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '10px' }}>
         {messages.length === 0 && !busy && (
           <p style={{ margin: '6px 2px', fontSize: '12.5px', color: '#9AA3B8', lineHeight: 1.6 }}>
             {disabled
@@ -391,7 +391,7 @@ export function StepChat({
               background: m.role === 'user' ? '#1463F3' : '#FFFFFF',
               color: m.role === 'user' ? '#FFFFFF' : '#1B2437',
               border: m.role === 'user' ? 'none' : '1px solid rgba(112,115,124,0.18)',
-              padding: '10px 14px', fontSize: '13px', lineHeight: 1.6, whiteSpace: 'pre-wrap',
+              padding: '11px 15px', fontSize: '14px', lineHeight: 1.65, whiteSpace: 'pre-wrap',
             }}>{m.text}</div>
           </div>
         ))}
@@ -412,16 +412,16 @@ export function StepChat({
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void send(); } }}
           disabled={disabled || busy}
-          rows={1}
+          rows={2}
           placeholder={disabled ? (disabledHint ?? '로그인하면 사용할 수 있어요.') : '변경하고 싶은 내용을 입력하세요 (Enter 전송)'}
           className="iw-input"
-          style={{ flex: 1, resize: 'none', border: '1px solid rgba(112,115,124,0.28)', borderRadius: '12px', padding: '11px 14px', fontSize: '13.5px', lineHeight: 1.5, color: '#071A3E', fontFamily: 'inherit', background: disabled ? '#F6F8FB' : '#FFFFFF', boxSizing: 'border-box', minHeight: '44px', maxHeight: '120px' }}
+          style={{ flex: 1, resize: 'none', border: '1px solid rgba(112,115,124,0.28)', borderRadius: '12px', padding: '11px 14px', fontSize: '14.5px', lineHeight: 1.55, color: '#071A3E', fontFamily: 'inherit', background: disabled ? '#F6F8FB' : '#FFFFFF', boxSizing: 'border-box', minHeight: '72px', maxHeight: '180px' }}
         />
         <button
           onClick={() => void send()}
           disabled={disabled || busy || !input.trim()}
           className="iw-btn-primary"
-          style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '12px', width: '44px', height: '44px', cursor: disabled || busy || !input.trim() ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, opacity: disabled || busy || !input.trim() ? 0.5 : 1 }}
+          style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '12px', width: '52px', height: '72px', cursor: disabled || busy || !input.trim() ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, opacity: disabled || busy || !input.trim() ? 0.5 : 1 }}
           title="전송"
         >
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>

@@ -155,7 +155,7 @@
 /* ── AI 어시스턴트 좌측 레이아웃 ── */
 .iw-chat-layout {
   display: grid;
-  grid-template-columns: 340px minmax(0, 1fr);
+  grid-template-columns: 420px minmax(0, 1fr);
   gap: 20px;
   align-items: start;
 }
