@@ -3,6 +3,7 @@ import { CARD_SHADOW, GROTESK, INPUT_STYLE, LABEL_STYLE, Logo, Notice } from '..
 import { ABOUT_FEATURES, EVENT_TYPES, PROCESS_CARDS, SHOWCASE_CASES } from '../data.js';
 import { errMessage, submitInquiry } from '../hooks.js';
 import { useIw } from '../state.js';
+import { useAuth } from '../../../hooks/useAuth.js';
 
 const BUDGET_RANGES = ['미정', '3,000만 원 미만', '3,000만~6,000만 원', '6,000만~1억 원', '1억 원 이상'];
 
@@ -133,6 +134,7 @@ function ContactSection() {
 
 export function LandingScreen() {
   const { go } = useIw();
+  const { user } = useAuth();
   return (
     <div style={{ minHeight: '100vh', background: '#F6F9FF', paddingBottom: '80px' }}>
       <header style={{ background: '#071A3E' }}>
@@ -143,7 +145,11 @@ export function LandingScreen() {
             <a href="#workflow" className="iw-navlink">워크플로우</a>
             <a href="#cases" className="iw-navlink">운영 사례</a>
           </nav>
-          <button onClick={() => go('auth')} className="iw-btn-glass" style={{ background: 'rgba(255,255,255,0.1)', color: '#FFFFFF', border: '1px solid rgba(255,255,255,0.28)', borderRadius: '999px', padding: '9px 22px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>로그인</button>
+          {user ? (
+            <button onClick={() => go('projects')} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '9px 22px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 18px rgba(20,99,243,0.35)' }}>내 프로젝트 가기</button>
+          ) : (
+            <button onClick={() => go('auth')} className="iw-btn-glass" style={{ background: 'rgba(255,255,255,0.1)', color: '#FFFFFF', border: '1px solid rgba(255,255,255,0.28)', borderRadius: '999px', padding: '9px 22px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>로그인</button>
+          )}
         </div>
       </header>
 
@@ -159,8 +165,17 @@ export function LandingScreen() {
             행사 정보를 입력하거나 과업지시서를 업로드하세요.<br />AI가 기획안과 3가지 예산 견적 옵션을 자동으로 만들어 드립니다.
           </p>
           <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={() => go('step1')} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '15px 34px', fontSize: '16px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 8px 24px rgba(20,99,243,0.4)' }}>무료로 기획 시작</button>
-            <a href="#cases" className="iw-btn-hero-ghost" style={{ background: 'transparent', color: '#FFFFFF', border: '1px solid rgba(255,255,255,0.32)', borderRadius: '999px', padding: '15px 34px', fontSize: '16px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'none', display: 'inline-block' }}>운영 사례 보기</a>
+            {user ? (
+              <>
+                <button onClick={() => go('projects')} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '15px 34px', fontSize: '16px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 8px 24px rgba(20,99,243,0.4)' }}>내 프로젝트 가기</button>
+                <button onClick={() => go('step1')} className="iw-btn-hero-ghost" style={{ background: 'transparent', color: '#FFFFFF', border: '1px solid rgba(255,255,255,0.32)', borderRadius: '999px', padding: '15px 34px', fontSize: '16px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>새 기획 시작</button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => go('step1')} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '15px 34px', fontSize: '16px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 8px 24px rgba(20,99,243,0.4)' }}>무료로 기획 시작</button>
+                <a href="#cases" className="iw-btn-hero-ghost" style={{ background: 'transparent', color: '#FFFFFF', border: '1px solid rgba(255,255,255,0.32)', borderRadius: '999px', padding: '15px 34px', fontSize: '16px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'none', display: 'inline-block' }}>운영 사례 보기</a>
+              </>
+            )}
           </div>
         </div>
         <svg viewBox="0 0 1440 120" preserveAspectRatio="none" style={{ display: 'block', width: '100%', height: '96px' }}>

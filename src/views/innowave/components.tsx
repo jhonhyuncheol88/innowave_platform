@@ -121,7 +121,7 @@ export function AppHeader() {
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 900, background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(112,115,124,0.18)' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '12px clamp(16px,5vw,32px)', display: 'flex', alignItems: 'center', gap: '20px' }}>
-        <div onClick={() => go(user ? 'projects' : 'landing')} style={{ cursor: 'pointer', display: 'flex' }} title="홈으로">
+        <div onClick={() => go('landing')} style={{ cursor: 'pointer', display: 'flex' }} title="홈으로">
           <Logo dark size={17} />
         </div>
         <nav style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '6px' }}>
