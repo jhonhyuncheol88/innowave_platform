@@ -127,27 +127,17 @@ function Step5Body() {
     return m;
   }, [cards]);
 
-  const planDefs: { id: PlanId; name: string; desc: string; mult: number }[] = [
-    { id: 'basic', name: 'Basic', desc: '핵심 프로그램 중심의 실속 구성', mult: params.multBasic },
-    { id: 'standard', name: 'Standard', desc: '권장 구성 — 예산 한도 기준 최적화', mult: 1.0 },
-    { id: 'premium', name: 'Premium', desc: '브랜딩·중계까지 포함한 확장 구성', mult: params.multPremium },
-  ];
+  // 최종 견적 — 3단계 비품 구성 그대로 (옵션 배율 없음), 예산 한도 반영
   const budgetWon = s.budget * 10000;
-  const quotes = useMemo(
-    () => Object.fromEntries(planDefs.map((d) => [d.id, buildOptionQuote(effectiveItems, d.id as QuoteOptionValue, d.mult, budgetWon)])),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [effectiveItems, budgetWon, params.multBasic, params.multPremium],
+  const selectedQuote = useMemo(
+    () => buildOptionQuote(effectiveItems, 'standard' as QuoteOptionValue, 1.0, budgetWon),
+    [effectiveItems, budgetWon],
   );
-  const selectedQuote = quotes[s.plan];
 
   // 게스트: 실제 레이트카드 없이 예산 기반 데모 수치를 만들어 블러 처리로만 노출
-  const figuresFor = (id: PlanId, mult: number) => {
-    if (user) {
-      const q = quotes[id];
-      return { supply: q.subtotal, margin: q.marginTotal, vat: q.vat, total: q.total };
-    }
-    return mkQuote(s.budget, mult, s.qpMargin, s.qpVat);
-  };
+  const figures = user
+    ? { supply: selectedQuote.subtotal, margin: selectedQuote.marginTotal, vat: selectedQuote.vat, total: selectedQuote.total }
+    : mkQuote(s.budget, 1.0, s.qpMargin, s.qpVat);
   const amountStyle = user ? {} : { filter: 'blur(9px)', userSelect: 'none' as const };
 
   /** 견적 확정 → (프로젝트 없으면 생성) → 견적 저장 → 발주처 공유 문서로 이동 */
@@ -193,11 +183,11 @@ function Step5Body() {
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px clamp(16px,5vw,32px) 0' }}>
       <Stepper current={5} />
 
-      <h1 style={{ margin: '0 0 6px', fontSize: '26px', fontWeight: 800, color: '#071A3E', letterSpacing: '-0.01em' }}>견적 옵션을 비교해 보세요</h1>
+      <h1 style={{ margin: '0 0 6px', fontSize: '26px', fontWeight: 800, color: '#071A3E', letterSpacing: '-0.01em' }}>최종 견적을 확인하세요</h1>
       <p style={{ margin: '0 0 26px', fontSize: '15px', color: '#5A6478' }}>
         {savedSupplies.length > 0
-          ? `3단계에서 선택한 비품 ${savedSupplies.length}개 항목을 기준으로 산출한 3가지 예산 옵션입니다.`
-          : `표준 레이트카드 ${cards.length > 0 ? `${cards.length}개 ` : ''}항목을 기준으로 산출한 3가지 예산 옵션입니다.`}
+          ? `3단계에서 선택한 비품 ${savedSupplies.length}개 항목을 기준으로 산출한 최종 견적입니다.`
+          : `표준 레이트카드 ${cards.length > 0 ? `${cards.length}개 ` : ''}항목을 기준으로 산출한 최종 견적입니다.`}
         {event ? ` — ${event.basicInfo.name}` : ''}
       </p>
 
@@ -214,35 +204,21 @@ function Step5Body() {
         <Loading label="레이트카드를 불러오는 중…" />
       ) : (
         <>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,270px),1fr))', gap: '18px', alignItems: 'stretch' }}>
-            {planDefs.map((d) => {
-              const f = figuresFor(d.id, d.mult);
-              const sel = s.plan === d.id;
-              const rec = d.id === 'standard';
-              return (
-                <div key={d.id} style={{ position: 'relative', background: '#FFFFFF', borderRadius: '20px', padding: '28px 26px', border: rec ? '2px solid #1463F3' : '2px solid transparent', boxShadow: CARD_SHADOW, display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  {rec && (
-                    <span style={{ position: 'absolute', top: '-11px', left: '26px', background: '#1463F3', color: '#FFFFFF', borderRadius: '999px', padding: '4px 14px', fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.02em' }}>권장</span>
-                  )}
-                  <div>
-                    <div style={{ fontFamily: GROTESK, fontWeight: 700, fontSize: '17px', color: '#071A3E' }}>{d.name}</div>
-                    <div style={{ fontSize: '13.5px', color: '#5A6478', marginTop: '3px' }}>{d.desc}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontFamily: GROTESK, fontWeight: 700, fontSize: '34px', letterSpacing: '-0.02em', color: rec ? '#1463F3' : '#071A3E' }}>
-                      ₩<span style={amountStyle}>{fmt(f.total)}</span>
-                    </div>
-                    <div style={{ fontSize: '12.5px', color: '#9AA3B8', marginTop: '2px' }}>{user ? '부가세 포함' : '로그인 후 확인 가능'}</div>
-                  </div>
-                  <div style={{ borderTop: '1px solid rgba(112,115,124,0.22)', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '7px', fontSize: '13.5px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#5A6478' }}>공급가</span><span style={{ fontFamily: GROTESK, fontWeight: 600, color: '#3A4358', ...amountStyle }}>₩{fmt(f.supply)}</span></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#5A6478' }}>마진</span><span style={{ fontFamily: GROTESK, fontWeight: 600, color: '#3A4358', ...amountStyle }}>₩{fmt(f.margin)}</span></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#5A6478' }}>부가세 (10%)</span><span style={{ fontFamily: GROTESK, fontWeight: 600, color: '#3A4358', ...amountStyle }}>₩{fmt(f.vat)}</span></div>
-                  </div>
-                  <button onClick={() => set({ plan: d.id })} className="iw-press" style={{ marginTop: 'auto', border: `1px solid ${sel ? '#1463F3' : 'rgba(20,99,243,0.4)'}`, background: sel ? '#1463F3' : '#FFFFFF', color: sel ? '#FFFFFF' : '#1463F3', borderRadius: '999px', padding: '12px 0', fontSize: '14.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', transition: 'all .16s' }}>{sel ? '선택된 옵션 ✓' : '이 옵션으로 진행'}</button>
+          <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '30px clamp(18px,4vw,34px)', border: '2px solid #1463F3', boxShadow: CARD_SHADOW }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '20px', flexWrap: 'wrap' }}>
+              <div>
+                <div style={{ fontSize: '14px', fontWeight: 700, color: '#5A6478', marginBottom: '6px' }}>최종 견적 (부가세 포함)</div>
+                <div style={{ fontFamily: GROTESK, fontWeight: 700, fontSize: 'clamp(34px,4vw,44px)', letterSpacing: '-0.02em', color: '#1463F3', lineHeight: 1.05 }}>
+                  ₩<span style={amountStyle}>{fmt(figures.total)}</span>
                 </div>
-              );
-            })}
+                {!user && <div style={{ fontSize: '12.5px', color: '#9AA3B8', marginTop: '4px' }}>로그인 후 확인 가능</div>}
+              </div>
+              <div style={{ display: 'flex', gap: '26px', flexWrap: 'wrap' }}>
+                <div><div style={{ fontSize: '12.5px', color: '#5A6478', marginBottom: '3px' }}>공급가</div><div style={{ fontFamily: GROTESK, fontWeight: 700, fontSize: '17px', color: '#071A3E', ...amountStyle }}>₩{fmt(figures.supply)}</div></div>
+                <div><div style={{ fontSize: '12.5px', color: '#5A6478', marginBottom: '3px' }}>마진</div><div style={{ fontFamily: GROTESK, fontWeight: 700, fontSize: '17px', color: '#071A3E', ...amountStyle }}>₩{fmt(figures.margin)}</div></div>
+                <div><div style={{ fontSize: '12.5px', color: '#5A6478', marginBottom: '3px' }}>부가세 (10%)</div><div style={{ fontFamily: GROTESK, fontWeight: 700, fontSize: '17px', color: '#071A3E', ...amountStyle }}>₩{fmt(figures.vat)}</div></div>
+              </div>
+            </div>
           </div>
 
           {/* 게스트: 최종 견적 로그인 게이트 */}
@@ -265,7 +241,7 @@ function Step5Body() {
           {user && (
           <div style={{ marginTop: '24px', background: '#FFFFFF', borderRadius: '20px', boxShadow: CARD_SHADOW, overflow: 'hidden' }}>
             <button onClick={() => set({ detailOpen: !s.detailOpen })} className="iw-accordion-head" style={{ width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', padding: '20px 26px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'inherit' }}>
-              <span style={{ fontSize: '16px', fontWeight: 700, color: '#071A3E' }}>{planDefs.find((d) => d.id === s.plan)?.name} 상세 내역</span>
+              <span style={{ fontSize: '16px', fontWeight: 700, color: '#071A3E' }}>최종 견적 상세 내역</span>
               <span style={{ color: '#5A6478', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 레이트카드 기준 {selectedQuote.items.length}개 항목
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: s.detailOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform .18s' }}><polyline points="6 9 12 15 18 9" /></svg>
@@ -300,7 +276,7 @@ function Step5Body() {
               eventId={s.currentEventId}
               event={event}
               quote={selectedQuote}
-              planName={planDefs.find((d) => d.id === s.plan)?.name ?? 'Standard'}
+              planName="최종"
               instruction={quoteInstruction}
             />
           )}
