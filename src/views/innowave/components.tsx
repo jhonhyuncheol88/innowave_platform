@@ -264,21 +264,78 @@ export function ScreenNav() {
   );
 }
 
-/* ── 단계별 AI 지침 입력 카드 ─────────────────────── */
+/* ── 단계별 AI 채팅 어시스턴트 ─────────────────────── */
 
-export function InstructionBox({
-  title, description, value, onChange, examples, tips, disabled = false, disabledHint,
+import {
+  loadStepChat, saveStepChat, saveStepInstruction,
+  type ChatMessage, type InstructionKey, type StepChatKey,
+} from './hooks.js';
+import { useEffect, useRef } from 'react';
+
+export function StepChat({
+  title, description, eventId, stepKey, instructionKey, examples, tips, disabled = false, disabledHint, onApply, onHistoryChange,
 }: {
   title: string;
   description: string;
-  value: string;
-  onChange: (v: string) => void;
+  /** null이면(게스트·프로젝트 미생성) 기록 저장 생략 — AI 반영은 로그인 시 동작 */
+  eventId: string | null;
+  stepKey: StepChatKey;
+  instructionKey: InstructionKey;
   examples: string[];
   tips: string[];
   disabled?: boolean;
   disabledHint?: string;
+  /** 사용자 메시지를 현재 단계 데이터에 반영하고 AI 응답(요약)을 돌려준다 */
+  onApply: (message: string) => Promise<string>;
+  /** 프로젝트 생성 전 대화를 화면이 백업해 두었다가 생성 후 저장할 수 있게 전달 */
+  onHistoryChange?: (messages: ChatMessage[]) => void;
 }) {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState('');
+  const [busy, setBusy] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+  const hydratedFor = useRef<string | null>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!eventId || hydratedFor.current === eventId) return;
+    hydratedFor.current = eventId;
+    void loadStepChat(eventId, stepKey).then((m) => { if (m.length) setMessages(m); }).catch(() => {});
+  }, [eventId, stepKey]);
+
+  useEffect(() => {
+    listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
+  }, [messages, busy]);
+
+  const persist = (msgs: ChatMessage[]) => {
+    onHistoryChange?.(msgs);
+    if (!eventId) return;
+    void saveStepChat(eventId, stepKey, msgs).catch(() => {});
+    const joined = msgs.filter((m) => m.role === 'user').map((m) => m.text).join('\n');
+    void saveStepInstruction(eventId, instructionKey, joined.slice(-1000)).catch(() => {});
+  };
+
+  const send = async (raw?: string) => {
+    const text = (raw ?? input).trim();
+    if (!text || busy || disabled) return;
+    setInput('');
+    setBusy(true);
+    const withUser = [...messages, { role: 'user' as const, text, at: Date.now() }];
+    setMessages(withUser);
+    try {
+      const note = await onApply(text);
+      const next = [...withUser, { role: 'ai' as const, text: note || '반영했어요.', at: Date.now() }];
+      setMessages(next);
+      persist(next);
+    } catch (e) {
+      const next = [...withUser, { role: 'ai' as const, text: `반영에 실패했어요: ${e instanceof Error ? e.message : String(e)}`, at: Date.now() }];
+      setMessages(next);
+      persist(next);
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div style={{ background: '#FFFFFF', borderRadius: '20px', boxShadow: CARD_SHADOW, padding: '22px 24px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '6px' }}>
@@ -287,13 +344,12 @@ export function InstructionBox({
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1463F3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z" /></svg>
           </span>
           <span style={{ fontSize: '15.5px', fontWeight: 700, color: '#071A3E' }}>{title}</span>
-          <span style={{ background: '#EEF1F6', color: '#5A6478', borderRadius: '999px', padding: '2px 9px', fontSize: '11px', fontWeight: 700 }}>선택</span>
         </div>
         <button
           onClick={() => setGuideOpen((o) => !o)}
           style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12.5px', fontWeight: 700, color: '#1463F3', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: '4px' }}
         >
-          지침 작성 가이드
+          요청 가이드
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: guideOpen ? 'rotate(180deg)' : 'none', transition: 'transform .16s' }}><polyline points="6 9 12 15 18 9" /></svg>
         </button>
       </div>
@@ -301,37 +357,77 @@ export function InstructionBox({
 
       {guideOpen && (
         <div style={{ background: '#F6F9FF', borderRadius: '14px', padding: '14px 16px', marginBottom: '12px' }}>
-          <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#0D3B8F', marginBottom: '6px' }}>작성 요령</div>
+          <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#0D3B8F', marginBottom: '6px' }}>요청 요령</div>
           <ul style={{ margin: '0 0 12px', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
             {tips.map((t) => <li key={t} style={{ fontSize: '12.5px', color: '#3A4358', lineHeight: 1.55 }}>{t}</li>)}
           </ul>
-          <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#0D3B8F', marginBottom: '6px' }}>예시 — 클릭하면 입력됩니다</div>
+          <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#0D3B8F', marginBottom: '6px' }}>예시 — 클릭하면 바로 전송됩니다</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {examples.map((ex) => (
               <button
                 key={ex}
-                onClick={() => { if (!disabled) onChange(value.trim() ? `${value.replace(/\s+$/, '')}\n${ex}` : ex); }}
-                disabled={disabled}
-                style={{ textAlign: 'left', background: '#FFFFFF', border: '1px solid rgba(20,99,243,0.22)', borderRadius: '10px', padding: '8px 12px', fontSize: '12.5px', color: '#3A4358', cursor: disabled ? 'not-allowed' : 'pointer', fontFamily: 'inherit', lineHeight: 1.5 }}
+                onClick={() => { if (!disabled && !busy) void send(ex); }}
+                disabled={disabled || busy}
+                style={{ textAlign: 'left', background: '#FFFFFF', border: '1px solid rgba(20,99,243,0.22)', borderRadius: '10px', padding: '8px 12px', fontSize: '12.5px', color: '#3A4358', cursor: disabled || busy ? 'not-allowed' : 'pointer', fontFamily: 'inherit', lineHeight: 1.5 }}
               >“{ex}”</button>
             ))}
           </div>
         </div>
       )}
 
-      <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        disabled={disabled}
-        maxLength={1000}
-        placeholder={disabled ? (disabledHint ?? '로그인하면 AI 지침을 사용할 수 있어요.') : '예: 지금 이 문서는 2025년 문서입니다. 2026년도에 맞게 작성해 주세요.'}
-        className="iw-input"
-        style={{ width: '100%', minHeight: '76px', resize: 'vertical', border: '1px solid rgba(112,115,124,0.28)', borderRadius: '12px', padding: '12px 14px', fontSize: '13.5px', lineHeight: 1.6, color: '#071A3E', fontFamily: 'inherit', background: disabled ? '#F6F8FB' : '#FFFFFF', boxSizing: 'border-box' }}
-      />
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
-        <span style={{ fontSize: '11.5px', color: '#9AA3B8' }}>다음 단계로 이동할 때 저장되고, AI가 초안을 만들 때 참고합니다.</span>
-        <span style={{ fontSize: '11.5px', color: '#9AA3B8' }}>{value.length}/1,000</span>
+      {/* 대화 영역 */}
+      <div ref={listRef} style={{ background: '#F6F9FF', borderRadius: '14px', padding: '14px', maxHeight: '280px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '10px' }}>
+        {messages.length === 0 && !busy && (
+          <p style={{ margin: '6px 2px', fontSize: '12.5px', color: '#9AA3B8', lineHeight: 1.6 }}>
+            {disabled
+              ? (disabledHint ?? '로그인하면 AI 어시스턴트를 사용할 수 있어요.')
+              : '예: "강화군에서 진행하는 것으로 바꿔줘, 시기는 27년 3월" — 보내는 즉시 이 단계 내용에 반영됩니다.'}
+          </p>
+        )}
+        {messages.map((m, i) => (
+          <div key={`${m.at}-${i}`} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
+            <div style={{
+              maxWidth: '82%', borderRadius: m.role === 'user' ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
+              background: m.role === 'user' ? '#1463F3' : '#FFFFFF',
+              color: m.role === 'user' ? '#FFFFFF' : '#1B2437',
+              border: m.role === 'user' ? 'none' : '1px solid rgba(112,115,124,0.18)',
+              padding: '10px 14px', fontSize: '13px', lineHeight: 1.6, whiteSpace: 'pre-wrap',
+            }}>{m.text}</div>
+          </div>
+        ))}
+        {busy && (
+          <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+            <div style={{ borderRadius: '14px 14px 14px 4px', background: '#FFFFFF', border: '1px solid rgba(112,115,124,0.18)', padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ width: '14px', height: '14px', borderRadius: '999px', border: '2.5px solid #E5F0FF', borderTopColor: '#1463F3', animation: 'iwSpin .8s linear infinite', display: 'inline-block' }} />
+              <span style={{ fontSize: '12.5px', color: '#5A6478' }}>반영하는 중…</span>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* 입력 영역 */}
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void send(); } }}
+          disabled={disabled || busy}
+          rows={1}
+          placeholder={disabled ? (disabledHint ?? '로그인하면 사용할 수 있어요.') : '변경하고 싶은 내용을 입력하세요 (Enter 전송)'}
+          className="iw-input"
+          style={{ flex: 1, resize: 'none', border: '1px solid rgba(112,115,124,0.28)', borderRadius: '12px', padding: '11px 14px', fontSize: '13.5px', lineHeight: 1.5, color: '#071A3E', fontFamily: 'inherit', background: disabled ? '#F6F8FB' : '#FFFFFF', boxSizing: 'border-box', minHeight: '44px', maxHeight: '120px' }}
+        />
+        <button
+          onClick={() => void send()}
+          disabled={disabled || busy || !input.trim()}
+          className="iw-btn-primary"
+          style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '12px', width: '44px', height: '44px', cursor: disabled || busy || !input.trim() ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, opacity: disabled || busy || !input.trim() ? 0.5 : 1 }}
+          title="전송"
+        >
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+        </button>
+      </div>
+      <div style={{ fontSize: '11.5px', color: '#9AA3B8', marginTop: '6px' }}>대화는 프로젝트에 저장되며, 다음 단계 AI 초안에도 반영됩니다.</div>
     </div>
   );
 }

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { CARD_SHADOW, INPUT_STYLE, InstructionBox, LABEL_STYLE, Loading, Notice, Stepper } from '../components.js';
-import { EVENT_TYPES, EXTRACTED_FIELDS, INSTRUCTION_EXAMPLES, INSTRUCTION_TIPS, OP_MODES, UPLOADED_FORM } from '../data.js';
+import { CARD_SHADOW, INPUT_STYLE, LABEL_STYLE, Loading, Notice, StepChat, Stepper } from '../components.js';
+import { EVENT_TYPES, EXTRACTED_FIELDS, INSTRUCTION_TIPS, OP_MODES, UPLOADED_FORM } from '../data.js';
 import {
-  DOC_ACCEPT, demoParseFor, errMessage, invalidateEvent, loadStepInstruction, saveStepInstruction, saveWorkflowStep, startDocParse, subscribeDocParse, useEvent,
-  type DocParse, type ParsedFields,
+  DOC_ACCEPT, applyStepInstruction, demoParseFor, errMessage, invalidateEvent, saveStepChat, saveStepInstruction, saveWorkflowStep, startDocParse, subscribeDocParse, useEvent,
+  type BasicInfoInstructionResult, type ChatMessage, type DocParse, type ParsedFields,
 } from '../hooks.js';
 import { useIw } from '../state.js';
 import { useAuth } from '../../../hooks/useAuth.js';
@@ -102,7 +102,6 @@ function Step1Inner() {
   const [invalid, setInvalid] = useState(false);
   const [busy, setBusy] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-  const [instr2, setInstr2] = useState('');
 
   const up = s.uploaded;
   const patch = (p: Partial<FormState>) => setForm((f) => ({ ...f, ...p }));
@@ -133,6 +132,35 @@ function Step1Inner() {
   };
 
   useEffect(() => () => { unsubRef.current?.(); }, []);
+
+  // ── AI 어시스턴트: 대화로 행사 정보를 즉시 수정 ──
+  const chatHistoryRef = useRef<ChatMessage[]>([]);
+  const chatApply = async (message: string) => {
+    const base = {
+      name: form.name, organizer: form.org, eventType: form.type,
+      periodStart: form.start, periodEnd: form.end, region: form.region,
+      operationType: form.opMode, participantScale: parseDigits(form.scale),
+      budgetLimit: parseBudgetWon(form.budget), purpose: form.purpose,
+    };
+    const r = await applyStepInstruction<BasicInfoInstructionResult>('basicInfo', message, base, base);
+    const f = r.fields;
+    if (f) {
+      setForm((prev) => ({
+        ...prev,
+        name: f.name || prev.name,
+        org: f.organizer || prev.org,
+        type: EVENT_TYPES.includes(f.eventType) ? f.eventType : prev.type,
+        start: /^\d{4}-\d{2}-\d{2}$/.test(f.periodStart) ? f.periodStart : prev.start,
+        end: /^\d{4}-\d{2}-\d{2}$/.test(f.periodEnd) ? f.periodEnd : prev.end,
+        region: f.region || prev.region,
+        opMode: ['오프라인', '온라인', '하이브리드'].includes(f.operationType) ? f.operationType : prev.opMode,
+        scale: f.participantScale > 0 ? `${f.participantScale}명` : prev.scale,
+        budget: f.budgetLimit > 0 ? `${Math.round(f.budgetLimit / 10000).toLocaleString('ko-KR')}만 원` : prev.budget,
+        purpose: f.purpose || prev.purpose,
+      }));
+    }
+    return r.note;
+  };
 
   const onFilePicked = async (file: File) => {
     if (!user) return;
@@ -222,12 +250,6 @@ function Step1Inner() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 기존 이벤트의 지침 문서(events/{id}/instructions/toStep2) 프리필
-  useEffect(() => {
-    if (!event?.id) return;
-    void loadStepInstruction(event.id, 'toStep2').then(setInstr2).catch(() => {});
-  }, [event?.id]);
-
   // 기존 이벤트(currentEventId)를 이어서 수정할 때 프리필
   useEffect(() => {
     if (!event) return;
@@ -284,14 +306,19 @@ function Step1Inner() {
       if (s.currentEventId) {
         // 상태·currentStep은 앞으로만 — 진행 중 프로젝트 수정 시 회귀 방지
         await saveWorkflowStep(s.currentEventId, 'composing', 2, { basicInfo, parsedFromDoc: up });
-        await saveStepInstruction(s.currentEventId, 'toStep2', instr2);
       } else {
         const created = await eventRepository.create(new Event({
           ownerUid: user.uid, basicInfo, parsedFromDoc: up, status: 'composing', currentStep: 2,
         }));
         set({ currentEventId: created.id });
         invalidateEvent(created.id);
-        if (created.id && instr2.trim()) await saveStepInstruction(created.id, 'toStep2', instr2);
+        // 프로젝트 생성 전 나눈 AI 대화를 새 프로젝트에 이관
+        if (created.id && chatHistoryRef.current.length > 0) {
+          const msgs = chatHistoryRef.current;
+          await saveStepChat(created.id, 'step1', msgs).catch(() => {});
+          const joined = msgs.filter((m) => m.role === 'user').map((m) => m.text).join('\n');
+          if (joined.trim()) await saveStepInstruction(created.id, 'toStep2', joined.slice(-1000)).catch(() => {});
+        }
       }
       go('step2');
     } catch (e) {
@@ -454,14 +481,21 @@ function Step1Inner() {
                   </div>
                 </div>
 
-                <InstructionBox
-                  title="다음 단계 AI 지침"
-                  description="2단계 프로그램 구성 초안을 만들 때 AI가 이 지침을 참고합니다."
-                  value={instr2}
-                  onChange={setInstr2}
-                  examples={INSTRUCTION_EXAMPLES.toStep2}
+                <StepChat
+                  title="AI 어시스턴트"
+                  description="대화로 행사 정보를 바로 수정하세요. 보내는 즉시 위 입력란에 반영되고, 2단계 프로그램 초안에도 참고됩니다."
+                  eventId={user ? s.currentEventId : null}
+                  stepKey="step1"
+                  instructionKey="toStep2"
+                  examples={[
+                    '강화군에서 진행하는 것으로 바꿔줘. 시기는 27년 3월이야.',
+                    '참가 규모를 250명, 예산은 8,000만 원으로 조정해줘.',
+                    '행사 목적을 지역 창업 생태계 활성화 중심으로 다듬어줘.',
+                  ]}
                   tips={INSTRUCTION_TIPS}
                   disabled={!user}
+                  onApply={chatApply}
+                  onHistoryChange={(m) => { chatHistoryRef.current = m; }}
                 />
               </div>
 

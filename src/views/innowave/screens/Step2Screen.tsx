@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { CARD_SHADOW, GROTESK, INPUT_STYLE, InstructionBox, LABEL_STYLE, Loading, Notice, Stepper } from '../components.js';
-import { INSTRUCTION_EXAMPLES, INSTRUCTION_TIPS, programDraftFor } from '../data.js';
+import { CARD_SHADOW, GROTESK, INPUT_STYLE, LABEL_STYLE, Loading, Notice, StepChat, Stepper } from '../components.js';
+import { INSTRUCTION_TIPS, programDraftFor } from '../data.js';
 import {
-  applyStepInstruction, errMessage, loadStepInstruction, markInstructionApplied, savePrograms, saveStepInstruction,
+  applyStepInstruction, errMessage, loadStepInstruction, markInstructionApplied, savePrograms,
   saveWorkflowStep, useEvent, usePrograms, type ProgramInstructionResult,
 } from '../hooks.js';
 import { useAuth } from '../../../hooks/useAuth.js';
@@ -25,8 +25,6 @@ export function Step2Screen() {
   const totalMin = s.programs.reduce((a, p) => a + p.dur, 0);
 
   // ── 단계별 AI 지침 ──
-  const [instr3, setInstr3] = useState('');          // 3단계(인력 매칭)용 지침 입력
-  const instrHydratedRef = useRef<string | null>(null);
   const [aiApplying, setAiApplying] = useState(false); // 1단계 지침을 반영한 초안 생성 중
   const [aiNote, setAiNote] = useState<string | null>(null);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -88,14 +86,21 @@ export function Step2Screen() {
     // event가 아직 로딩 중이면 다음 렌더에서 이어서 처리
   }, [needsHydration, savedLoading, savedPrograms, event, s.currentEventId, set, user]);
 
-  // 기존 이벤트의 3단계용 지침 문서 프리필
-  useEffect(() => {
-    if (!event?.id || instrHydratedRef.current === event.id) return;
-    instrHydratedRef.current = event.id;
-    void loadStepInstruction(event.id, 'toStep3').then(setInstr3).catch(() => {});
-  }, [event]);
-
   const markDirty = () => { setDirty(true); setSavedChip(false); };
+
+  /** AI 어시스턴트: 대화로 프로그램 구성을 즉시 수정 */
+  const chatApply = async (message: string) => {
+    const info = event?.basicInfo ?? s.guestInfo ?? {};
+    const r = await applyStepInstruction<ProgramInstructionResult>(
+      'programs', message, info,
+      s.programs.map((p) => ({ time: p.time, name: p.name, dur: p.dur })),
+    );
+    if (r.programs?.length) {
+      set({ programs: r.programs.map((p) => ({ time: p.time, name: p.name, dur: Math.max(5, p.dur || 30), ai: true })) });
+      markDirty();
+    }
+    return r.note;
+  };
 
   const editSave = () => {
     if (s.editIdx === null) return;
@@ -116,7 +121,6 @@ export function Step2Screen() {
     try {
       await savePrograms(s.currentEventId!, s.programs);
       await saveWorkflowStep(s.currentEventId!, 'composing', 2);
-      await saveStepInstruction(s.currentEventId!, 'toStep3', instr3);
       setDirty(false);
       setIsDraft(false);
       setSavedChip(true);
@@ -141,7 +145,6 @@ export function Step2Screen() {
       await savePrograms(s.currentEventId, s.programs);
       // ① 상태 회귀 방지 — 확정/진행 중 프로젝트는 상태를 되돌리지 않고 데이터만 저장
       await saveWorkflowStep(s.currentEventId, 'composing', 3);
-      await saveStepInstruction(s.currentEventId, 'toStep3', instr3);
       setDirty(false);
       setIsDraft(false);
       go('step3');
@@ -242,14 +245,20 @@ export function Step2Screen() {
         )}
 
         <div style={{ marginTop: '20px' }}>
-          <InstructionBox
-            title="다음 단계 AI 지침"
-            description="3단계 비품 선택에서 AI가 추천 구성을 만들 때 이 지침을 참고합니다."
-            value={instr3}
-            onChange={setInstr3}
-            examples={INSTRUCTION_EXAMPLES.toStep3}
+          <StepChat
+            title="AI 어시스턴트"
+            description="대화로 프로그램 구성을 바로 수정하세요. 보내는 즉시 위 목록에 반영되고, 3단계 비품 추천에도 참고됩니다."
+            eventId={user ? s.currentEventId : null}
+            stepKey="step2"
+            instructionKey="toStep3"
+            examples={[
+              '점심 시간은 12시부터 1시간으로 고정하고, 네트워킹 세션을 마지막에 넣어줘.',
+              '개회식은 30분 이내로 짧게, 멘토링 시간을 2시간 이상 확보해줘.',
+              '전체 일정을 오후 1시 시작 기준으로 당겨줘.',
+            ]}
             tips={INSTRUCTION_TIPS}
             disabled={!user}
+            onApply={chatApply}
           />
         </div>
 

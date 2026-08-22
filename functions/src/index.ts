@@ -187,7 +187,37 @@ const QUOTE_SCHEMA = {
   required: ['items', 'note'],
 };
 
+const BASICINFO_SCHEMA = {
+  type: Type.OBJECT,
+  properties: {
+    fields: {
+      type: Type.OBJECT,
+      properties: {
+        name: { type: Type.STRING, description: '행사명' },
+        organizer: { type: Type.STRING, description: '주관기관' },
+        eventType: { type: Type.STRING, enum: [...EVENT_TYPES, ''], description: '행사 유형' },
+        periodStart: { type: Type.STRING, description: '시작일 YYYY-MM-DD, 없으면 빈 문자열' },
+        periodEnd: { type: Type.STRING, description: '종료일 YYYY-MM-DD, 없으면 빈 문자열' },
+        region: { type: Type.STRING, description: '개최 지역' },
+        operationType: { type: Type.STRING, enum: ['오프라인', '온라인', '하이브리드', ''], description: '운영 형태' },
+        participantScale: { type: Type.INTEGER, description: '참가 인원 수 (숫자만, 미변경 시 기존 값)' },
+        budgetLimit: { type: Type.INTEGER, description: '예산 총액 원 단위 정수 (미변경 시 기존 값)' },
+        purpose: { type: Type.STRING, description: '행사 목적' },
+      },
+      required: ['name', 'organizer', 'eventType', 'periodStart', 'periodEnd', 'region', 'operationType', 'participantScale', 'budgetLimit', 'purpose'],
+    },
+    note: { type: Type.STRING, description: '무엇을 어떻게 바꿨는지 1~2문장 요약 (대화체)' },
+  },
+  required: ['fields', 'note'],
+};
+
 const INSTRUCTION_PROMPTS: Record<string, string> = {
+  basicInfo: `당신은 행사 기획 어시스턴트다. 아래 행사 기본 정보(base)를 사용자 요청에 맞게 수정하라.
+규칙:
+- 요청된 항목만 바꾸고 나머지는 base 값을 그대로 유지한다.
+- 날짜는 YYYY-MM-DD. "27년 3월"처럼 기간이 모호하면 해당 월의 1일~말일로 설정한다.
+- 예산은 원 단위 정수, 인원은 숫자만.
+- note는 사용자에게 답하는 대화체 1~2문장으로 쓴다. 예: "지역을 강화군으로, 기간을 2027년 3월로 변경했어요."`,
   programs: `당신은 MICE 행사 프로그램 기획 전문가다. 아래 기본 프로그램 초안을 사용자 지침에 맞게 수정하라.
 규칙:
 - 지침에 없는 부분은 초안을 최대한 유지한다.
@@ -207,6 +237,7 @@ const INSTRUCTION_PROMPTS: Record<string, string> = {
 };
 
 const INSTRUCTION_SCHEMAS: Record<string, object> = {
+  basicInfo: BASICINFO_SCHEMA,
   programs: PROGRAM_SCHEMA,
   matching: MATCHING_SCHEMA,
   quote: QUOTE_SCHEMA,
@@ -235,7 +266,9 @@ export const applyStepInstruction = onCall(
       INSTRUCTION_PROMPTS[target],
       '\n----- 행사 정보 -----',
       JSON.stringify(eventInfo ?? {}, null, 2).slice(0, 4000),
-      target === 'programs' ? '\n----- 기본 프로그램 초안 -----' : target === 'matching' ? '\n----- 후보 인력 목록 -----' : '\n----- 견적 항목 (기본 수량) -----',
+      target === 'basicInfo' ? '\n----- 행사 기본 정보 (base) -----'
+        : target === 'programs' ? '\n----- 기본 프로그램 초안 -----'
+          : target === 'matching' ? '\n----- 후보 인력 목록 -----' : '\n----- 견적 항목 (기본 수량) -----',
       JSON.stringify(base ?? [], null, 2).slice(0, 20000),
       '\n----- 사용자 지침 -----',
       instruction.trim(),

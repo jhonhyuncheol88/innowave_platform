@@ -144,6 +144,12 @@ service cloud.firestore {
         allow write: if canWriteEvent(eventId);
       }
 
+      // 단계별 AI 채팅 기록 (step1~step4)
+      match /chats/{chatId} {
+        allow read: if canReadEvent(eventId);
+        allow write: if canWriteEvent(eventId);
+      }
+
       match /quotes/{quoteId} {
         allow read: if canReadEvent(eventId);
         allow write: if canWriteEvent(eventId);

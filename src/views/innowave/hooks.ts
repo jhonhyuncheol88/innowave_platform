@@ -328,7 +328,16 @@ export async function saveWorkflowStep(
 /* ── 단계별 AI 지침 (다음 단계 초안 생성 시 반영) ───────── */
 
 export type InstructionKey = 'toStep2' | 'toStep3' | 'toStep4' | 'toStep5';
-export type InstructionTarget = 'programs' | 'matching' | 'quote';
+export type InstructionTarget = 'basicInfo' | 'programs' | 'matching' | 'quote';
+
+export interface BasicInfoInstructionResult {
+  fields: {
+    name: string; organizer: string; eventType: string;
+    periodStart: string; periodEnd: string; region: string;
+    operationType: string; participantScale: number; budgetLimit: number; purpose: string;
+  };
+  note: string;
+}
 
 export interface ProgramInstructionResult {
   programs: { time: string; name: string; dur: number }[];
@@ -358,6 +367,29 @@ export async function saveStepInstruction(eventId: string, key: InstructionKey, 
     updatedAt: serverTimestamp(),
     updatedBy: auth.currentUser?.uid ?? '',
   }, { merge: true });
+}
+
+/* ── 단계별 AI 채팅 기록 (events/{id}/chats/{stepKey}) ── */
+
+export type StepChatKey = 'step1' | 'step2' | 'step3' | 'step4';
+
+export interface ChatMessage {
+  role: 'user' | 'ai';
+  text: string;
+  at: number; // epoch ms (배열 내부라 serverTimestamp 불가)
+}
+
+export async function loadStepChat(eventId: string, stepKey: StepChatKey): Promise<ChatMessage[]> {
+  const snap = await getDoc(doc(db, `events/${eventId}/chats/${stepKey}`));
+  return (snap.data()?.messages as ChatMessage[]) ?? [];
+}
+
+export async function saveStepChat(eventId: string, stepKey: StepChatKey, messages: ChatMessage[]): Promise<void> {
+  await setDoc(doc(db, `events/${eventId}/chats/${stepKey}`), {
+    messages: messages.slice(-60), // 최근 60개만 보존
+    updatedAt: serverTimestamp(),
+    updatedBy: auth.currentUser?.uid ?? '',
+  });
 }
 
 /** AI 반영 결과 기록 — 언제 어떤 요약으로 반영됐는지 지침 문서에 남긴다 */

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { CARD_SHADOW, GROTESK, InstructionBox, Loading, Notice, Stepper } from '../components.js';
-import { INSTRUCTION_EXAMPLES, INSTRUCTION_TIPS, PEOPLE_DATA } from '../data.js';
+import { CARD_SHADOW, GROTESK, Loading, Notice, StepChat, Stepper } from '../components.js';
+import { INSTRUCTION_TIPS, PEOPLE_DATA } from '../data.js';
 import {
   applyStepInstruction, errMessage, loadStepInstruction, loadWorkflowDocument, markInstructionApplied,
-  pendingDocumentGeneration, saveMatches, saveStepInstruction, saveWorkflowStep, startDocumentPregeneration,
+  pendingDocumentGeneration, saveMatches, saveWorkflowStep, startDocumentPregeneration,
   useEvent, useMatches, usePersonnel,
   type MatchSelection, type MatchingInstructionResult,
 } from '../hooks.js';
@@ -76,15 +76,6 @@ function Step4Body() {
   const selectedRateTotal = Object.keys(s.selected)
     .reduce((a, k) => a + (selectionInfo.get(k)?.unitRateSnapshot || 0), 0);
 
-  // ── 단계별 AI 지침 ──
-  const [instr5, setInstr5] = useState('');            // 5단계(견적)용 지침 입력
-  const instrHydratedRef = useRef<string | null>(null);
-  useEffect(() => {
-    if (!user || !loadedEvent?.id || instrHydratedRef.current === loadedEvent.id) return;
-    instrHydratedRef.current = loadedEvent.id;
-    void loadStepInstruction(loadedEvent.id, 'toStep5').then(setInstr5).catch(() => {});
-  }, [user, loadedEvent]);
-
   // 3단계에서 입력한 지침 문서(events/{id}/instructions/toStep4)를 반영해 현재 역할 탭의 추천 인력 산출
   const [matchInstruction, setMatchInstruction] = useState('');
   const matchInstrLoadedRef = useRef<string | null>(null);
@@ -122,6 +113,19 @@ function Step4Body() {
 
   const roleRec = recs[s.roleTab];
 
+  /** AI 어시스턴트: 대화로 현재 역할 탭의 추천 인력을 즉시 조정 */
+  const chatApply = async (message: string) => {
+    const r = await applyStepInstruction<MatchingInstructionResult>(
+      'matching', message, event.basicInfo,
+      ranked.map(({ p, fit }) => ({
+        id: p.id ?? '', name: p.name, role: s.roleTab, field: p.expertiseField,
+        career: p.careerSummary, region: p.activityRegion, rating: p.rating, fit,
+      })),
+    );
+    setRecs((m) => ({ ...m, [s.roleTab]: r }));
+    return r.note;
+  };
+
   const goNext = async () => {
     setSaveError(null);
     // 프로젝트가 없거나 로그아웃 상태면 저장 없이 게스트로 진행
@@ -137,7 +141,6 @@ function Step4Body() {
       await saveMatches(s.currentEventId, selections);
       // 상태·currentStep은 앞으로만 — 진행 중 프로젝트 수정 시 회귀 방지
       await saveWorkflowStep(s.currentEventId, 'matching', 5);
-      await saveStepInstruction(s.currentEventId, 'toStep5', instr5);
       // 5단계 입장 게이트 — 제안서·과업지시서가 만들어진 후에만 이동
       if (loadedEvent) {
         const eventId = s.currentEventId;
@@ -147,13 +150,14 @@ function Step4Body() {
         ]);
         if (!hasProposal || !hasWorkorder) {
           const roleCounts = selections.reduce<Record<string, number>>((a, m) => ({ ...a, [m.role]: (a[m.role] || 0) + 1 }), {});
+          const chatInstruction = await loadStepInstruction(eventId, 'toStep5').catch(() => '');
           startDocumentPregeneration(eventId, {
             eventInfo: loadedEvent.basicInfo,
             programs: s.programs.map((p) => ({ time: p.time, name: p.name, dur: p.dur })),
             supplies: s.supplies.map((it) => ({ name: it.name, cat: it.cat, qty: it.qty, unit: it.unit })),
             personnel: Object.entries(roleCounts).map(([role, count]) => ({ role, count })),
             quote: { total: loadedEvent.basicInfo.budgetLimit || null, note: '예산 한도 기준 (상세 예산안 별첨)' },
-            instruction: instr5 || null,
+            instruction: chatInstruction || null,
           });
           setDocGenState('running');
           await pendingDocumentGeneration(eventId);
@@ -289,14 +293,20 @@ function Step4Body() {
       )}
 
       <div style={{ marginTop: '24px' }}>
-        <InstructionBox
-          title="다음 단계 AI 지침"
-          description="5단계 견적 옵션을 산출할 때 AI가 이 지침을 참고합니다."
-          value={instr5}
-          onChange={setInstr5}
-          examples={INSTRUCTION_EXAMPLES.toStep5}
+        <StepChat
+          title="AI 어시스턴트"
+          description="대화로 추천 인력을 조정하세요. 보내는 즉시 현재 역할 탭 추천에 반영되고, 5단계 문서·견적 생성에도 참고됩니다."
+          eventId={user ? s.currentEventId : null}
+          stepKey="step4"
+          instructionKey="toStep5"
+          examples={[
+            '멘토링 경험이 많은 인력을 우선 추천해줘.',
+            'AI·데이터 분야 전문가 위주로 골라줘.',
+            '행사 개최 지역에서 활동 가능한 인력을 우선해줘.',
+          ]}
           tips={INSTRUCTION_TIPS}
           disabled={!user}
+          onApply={chatApply}
         />
       </div>
 

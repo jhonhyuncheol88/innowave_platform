@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { CARD_SHADOW, GROTESK, InstructionBox, Loading, Notice, Stepper } from '../components.js';
-import { INITIAL_RATE_LIST, INSTRUCTION_EXAMPLES, INSTRUCTION_TIPS, RATE_CATEGORIES } from '../data.js';
+import { CARD_SHADOW, GROTESK, Loading, Notice, StepChat, Stepper } from '../components.js';
+import { INITIAL_RATE_LIST, INSTRUCTION_TIPS, RATE_CATEGORIES } from '../data.js';
 import {
   applyStepInstruction, buildQuoteItems, errMessage, loadStepInstruction, markInstructionApplied,
-  saveStepInstruction, saveSupplies, saveWorkflowStep, useEvent, useRateCards, useSupplies,
+  saveSupplies, saveWorkflowStep, useEvent, useRateCards, useSupplies,
   type QuoteInstructionResult,
 } from '../hooks.js';
 import { fmt, useIw } from '../state.js';
@@ -48,15 +48,6 @@ function Step3Body() {
   const [aiApplying, setAiApplying] = useState(false);
   const [aiNote, setAiNote] = useState<string | null>(null);
   const [aiError, setAiError] = useState<string | null>(null);
-
-  // ── 4단계(인력 매칭)용 지침 입력 ──
-  const [instr4, setInstr4] = useState('');
-  const instrHydratedRef = useRef<string | null>(null);
-  useEffect(() => {
-    if (!user || !event?.id || instrHydratedRef.current === event.id) return;
-    instrHydratedRef.current = event.id;
-    void loadStepInstruction(event.id, 'toStep4').then(setInstr4).catch(() => {});
-  }, [user, event]);
 
   // ── 하이드레이션: 저장본 복원 → 없으면 AI 추천 초안 (2단계 지침 반영) ──
   const needsHydration = !!user && !!s.currentEventId && s.suppliesEventId !== s.currentEventId;
@@ -118,6 +109,26 @@ function Step3Body() {
     set({ supplies: s.supplies.filter((_, i) => i !== idx) });
   };
 
+  /** AI 어시스턴트: 대화로 비품 구성을 즉시 수정 (수량 조정·제외) */
+  const chatApply = async (message: string) => {
+    const r = await applyStepInstruction<QuoteInstructionResult>(
+      'quote', message, event?.basicInfo ?? s.guestInfo ?? {},
+      s.supplies.map((d) => ({ rateCardId: d.rateCardId || d.name, itemName: d.name, unit: d.unit, qty: d.qty, unitPrice: d.unitPrice })),
+    );
+    if (r.items?.length) {
+      const qtyMap = new Map(r.items.map((it) => [it.rateCardId, it.qty]));
+      set({
+        supplies: s.supplies
+          .map((d) => {
+            const key = d.rateCardId || d.name;
+            return qtyMap.has(key) ? { ...d, qty: qtyMap.get(key)! } : d;
+          })
+          .filter((d) => d.qty > 0),
+      });
+    }
+    return r.note;
+  };
+
   // ── 비품 추가 모달 ──
   const [addOpen, setAddOpen] = useState(false);
   const [addCat, setAddCat] = useState('전체');
@@ -164,7 +175,6 @@ function Step3Body() {
       await saveSupplies(s.currentEventId, s.supplies);
       // 비품 확정 → 인력 매칭 단계로 (상태·currentStep은 앞으로만)
       await saveWorkflowStep(s.currentEventId, 'matching', 4);
-      await saveStepInstruction(s.currentEventId, 'toStep4', instr4);
       setIsDraft(false);
       go('step4');
     } catch (e) {
@@ -274,14 +284,20 @@ function Step3Body() {
       )}
 
       <div style={{ marginTop: '20px' }}>
-        <InstructionBox
-          title="다음 단계 AI 지침"
-          description="4단계 인력 매칭에서 후보를 추천할 때 AI가 이 지침을 참고합니다."
-          value={instr4}
-          onChange={setInstr4}
-          examples={INSTRUCTION_EXAMPLES.toStep4}
+        <StepChat
+          title="AI 어시스턴트"
+          description="대화로 비품 구성을 바로 수정하세요. 보내는 즉시 위 목록에 반영되고, 4단계 인력 추천에도 참고됩니다."
+          eventId={user ? s.currentEventId : null}
+          stepKey="step3"
+          instructionKey="toStep4"
+          examples={[
+            '홍보물 비중을 줄이고 전문가 섭외 비중을 늘려줘.',
+            '케이터링은 참가 인원의 80% 기준으로 잡아줘.',
+            '무대·음향 장비는 최소 구성으로 잡아줘.',
+          ]}
           tips={INSTRUCTION_TIPS}
           disabled={!user}
+          onApply={chatApply}
         />
       </div>
 
