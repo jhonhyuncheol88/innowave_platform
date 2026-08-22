@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { CARD_SHADOW, GROTESK, Loading, Logo, Notice, RequireAuth } from '../components.js';
+import { CARD_SHADOW, GROTESK, Loading, Logo, Notice } from '../components.js';
 import {
-  buildOptionQuote, buildQuoteItems, errMessage, loadWorkflowDocument, tsLabel, useEvent, usePrograms, useQuoteParams, useRateCards,
+  buildOptionQuote, buildQuoteItems, errMessage, loadWorkflowDocument, tsLabel, useEvent, usePrograms, useQuoteParams, useRateCards, useSupplies,
   type ProposalDocContent, type WorkorderDocContent,
 } from '../hooks.js';
 import { ProposalDocView, WorkorderDocView } from './WorkflowDocs.js';
 import { downloadElementAsPdf } from '../pdf.js';
+import { useAuth } from '../../../hooks/useAuth.js';
 import { fmt, selectionSummary, useIw } from '../state.js';
-import type { QuoteOptionValue } from '../../../models/Quote.js';
+import { QuoteItem, type QuoteOptionValue } from '../../../models/Quote.js';
 
 const PLAN_NAMES = { basic: 'Basic', standard: 'Standard', premium: 'Premium' } as const;
 
@@ -19,7 +20,10 @@ function ProposalBody() {
   const eventId = searchParams.get('event') ?? s.currentEventId;
 
   const { event } = useEvent(eventId);
-  const { cards, loading: cardsLoading } = useRateCards();
+  const { user } = useAuth();
+  // 익명 열람 시 rateCards는 조회하지 않는다 (rules상 로그인 필요) — supplies 스냅샷으로 견적 구성
+  const { cards, loading: cardsLoading } = useRateCards(!!user);
+  const { supplies: savedSupplies } = useSupplies(eventId);
   const { params } = useQuoteParams();
   const { programs: savedPrograms } = usePrograms(eventId);
   const docRef = useRef<HTMLDivElement>(null);
@@ -38,7 +42,15 @@ function ProposalBody() {
   const [pdfBusy, setPdfBusy] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
 
-  const items = useMemo(() => buildQuoteItems(cards, event), [cards, event]);
+  const items = useMemo(() => {
+    if (savedSupplies.length > 0) {
+      return savedSupplies.filter((it) => it.qty > 0).map((it) => new QuoteItem({
+        rateCardId: it.rateCardId, itemName: it.name, unit: it.unit,
+        qty: it.qty, unitPrice: it.unitPrice, marginRate: it.marginRate,
+      }));
+    }
+    return buildQuoteItems(cards, event);
+  }, [savedSupplies, cards, event]);
   const mult = s.plan === 'basic' ? params.multBasic : s.plan === 'premium' ? params.multPremium : 1.0;
   const quote = useMemo(
     () => buildOptionQuote(items, s.plan as QuoteOptionValue, mult, s.budget * 10000),
@@ -131,7 +143,7 @@ function ProposalBody() {
                 b={b}
                 programs={programRows.map((p) => ({ title: p.name, startTime: p.time, durationMin: p.dur }))}
                 quote={quote}
-                planName={PLAN_NAMES[s.plan]}
+                planName="최종"
                 roleCounts={Object.fromEntries(selSummary.map((x) => [x.role, x.count]))}
               />
             </div>
@@ -157,9 +169,7 @@ function ProposalBody() {
 export function ProposalScreen() {
   return (
     <div style={{ minHeight: '100vh', background: '#F6F9FF', paddingBottom: '100px' }}>
-      <RequireAuth>
-        <ProposalBody />
-      </RequireAuth>
+      <ProposalBody />
     </div>
   );
 }

@@ -98,7 +98,9 @@ service cloud.firestore {
 
     // ── events (워크플로우 중심) ───────────────────────────────────────────
     match /events/{eventId} {
-      allow read: if canReadEvent(eventId);
+      // 공유 링크 열람: 문서 ID(추측 불가 랜덤 값)를 아는 사람은 로그인 없이 단건 조회 가능
+      allow get: if true;
+      allow list: if canReadEvent(eventId);
 
       allow create: if isSignedIn()
         && !isClient()
@@ -118,12 +120,12 @@ service cloud.firestore {
         || (isSignedIn() && resource.data.ownerUid == request.auth.uid);
 
       match /documents/{docId} {
-        allow read: if canReadEvent(eventId);
+        allow read: if true; // 공유 문서(제안서·과업지시서) 익명 열람
         allow write: if canWriteEvent(eventId);
       }
 
       match /programs/{programId} {
-        allow read: if canReadEvent(eventId);
+        allow read: if true; // 공유 문서의 프로그램 표 익명 열람
         allow write: if canWriteEvent(eventId);
       }
 
@@ -138,9 +140,9 @@ service cloud.firestore {
         allow write: if canWriteEvent(eventId);
       }
 
-      // 3단계 비품 선택 (레이트카드 스냅샷 + 수량)
+      // 3단계 비품 선택 (레이트카드 스냅샷 + 수량) — 공유 문서의 예산 표 익명 열람
       match /supplies/{supplyId} {
-        allow read: if canReadEvent(eventId);
+        allow read: if true;
         allow write: if canWriteEvent(eventId);
       }
 
