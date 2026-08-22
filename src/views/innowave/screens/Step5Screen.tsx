@@ -245,21 +245,6 @@ function Step5Body() {
             })}
           </div>
 
-          {/* 예산 시뮬레이션 */}
-          <div style={{ marginTop: '24px', background: '#FFFFFF', borderRadius: '20px', boxShadow: CARD_SHADOW, padding: '26px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '16px', flexWrap: 'wrap', marginBottom: '14px' }}>
-              <div style={{ fontSize: '16px', fontWeight: 700, color: '#071A3E' }}>예산 시뮬레이션</div>
-              <div style={{ fontSize: '13.5px', color: '#5A6478' }}>
-                예산 한도 <span style={{ fontFamily: GROTESK, fontWeight: 700, fontSize: '19px', color: '#1463F3' }}>{s.budget.toLocaleString('ko-KR')}</span> 만 원
-              </div>
-            </div>
-            <input type="range" min={BUDGET_MIN} max={BUDGET_MAX} step={500} value={s.budget} onChange={(e) => set({ budget: Number(e.target.value) })} style={{ width: '100%', accentColor: '#1463F3', cursor: 'pointer' }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#9AA3B8', marginTop: '6px', fontFamily: GROTESK }}>
-              <span>{BUDGET_MIN.toLocaleString('ko-KR')}</span><span>{BUDGET_MAX.toLocaleString('ko-KR')}</span>
-            </div>
-            <p style={{ margin: '12px 0 0', fontSize: '13px', color: '#5A6478' }}>한도를 조정하면 세 옵션의 구성 수량이 예산 안으로 실시간 재계산됩니다.</p>
-          </div>
-
           {/* 게스트: 최종 견적 로그인 게이트 */}
           {!user && (
             <div style={{ marginTop: '24px', background: '#071A3E', borderRadius: '20px', padding: '30px clamp(16px,5vw,32px)', display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
