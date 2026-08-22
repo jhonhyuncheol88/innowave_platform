@@ -37,7 +37,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return onAuthStateChanged(auth, async (user) => {
       if (!user) return setState({ user: null, role: null, approval: null, loading: false });
       const profile = await ensureUserProfile(user);
-      setState({ user, role: profile.role, approval: profile.approval, loading: false });
+      // 시연 모드: 로그인만 하면 승인 절차 없이 바로 사용 가능 (승인 게이트 복원 시 profile.approval로 되돌릴 것)
+      setState({ user, role: profile.role, approval: 'approved', loading: false });
     });
   }, []);
 

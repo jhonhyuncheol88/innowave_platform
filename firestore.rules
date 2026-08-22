@@ -41,10 +41,10 @@ service cloud.firestore {
       return v == null || (v is string && v.size() <= max);
     }
 
-    // 관리자 사용허가 — approvalStatus 필드가 없는 기존 계정은 승인으로 간주
+    // 관리자 사용허가 — 시연 모드: 로그인한 계정은 모두 승인으로 간주
+    // (승인 게이트 복원 시: userDoc().data.get('approvalStatus', 'approved') == 'approved' 검사로 되돌릴 것)
     function isApproved() {
-      return isSignedIn() && hasProfile()
-        && userDoc().data.get('approvalStatus', 'approved') == 'approved';
+      return isSignedIn() && hasProfile();
     }
 
     function eventData(eventId) {
