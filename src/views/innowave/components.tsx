@@ -51,7 +51,7 @@ export function Logo({ dark = false, size = 21, suffix }: { dark?: boolean; size
 
 /* ── 워크플로우 스텝퍼 ────────────────────────────── */
 
-const STEP_LABELS = ['행사 정보', '프로그램 구성', '비품 선택', '인력 매칭', '견적·기획안'];
+const STEP_LABELS = ['행사 정보', '프로그램 구성', '비품 선택', '인력 매칭', '제안서·과업지시서'];
 
 export function Stepper({ current }: { current: number }) {
   return (
@@ -150,7 +150,7 @@ export function AppHeader() {
 
 const NAV_SCREENS: [ScreenId, string][] = [
   ['landing', '랜딩'], ['auth', '로그인'], ['step1', '① 정보'], ['step2', '② 프로그램'],
-  ['step3', '③ 비품'], ['step4', '④ 매칭'], ['step5', '⑤ 견적'], ['proposal', '기획안 확인'], ['progress', '진행 입력'],
+  ['step3', '③ 비품'], ['step4', '④ 매칭'], ['step5', '⑤ 문서'], ['proposal', '기획안 확인'], ['progress', '진행 입력'],
   ['dashboard', '발주처 현황'], ['projects', '내 프로젝트'], ['admin', '관리자'],
 ];
 

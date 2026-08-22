@@ -2,8 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { CARD_SHADOW, GROTESK, InstructionBox, Loading, Notice, Stepper } from '../components.js';
 import { INSTRUCTION_EXAMPLES, INSTRUCTION_TIPS, PEOPLE_DATA } from '../data.js';
 import {
-  applyStepInstruction, errMessage, loadStepInstruction, markInstructionApplied, saveMatches, saveStepInstruction,
-  saveWorkflowStep, startDocumentPregeneration, useEvent, useMatches, usePersonnel,
+  applyStepInstruction, errMessage, loadStepInstruction, loadWorkflowDocument, markInstructionApplied,
+  pendingDocumentGeneration, saveMatches, saveStepInstruction, saveWorkflowStep, startDocumentPregeneration,
+  useEvent, useMatches, usePersonnel,
   type MatchSelection, type MatchingInstructionResult,
 } from '../hooks.js';
 import { fmt, selectionSummary, useIw } from '../state.js';
@@ -24,6 +25,8 @@ function Step4Body() {
   const { people, loading, error } = usePersonnel(s.roleTab, 60, !!user);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // 5단계 입장 게이트 — 제안서·과업지시서 생성 대기 팝업 상태
+  const [docGenState, setDocGenState] = useState<'idle' | 'running' | 'failed'>('idle');
 
   // ── 기존 프로젝트 수정: 저장된 인력 선택(events/{id}/matches) 복원 ──
   const { matches: savedMatches, loading: matchesLoading } = useMatches(user ? s.currentEventId : null);
@@ -135,17 +138,35 @@ function Step4Body() {
       // 상태·currentStep은 앞으로만 — 진행 중 프로젝트 수정 시 회귀 방지
       await saveWorkflowStep(s.currentEventId, 'matching', 5);
       await saveStepInstruction(s.currentEventId, 'toStep5', instr5);
-      // 5단계 산출 문서(제안서·과업지시서) 사전 생성 — 이동 후 백그라운드에서 이어짐
+      // 5단계 입장 게이트 — 제안서·과업지시서가 만들어진 후에만 이동
       if (loadedEvent) {
-        const roleCounts = selections.reduce<Record<string, number>>((a, m) => ({ ...a, [m.role]: (a[m.role] || 0) + 1 }), {});
-        startDocumentPregeneration(s.currentEventId, {
-          eventInfo: loadedEvent.basicInfo,
-          programs: s.programs.map((p) => ({ time: p.time, name: p.name, dur: p.dur })),
-          supplies: s.supplies.map((it) => ({ name: it.name, cat: it.cat, qty: it.qty, unit: it.unit })),
-          personnel: Object.entries(roleCounts).map(([role, count]) => ({ role, count })),
-          quote: { total: loadedEvent.basicInfo.budgetLimit || null, note: '예산 한도 기준 (상세 예산안 별첨)' },
-          instruction: instr5 || null,
-        });
+        const eventId = s.currentEventId;
+        const [hasProposal, hasWorkorder] = await Promise.all([
+          loadWorkflowDocument(eventId, 'proposal'),
+          loadWorkflowDocument(eventId, 'workorder'),
+        ]);
+        if (!hasProposal || !hasWorkorder) {
+          const roleCounts = selections.reduce<Record<string, number>>((a, m) => ({ ...a, [m.role]: (a[m.role] || 0) + 1 }), {});
+          startDocumentPregeneration(eventId, {
+            eventInfo: loadedEvent.basicInfo,
+            programs: s.programs.map((p) => ({ time: p.time, name: p.name, dur: p.dur })),
+            supplies: s.supplies.map((it) => ({ name: it.name, cat: it.cat, qty: it.qty, unit: it.unit })),
+            personnel: Object.entries(roleCounts).map(([role, count]) => ({ role, count })),
+            quote: { total: loadedEvent.basicInfo.budgetLimit || null, note: '예산 한도 기준 (상세 예산안 별첨)' },
+            instruction: instr5 || null,
+          });
+          setDocGenState('running');
+          await pendingDocumentGeneration(eventId);
+          const [p1, p2] = await Promise.all([
+            loadWorkflowDocument(eventId, 'proposal'),
+            loadWorkflowDocument(eventId, 'workorder'),
+          ]);
+          if (!p1 || !p2) {
+            setDocGenState('failed');
+            return;
+          }
+          setDocGenState('idle');
+        }
       }
       go('step5');
     } catch (e) {
@@ -285,6 +306,36 @@ function Step4Body() {
         <button onClick={() => go('step3')} className="iw-btn-outline-navy" style={{ background: 'transparent', color: '#0D3B8F', border: '1px solid rgba(13,59,143,0.25)', borderRadius: '999px', padding: '13px 30px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>이전</button>
         <button onClick={goNext} disabled={busy} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '13px clamp(16px,5vw,32px)', fontSize: '15px', fontWeight: 700, cursor: busy ? 'wait' : 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 18px rgba(20,99,243,0.3)', opacity: busy ? 0.7 : 1 }}>{busy ? '저장 중…' : '다음 단계로'}</button>
       </div>
+
+      {/* 5단계 입장 게이트 팝업 — 제안서·과업지시서 생성 대기 */}
+      {docGenState !== 'idle' && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,62,0.55)', backdropFilter: 'blur(4px)', zIndex: 1200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div role="dialog" aria-modal="true" style={{ background: '#FFFFFF', borderRadius: '22px', boxShadow: '0 24px 64px rgba(7,26,62,0.28)', padding: '36px clamp(22px,5vw,40px)', maxWidth: '440px', width: '100%', textAlign: 'center' }}>
+            {docGenState === 'running' ? (
+              <>
+                <span style={{ width: '44px', height: '44px', borderRadius: '999px', border: '5px solid #E5F0FF', borderTopColor: '#1463F3', animation: 'iwSpin .8s linear infinite', display: 'inline-block', marginBottom: '18px' }} />
+                <h2 style={{ margin: '0 0 8px', fontSize: '18px', fontWeight: 800, color: '#071A3E' }}>현재 정보를 바탕으로<br />과업지시서·제안서가 작성되고 있어요</h2>
+                <p style={{ margin: 0, fontSize: '13.5px', lineHeight: 1.65, color: '#5A6478' }}>
+                  1~4단계 데이터와 지침을 반영해 AI가 두 문서를 작성 중입니다.<br />
+                  최대 1분 정도 걸리며, 완료되면 자동으로 이동합니다.
+                </p>
+              </>
+            ) : (
+              <>
+                <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#FFF0F0', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E5484D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                </div>
+                <h2 style={{ margin: '0 0 8px', fontSize: '18px', fontWeight: 800, color: '#071A3E' }}>문서 작성에 실패했어요</h2>
+                <p style={{ margin: '0 0 20px', fontSize: '13.5px', lineHeight: 1.65, color: '#5A6478' }}>일시적인 오류일 수 있어요. 다시 시도해 주세요.</p>
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                  <button onClick={() => setDocGenState('idle')} style={{ background: 'transparent', color: '#5A6478', border: '1px solid rgba(112,115,124,0.28)', borderRadius: '999px', padding: '11px 24px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>닫기</button>
+                  <button onClick={() => { setDocGenState('idle'); void goNext(); }} className="iw-btn-primary" style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '11px 26px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 18px rgba(20,99,243,0.3)' }}>다시 시도</button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

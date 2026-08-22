@@ -10,7 +10,7 @@ const STEP_DEFS: { n: number; label: string; screen: ScreenId }[] = [
   { n: 2, label: '프로그램 구성', screen: 'step2' },
   { n: 3, label: '비품 선택', screen: 'step3' },
   { n: 4, label: '인력 매칭', screen: 'step4' },
-  { n: 5, label: '견적·기획안', screen: 'step5' },
+  { n: 5, label: '제안서·과업지시서', screen: 'step5' },
 ];
 
 const OPTION_LABEL: Record<string, string> = { basic: 'Basic', standard: 'Standard', premium: 'Premium' };
