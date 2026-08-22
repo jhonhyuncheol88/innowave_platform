@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CARD_SHADOW, GROTESK, Loading, Notice, RequireAuth } from '../components.js';
 import { PROJ_STATUS_MAP } from '../data.js';
-import { deleteEvent, errMessage, tsLabel, useEvent, useLatestQuote, wonLabel } from '../hooks.js';
+import { deleteEvent, errMessage, loadWorkflowDocument, tsLabel, useEvent, useLatestQuote, wonLabel } from '../hooks.js';
 import { fmt, useIw } from '../state.js';
 import type { ScreenId } from '../types.js';
 
@@ -49,6 +49,16 @@ function ProjectHubBody() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  // 산출 문서(제안서·과업지시서) 생성 여부
+  const [docStatus, setDocStatus] = useState<{ proposal: boolean; workorder: boolean }>({ proposal: false, workorder: false });
+  useEffect(() => {
+    if (!s.currentEventId) return;
+    void Promise.all([
+      loadWorkflowDocument(s.currentEventId, 'proposal'),
+      loadWorkflowDocument(s.currentEventId, 'workorder'),
+    ]).then(([p, w]) => setDocStatus({ proposal: !!p, workorder: !!w })).catch(() => {});
+  }, [s.currentEventId]);
 
   if (!s.currentEventId) return <EmptyState onBack={() => go('projects')} />;
   if (loading) return <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '36px clamp(16px,5vw,32px) 0' }}><Loading label="프로젝트를 불러오는 중…" /></div>;
@@ -126,38 +136,38 @@ function ProjectHubBody() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))', gap: '20px', alignItems: 'stretch' }}>
 
-        {/* 견적 카드 */}
+        {/* 산출 문서 카드 — 제안서·과업지시서 중심 */}
         <div style={{ background: '#FFFFFF', borderRadius: '20px', boxShadow: CARD_SHADOW, padding: '28px clamp(16px,5vw,32px)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          <h2 style={{ margin: 0, fontSize: '17px', fontWeight: 800, color: '#071A3E', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            저장된 견적
-            {quote && (
-              <span style={{ background: '#E5F0FF', color: '#1463F3', borderRadius: '999px', padding: '3px 12px', fontSize: '11.5px', fontWeight: 700, whiteSpace: 'nowrap' }}>{OPTION_LABEL[quote.optionType] ?? quote.optionType} 옵션</span>
-            )}
-          </h2>
+          <h2 style={{ margin: 0, fontSize: '17px', fontWeight: 800, color: '#071A3E' }}>산출 문서</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {([['proposal', '운영사업 제안서'], ['workorder', '과업지시서']] as const).map(([key, label]) => (
+              <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid rgba(112,115,124,0.18)', borderRadius: '14px', padding: '13px 16px' }}>
+                <span style={{ width: '32px', height: '32px', borderRadius: '10px', background: key === 'proposal' ? '#E5F0FF' : '#DCF3F8', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={key === 'proposal' ? '#1463F3' : '#0C7A93'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                </span>
+                <span style={{ flex: 1, fontSize: '14.5px', fontWeight: 700, color: '#071A3E' }}>{label}</span>
+                {docStatus[key] ? (
+                  <span style={{ background: '#F0FBF4', color: '#1B8A4B', borderRadius: '999px', padding: '4px 12px', fontSize: '11.5px', fontWeight: 700 }}>생성됨</span>
+                ) : (
+                  <span style={{ background: '#EEF1F6', color: '#9AA3B8', borderRadius: '999px', padding: '4px 12px', fontSize: '11.5px', fontWeight: 700 }}>미생성</span>
+                )}
+              </div>
+            ))}
+          </div>
           {quoteLoading ? (
-            <Loading label="견적을 불러오는 중…" />
+            <Loading label="예산 정보를 불러오는 중…" />
           ) : quote ? (
-            <>
-              <div>
-                <div style={{ fontFamily: GROTESK, fontWeight: 700, fontSize: '32px', letterSpacing: '-0.02em', color: '#1463F3' }}>₩{fmt(quote.total)}</div>
-                <div style={{ fontSize: '12.5px', color: '#9AA3B8', marginTop: '2px' }}>부가세 포함 · 레이트카드 {quote.items.length}개 항목 · 저장일 {tsLabel(quote.createdAt)}</div>
-              </div>
-              <div style={{ borderTop: '1px solid rgba(112,115,124,0.22)', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '7px', fontSize: '13.5px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#5A6478' }}>공급가</span><span style={{ fontFamily: GROTESK, fontWeight: 600, color: '#3A4358' }}>₩{fmt(quote.subtotal)}</span></div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#5A6478' }}>마진</span><span style={{ fontFamily: GROTESK, fontWeight: 600, color: '#3A4358' }}>₩{fmt(quote.marginTotal)}</span></div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#5A6478' }}>부가세</span><span style={{ fontFamily: GROTESK, fontWeight: 600, color: '#3A4358' }}>₩{fmt(quote.vat)}</span></div>
-              </div>
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: 'auto' }}>
-                <button onClick={() => go('step5')} className="iw-btn-outline-blue" style={{ flex: 1, border: '1px solid rgba(20,99,243,0.4)', background: '#FFFFFF', color: '#1463F3', borderRadius: '999px', padding: '11px 0', fontSize: '13.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>견적 다시 산출</button>
-                <button onClick={() => go('proposal')} className="iw-btn-primary" style={{ flex: 1, background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '11px 0', fontSize: '13.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>발주처 공유 문서 보기</button>
-              </div>
-            </>
-          ) : (
-            <>
-              <p style={{ margin: 0, fontSize: '14px', color: '#5A6478' }}>저장된 견적이 아직 없습니다.</p>
-              <button onClick={() => go('step5')} className="iw-btn-primary" style={{ marginTop: 'auto', background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '11px 0', fontSize: '13.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>견적 만들기</button>
-            </>
-          )}
+            <div style={{ fontSize: '12.5px', color: '#9AA3B8' }}>
+              소요예산(별첨) <span style={{ fontFamily: GROTESK, fontWeight: 700, fontSize: '15px', color: '#1463F3' }}>₩{fmt(quote.total)}</span>
+              {' '}· {OPTION_LABEL[quote.optionType] ?? quote.optionType} 옵션 · 저장일 {tsLabel(quote.createdAt)}
+            </div>
+          ) : null}
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: 'auto' }}>
+            <button onClick={() => go('step5')} className="iw-btn-outline-blue" style={{ flex: 1, border: '1px solid rgba(20,99,243,0.4)', background: '#FFFFFF', color: '#1463F3', borderRadius: '999px', padding: '11px 0', fontSize: '13.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+              {docStatus.proposal || docStatus.workorder ? '제안서·과업지시서 수정' : '문서 만들기'}
+            </button>
+            <button onClick={() => go('proposal')} className="iw-btn-primary" style={{ flex: 1, background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '11px 0', fontSize: '13.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>발주처 공유 문서 보기</button>
+          </div>
         </div>
 
         {/* 진행 현황 카드 */}

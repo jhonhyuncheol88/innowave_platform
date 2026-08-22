@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CARD_SHADOW, GROTESK, Loading, Notice, RequireAuth } from '../components.js';
 import { PROJ_FILTERS, PROJ_STATUS_MAP } from '../data.js';
-import { tsLabel, useMyEvents } from '../hooks.js';
+import { deleteEvent, errMessage, tsLabel, useMyEvents } from '../hooks.js';
 import { useAuth } from '../../../hooks/useAuth.js';
 import { useIw, WORKFLOW_RESET } from '../state.js';
 import type { Event } from '../../../models/Event.js';
@@ -24,7 +24,7 @@ export function ProjectsScreen() {
 function ProjectsInner() {
   const { s, set, go } = useIw();
   const { role, approval } = useAuth();
-  const { events, loading, error } = useMyEvents();
+  const { events, loading, error, reload } = useMyEvents();
   const [search, setSearch] = useState('');
   const canOperate = role === 'admin' || approval === 'approved';
 
@@ -35,6 +35,27 @@ function ProjectsInner() {
   const openEvent = (ev: Event) => {
     set({ currentEventId: ev.id });
     go('project');
+  };
+
+  // ── 프로젝트 삭제 (카드 휴지통 → 확인 팝업) ──
+  const [confirmDel, setConfirmDel] = useState<Event | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [delError, setDelError] = useState<string | null>(null);
+
+  const removeProject = async () => {
+    if (!confirmDel?.id || deleting) return;
+    setDeleting(true);
+    setDelError(null);
+    try {
+      await deleteEvent(confirmDel.id);
+      if (s.currentEventId === confirmDel.id) set({ currentEventId: null });
+      setConfirmDel(null);
+      reload();
+    } catch (e) {
+      setDelError(errMessage(e));
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -106,10 +127,43 @@ function ProjectsInner() {
                       </div>
                     </div>
                   )}
-                  <div style={{ fontSize: '12.5px', color: '#9AA3B8', marginTop: 'auto' }}>최종 수정 {tsLabel(ev.updatedAt)}</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', marginTop: 'auto' }}>
+                    <span style={{ fontSize: '12.5px', color: '#9AA3B8' }}>최종 수정 {tsLabel(ev.updatedAt)}</span>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setConfirmDel(ev); setDelError(null); }}
+                      title="프로젝트 삭제" className="iw-icon-delete"
+                      style={{ width: '30px', height: '30px', borderRadius: '9px', border: '1px solid rgba(112,115,124,0.2)', background: '#FFFFFF', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9AA3B8', flexShrink: 0 }}
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+                    </button>
+                  </div>
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* 삭제 확인 팝업 */}
+        {confirmDel && (
+          <div
+            onClick={() => { if (!deleting) setConfirmDel(null); }}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(7,26,62,0.45)', backdropFilter: 'blur(3px)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
+          >
+            <div onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" style={{ background: '#FFFFFF', borderRadius: '22px', boxShadow: '0 24px 64px rgba(7,26,62,0.28)', padding: '32px clamp(22px,5vw,36px)', maxWidth: '420px', width: '100%', textAlign: 'center' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#FFF0F0', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E5484D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+              </div>
+              <h2 style={{ margin: '0 0 8px', fontSize: '18px', fontWeight: 800, color: '#071A3E' }}>프로젝트를 삭제할까요?</h2>
+              <p style={{ margin: '0 0 20px', fontSize: '13.5px', lineHeight: 1.65, color: '#5A6478' }}>
+                &lsquo;{confirmDel.basicInfo.name || '(무명 프로젝트)'}&rsquo;<br />
+                삭제하면 프로그램·비품·인력·문서 데이터를 복구할 수 없습니다.
+              </p>
+              {delError && <div style={{ marginBottom: '14px', textAlign: 'left' }}><Notice tone="error">{delError}</Notice></div>}
+              <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                <button onClick={() => setConfirmDel(null)} disabled={deleting} style={{ background: 'transparent', color: '#5A6478', border: '1px solid rgba(112,115,124,0.28)', borderRadius: '999px', padding: '11px 26px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>취소</button>
+                <button onClick={() => void removeProject()} disabled={deleting} style={{ background: '#E5484D', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '11px 28px', fontSize: '14px', fontWeight: 700, cursor: deleting ? 'wait' : 'pointer', fontFamily: 'inherit', opacity: deleting ? 0.7 : 1 }}>{deleting ? '삭제 중…' : '삭제'}</button>
+              </div>
+            </div>
           </div>
         )}
 
