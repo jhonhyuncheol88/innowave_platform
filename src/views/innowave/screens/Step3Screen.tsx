@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CARD_SHADOW, GROTESK, Loading, Notice, StepChat, Stepper } from '../components.js';
-import { INITIAL_RATE_LIST, INSTRUCTION_TIPS, RATE_CATEGORIES } from '../data.js';
+import { INITIAL_RATE_LIST, INSTRUCTION_TIPS, RATE_CATEGORIES, composeEventSupplies, spanDays, type SupplyPoolItem } from '../data.js';
 import {
-  applyStepInstruction, buildQuoteItems, errMessage, loadStepInstruction, markInstructionApplied,
+  applyStepInstruction, errMessage, loadStepInstruction, markInstructionApplied,
   saveSupplies, saveWorkflowStep, useEvent, useRateCards, useSupplies,
   type QuoteInstructionResult,
 } from '../hooks.js';
@@ -10,39 +10,37 @@ import { fmt, useIw } from '../state.js';
 import { useAuth } from '../../../hooks/useAuth.js';
 import type { SupplyItem } from '../types.js';
 
-/** 비품 구성의 최종 견적(공급가+마진+부가세)이 예산에 근접하도록 수량을 비례 조정 */
-function scaleSuppliesToBudget(items: SupplyItem[], budgetWon: number): SupplyItem[] {
-  if (budgetWon <= 0 || items.length === 0) return items;
-  const grossed = items.reduce((sum, it) => sum + it.unitPrice * it.qty * (1 + (it.marginRate || 0)), 0) * 1.1;
-  if (grossed <= 0) return items;
-  const ratio = budgetWon / grossed;
-  return items.map((it) => ({ ...it, qty: Math.max(1, Math.round(it.qty * ratio)) }));
+/** 인원 기반 항목(1인당 산정) — 예산 스케일 시 수량을 인원수 그대로 고정한다 */
+function isPerPerson(it: SupplyItem): boolean {
+  return it.unit.includes('인') || it.unit === '명'
+    || ['명찰', '기념품', '리플렛 제작', '교재 및 워크시트 제작'].some((n) => it.name.includes(n));
 }
 
-/** 게스트 데모용 추천 구성 — 카테고리별 대표 항목 + 규모 기반 수량 (INITIAL_RATE_LIST 기준) */
-function demoSupplies(scale: number): SupplyItem[] {
-  const picks: { cat: string; qty: number }[] = [
-    { cat: '장소·공간', qty: 1 },
-    { cat: '장비·시스템', qty: 1 },
-    { cat: '케이터링·다과', qty: scale },
-    { cat: '인쇄·디자인', qty: 10 },
-    { cat: '인력', qty: 10 },
-    { cat: '기념품·굿즈', qty: scale },
-    { cat: '마케팅·홍보', qty: 1 },
-    { cat: '안전·보험', qty: 1 },
-    { cat: '운영·행정', qty: 1 },
-  ];
-  return picks.flatMap(({ cat, qty }) => {
-    const item = INITIAL_RATE_LIST
-      .filter((r) => r.active && r.cat === cat)
-      .sort((a, b) => b.price - a.price)[0];
-    if (!item) return [];
-    return [{
-      rateCardId: '', name: item.name, cat: item.cat, unit: item.unit,
-      unitPrice: item.price, marginRate: (item.margin || 0) / 100, qty, source: 'ai' as const,
-    }];
-  });
+/** 비품 구성의 최종 견적(공급가+마진+부가세)이 예산에 근접하도록 수량을 비례 조정
+ *  — 인원 기반 항목은 고정하고, 장비·인쇄·홍보 등 나머지 항목이 예산을 흡수한다 */
+function scaleSuppliesToBudget(items: SupplyItem[], budgetWon: number): SupplyItem[] {
+  if (budgetWon <= 0 || items.length === 0) return items;
+  const gross = (it: SupplyItem) => it.unitPrice * it.qty * (1 + (it.marginRate || 0)) * 1.1;
+  const fixedTotal = items.filter(isPerPerson).reduce((sum, it) => sum + gross(it), 0);
+  const scalableTotal = items.filter((it) => !isPerPerson(it)).reduce((sum, it) => sum + gross(it), 0);
+  if (scalableTotal <= 0) {
+    // 전부 인원 기반이면 전체 비례 조정으로 폴백
+    const all = fixedTotal;
+    if (all <= 0) return items;
+    const r = budgetWon / all;
+    return items.map((it) => ({ ...it, qty: Math.max(1, Math.round(it.qty * r)) }));
+  }
+  const ratio = Math.max(0.2, (budgetWon - fixedTotal) / scalableTotal);
+  return items.map((it) => (isPerPerson(it) ? it : { ...it, qty: Math.max(1, Math.round(it.qty * ratio)) }));
 }
+
+/** 게스트 데모용 풀 — INITIAL_RATE_LIST를 공용 풀 형태로 변환 */
+const DEMO_POOL: SupplyPoolItem[] = INITIAL_RATE_LIST
+  .filter((r) => r.active)
+  .map((r) => ({
+    rateCardId: '', name: r.name, cat: r.cat, unit: r.unit,
+    unitPrice: r.price, marginRate: (r.margin || 0) / 100,
+  }));
 
 function Step3Body() {
   const { s, set, go } = useIw();
@@ -72,13 +70,18 @@ function Step3Body() {
       return;
     }
     if (cards.length === 0) return;
-    const cardById = new Map(cards.map((c) => [c.id ?? '', c]));
-    const draft: SupplyItem[] = scaleSuppliesToBudget(buildQuoteItems(cards, event).map((qi) => ({
-      rateCardId: qi.rateCardId, name: qi.itemName,
-      cat: cardById.get(qi.rateCardId)?.category ?? '',
-      unit: qi.unit, unitPrice: qi.unitPrice, marginRate: qi.marginRate,
-      qty: qi.qty, source: 'ai',
-    })), event.basicInfo.budgetLimit || 0);
+    // 행사 유형·규모·일수·운영형태에 맞는 비품 구성 → 예산에 맞춰 수량 스케일
+    const b = event.basicInfo;
+    const pool: SupplyPoolItem[] = cards
+      .filter((c) => c.isActive)
+      .map((c) => ({
+        rateCardId: c.id ?? '', name: c.itemName, cat: c.category,
+        unit: c.unit, unitPrice: c.unitPrice, marginRate: c.marginRate,
+      }));
+    const composed = composeEventSupplies(
+      pool, b.eventType, b.participantScale || 100, spanDays(b.periodStart, b.periodEnd), b.operationType,
+    );
+    const draft: SupplyItem[] = scaleSuppliesToBudget(composed, budgetWon);
     set({ supplies: draft, suppliesEventId: s.currentEventId });
     setIsDraft(true);
     // 2단계에서 입력한 지침 문서(events/{id}/instructions/toStep3)가 있으면 추천 수량 조정
@@ -109,10 +112,15 @@ function Step3Body() {
       .catch(() => {});
   }, [needsHydration, savedLoading, cardsLoading, savedSupplies, event, cards, s.currentEventId, set]);
 
-  // 게스트: 데모 추천 구성
+  // 게스트: 행사 유형에 맞는 데모 추천 구성 (예산 스케일 포함)
   useEffect(() => {
     if (user || s.supplies.length > 0) return;
-    set({ supplies: scaleSuppliesToBudget(demoSupplies(s.guestInfo?.participantScale || 100), s.guestInfo?.budgetLimit || 0) });
+    const g = s.guestInfo;
+    const composed = composeEventSupplies(
+      DEMO_POOL, g?.eventType || '포럼·컨퍼런스', g?.participantScale || 100,
+      spanDays(g?.periodStart, g?.periodEnd), g?.operationType || '오프라인',
+    );
+    set({ supplies: scaleSuppliesToBudget(composed, g?.budgetLimit || 0) });
   }, [user, s.supplies.length, s.guestInfo, set]);
 
   const patchItem = (idx: number, qty: number) => {

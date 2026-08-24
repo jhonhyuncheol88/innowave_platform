@@ -3,7 +3,7 @@
 //  예산==견적 '정확 금액'은 quote-test.mjs 수치 검증으로 확인됨: 오차 <0.1%)
 import { chromium } from 'playwright';
 
-const BASE = 'http://localhost:5177';
+const BASE = 'http://localhost:5173';
 const SHOT = (n) => `/private/tmp/claude-502/-Users-jeonhyuncheol-development--------------innowave-platform/48a88b1b-95ae-4034-a1d5-dd27bce4bf32/scratchpad/e2e-${n}.png`;
 const results = [];
 const check = (name, ok, detail) => { results.push({ name, ok }); console.log(`${ok ? '✅' : '❌'} ${name}${detail ? ' — ' + detail : ''}`); };

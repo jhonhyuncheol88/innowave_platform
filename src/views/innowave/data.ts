@@ -1,5 +1,5 @@
 /** INNOWAVE.dc.html 프로토타입 데모 데이터 */
-import type { MatchPerson, Milestone, PoolPerson, ProgramItem, RateItem } from './types.js';
+import type { MatchPerson, Milestone, PoolPerson, ProgramItem, RateItem, SupplyItem } from './types.js';
 
 export const PROCESS_CARDS = [
   { num: '01', title: '행사 정보 입력', desc: '기본 정보를 입력하거나 과업지시서를 올리면 AI가 항목을 자동으로 채웁니다.' },
@@ -365,3 +365,139 @@ export const ABOUT_FEATURES = [
 export const PR_STAFF_DEFAULT: [string, number][] = [
   ['강사', 2], ['멘토', 4], ['심사위원', 3], ['운영인력', 16],
 ];
+
+/* ── 행사 유형별 비품 구성 (AI 판단 초안) ─────────────────────
+ * 카테고리별 대표 1개가 아니라, 행사 성격에 실제 필요한 항목들을
+ * 규모(scale)·일수(days)·운영형태에 맞는 수량으로 채운다.
+ * '인력' 카테고리는 넣지 않는다 — 인건비는 4단계 매칭 인력으로 별도 산출. */
+
+interface SupplyPick {
+  /** 레이트카드 항목명에 포함될 키워드 (규모에 따라 달라지면 함수) */
+  k: string | ((scale: number) => string);
+  /** 수량 규칙 */
+  q: (scale: number, days: number) => number;
+}
+
+/** 대부분 행사에 공통으로 필요한 기본 구성 */
+const COMMON_PICKS: SupplyPick[] = [
+  { k: (s) => (s >= 250 ? '컨벤션홀' : '세미나실'), q: (_s, d) => d },
+  { k: '음향 시스템', q: () => 1 },
+  { k: '키비주얼', q: () => 1 },
+  { k: '현수막', q: () => 4 },
+  { k: '배너', q: () => 4 },
+  { k: '명찰', q: (s) => s },
+  { k: '홍보용 포스터', q: () => 2 },
+  { k: '스케치영상', q: () => 1 },
+  { k: '케이터링', q: (s, d) => s * d },
+  { k: '커피브레이크', q: (s, d) => s * d },
+  { k: '기념품', q: (s) => s },
+  { k: '행사배상책임보험', q: (s) => s },
+  { k: '안전관리 요원', q: (_s, d) => 2 * d },
+  { k: '사무용 비품', q: () => 1 },
+];
+
+/** 행사 유형별 추가·대체 구성 */
+const EVENT_SUPPLY_PLANS: Record<string, SupplyPick[]> = {
+  '해커톤·아이디어톤': [
+    { k: '무대 임대', q: () => 1 },
+    { k: 'LED 스크린', q: (_s, d) => d },
+    { k: '다과 및 푸드', q: (_s, d) => d },
+    { k: '시상식 폼보드', q: () => 3 },
+    { k: '리플렛', q: (s) => s },
+  ],
+  '부트캠프·창업캠프': [
+    { k: '대관료(교육장)', q: (_s, d) => d },
+    { k: '숙박', q: (s, d) => (d > 1 ? s * (d - 1) : 0) },
+    { k: '교재 및 워크시트', q: (s) => s },
+    { k: '버스 임차 및 운행 제반경비(25인승)', q: () => 2 },
+    { k: '다과', q: (s, d) => s * d },
+  ],
+  '데모데이·IR피칭': [
+    { k: '무대 임대', q: () => 1 },
+    { k: 'LED 스크린', q: (_s, d) => d },
+    { k: '포토존', q: () => 1 },
+    { k: '시상식 폼보드', q: () => 3 },
+    { k: '리플렛', q: (s) => s },
+  ],
+  '경진대회': [
+    { k: '무대 임대', q: () => 1 },
+    { k: 'LED 스크린', q: (_s, d) => d },
+    { k: '시상식 폼보드', q: () => 5 },
+    { k: '현황판', q: () => 6 },
+  ],
+  '네트워킹': [
+    { k: '포토존', q: () => 1 },
+    { k: '출장 뷔페', q: (s) => s },
+  ],
+  '포럼·컨퍼런스': [
+    { k: '무대 임대', q: () => 1 },
+    { k: 'LED 스크린', q: (_s, d) => d },
+    { k: '리플렛', q: (s) => s },
+    { k: '포디움 타이틀', q: () => 2 },
+    { k: '동시통역', q: (s) => (s >= 200 ? 1 : 0) },
+  ],
+  '특강·세미나': [
+    { k: '리플렛', q: (s) => s },
+  ],
+  '박람회·전시': [
+    { k: '무대 임대', q: () => 1 },
+    { k: '포토존', q: () => 1 },
+    { k: '스카시', q: () => 2 },
+    { k: '현황판', q: () => 10 },
+    { k: '영상 스위칭', q: () => 1 },
+  ],
+};
+
+/** 기간 문자열(YYYY-MM-DD) → 행사 일수 (1~30) */
+export function spanDays(start?: string | null, end?: string | null): number {
+  if (!start || !end) return 1;
+  const diff = Math.round((new Date(end).getTime() - new Date(start).getTime()) / 86400000) + 1;
+  return Math.max(1, Math.min(diff, 30));
+}
+
+/** 비품 후보 풀 항목 — 레이트카드(로그인)·INITIAL_RATE_LIST(게스트) 공용 형태 */
+export interface SupplyPoolItem {
+  rateCardId: string;
+  name: string;
+  cat: string;
+  unit: string;
+  unitPrice: number;
+  marginRate: number; // 소수 (0.1 = 10%)
+}
+
+/** 행사 유형·규모·일수·운영형태에 맞는 비품 구성 생성 */
+export function composeEventSupplies(
+  pool: SupplyPoolItem[],
+  eventType: string,
+  scale: number,
+  days: number,
+  operationType: string,
+): SupplyItem[] {
+  const s = Math.max(scale, 10);
+  const d = Math.max(days, 1);
+  const picks: SupplyPick[] = [
+    ...COMMON_PICKS,
+    ...(EVENT_SUPPLY_PLANS[eventType] ?? EVENT_SUPPLY_PLANS['포럼·컨퍼런스']),
+    // 온라인·하이브리드는 중계 추가
+    ...(operationType !== '오프라인' ? [{ k: '온라인 생중계', q: (_s2: number, d2: number) => d2 } as SupplyPick] : []),
+  ];
+  // 부트캠프는 교육장 대관을 쓰므로 공통 대관(세미나실/컨벤션홀)을 제외
+  const filtered = eventType === '부트캠프·창업캠프'
+    ? picks.filter((p) => typeof p.k !== 'function')
+    : picks;
+  const used = new Set<string>();
+  const items: SupplyItem[] = [];
+  filtered.forEach((p) => {
+    const keyword = typeof p.k === 'function' ? p.k(s) : p.k;
+    const qty = Math.round(p.q(s, d));
+    if (qty <= 0) return;
+    const hit = pool.find((it) => it.cat !== '인력' && it.name.includes(keyword) && !used.has(it.rateCardId || it.name));
+    if (!hit) return;
+    used.add(hit.rateCardId || hit.name);
+    items.push({
+      rateCardId: hit.rateCardId, name: hit.name, cat: hit.cat, unit: hit.unit,
+      unitPrice: hit.unitPrice, marginRate: hit.marginRate, qty, source: 'ai',
+    });
+  });
+  return items;
+}
