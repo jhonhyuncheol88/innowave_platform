@@ -179,29 +179,72 @@ function DocCard({ children }: { children: React.ReactNode }) {
  *  sow-gen/sow: 과업지시서 페이지 → proposal-gen/proposal: 운영제안서 페이지 */
 type ShowPhase = 'attach' | 'reading' | 'memo' | 'sow-gen' | 'sow' | 'proposal-gen' | 'proposal';
 
-/** 각 단계 산출물을 PDF로 저장 — 대상 영역(ref)을 캡처해 다운로드 */
-function PdfButton({ targetRef, fileName }: { targetRef: React.RefObject<HTMLDivElement | null>; fileName: string }) {
+/** 정적 자산(docx·hwpx)을 지정 파일명으로 내려받기 */
+function downloadAsset(href: string, fileName: string) {
+  const a = document.createElement('a');
+  a.href = href;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+/** 각 단계 산출물 다운로드 — 형식(PDF·DOCX·HWPX)을 선택해 저장 */
+function DownloadMenu({ targetRef, baseName, assetKey }: {
+  targetRef: React.RefObject<HTMLDivElement | null>;
+  /** 저장 파일명 접두어 (예: '과업지시서_2026_SNU-SH_DEMO_DAY') */
+  baseName: string;
+  /** public/downloads/ 내 자산 키 (memo·sow·proposal) */
+  assetKey: 'memo' | 'sow' | 'proposal';
+}) {
+  const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
-  const onClick = async () => {
+  const pdf = async () => {
     if (!targetRef.current || busy) return;
+    setOpen(false);
     setBusy(true);
     try {
-      await downloadElementAsPdf(targetRef.current, fileName);
+      await downloadElementAsPdf(targetRef.current, `${baseName}.pdf`);
     } finally {
       setBusy(false);
     }
   };
+  const asset = (ext: 'docx' | 'hwpx') => {
+    setOpen(false);
+    downloadAsset(`/downloads/${assetKey}.${ext}`, `${baseName}.${ext}`);
+  };
+  const itemStyle: React.CSSProperties = {
+    display: 'flex', alignItems: 'center', gap: '9px', width: '100%', background: 'transparent', border: 'none',
+    padding: '10px 16px', fontSize: '13px', fontWeight: 600, color: '#1B2437', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
+  };
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+    <div style={{ display: 'flex', justifyContent: 'flex-end', position: 'relative' }}>
       <button
-        onClick={() => void onClick()}
+        onClick={() => setOpen((v) => !v)}
         disabled={busy}
         className="iw-btn-outline-navy"
         style={{ background: 'transparent', color: '#0D3B8F', border: '1px solid rgba(13,59,143,0.25)', borderRadius: '999px', padding: '9px 18px', fontSize: '13px', fontWeight: 700, cursor: busy ? 'wait' : 'pointer', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: '7px', opacity: busy ? 0.7 : 1 }}
       >
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-        {busy ? 'PDF 생성 중…' : 'PDF 다운로드'}
+        {busy ? 'PDF 생성 중…' : '다운로드'}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .15s' }}><polyline points="6 9 12 15 18 9" /></svg>
       </button>
+      {open && (
+        <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, zIndex: 40, background: '#FFFFFF', border: '1px solid rgba(112,115,124,0.2)', borderRadius: '14px', boxShadow: '0 12px 32px rgba(7,26,62,0.16)', overflow: 'hidden', minWidth: '190px' }}>
+          <button onClick={() => void pdf()} style={itemStyle} className="iw-accordion-head">
+            <span style={{ width: '26px', height: '26px', borderRadius: '8px', background: '#FFE9E9', color: '#C4302B', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '9.5px', fontWeight: 800 }}>PDF</span>
+            PDF 문서
+          </button>
+          <button onClick={() => asset('docx')} style={itemStyle} className="iw-accordion-head">
+            <span style={{ width: '26px', height: '26px', borderRadius: '8px', background: '#E5F0FF', color: '#1B5EBE', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '8.5px', fontWeight: 800 }}>DOC</span>
+            워드 문서 (DOCX)
+          </button>
+          <button onClick={() => asset('hwpx')} style={itemStyle} className="iw-accordion-head">
+            <span style={{ width: '26px', height: '26px', borderRadius: '8px', background: '#E8F6FF', color: '#0B84C4', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '8.5px', fontWeight: 800 }}>HWP</span>
+            한글 문서 (HWPX)
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -333,7 +376,7 @@ export function ShowcaseScreen() {
         {phase === 'reading' && <GeneratingCard label={'AI가 첨부된 미팅 자료를 읽고 있어요…'} />}
         {phase === 'memo' && (
           <>
-            <PdfButton targetRef={memoRef} fileName="미팅메모_2026_SNU-SH_DEMO_DAY.pdf" />
+            <DownloadMenu targetRef={memoRef} baseName="미팅메모_2026_SNU-SH_DEMO_DAY" assetKey="memo" />
             <div ref={memoRef} style={{ background: '#F6F9FF', padding: '6px 4px' }}>
               <MemoCard value={MEMO_TEXT} fileName={fileName} />
             </div>
@@ -345,7 +388,7 @@ export function ShowcaseScreen() {
         {phase === 'sow-gen' && <GeneratingCard label={'AI가 메모를 분석해 과업지시서를 작성하고 있어요…'} />}
         {phase === 'sow' && (
           <>
-            <PdfButton targetRef={sowRef} fileName="과업지시서_2026_SNU-SH_DEMO_DAY.pdf" />
+            <DownloadMenu targetRef={sowRef} baseName="과업지시서_2026_SNU-SH_DEMO_DAY" assetKey="sow" />
             <div ref={sowRef} style={{ background: '#F6F9FF', padding: '6px 4px' }}>
               <DocCard><SowDocument /></DocCard>
             </div>
@@ -364,7 +407,7 @@ export function ShowcaseScreen() {
                 <button onClick={() => go('projects')} style={{ marginLeft: 'auto', background: 'transparent', border: 'none', color: '#1463F3', fontSize: '13px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline' }}>내 프로젝트 보기</button>
               </div>
             )}
-            <PdfButton targetRef={proposalRef} fileName="운영제안서_2026_SNU-SH_DEMO_DAY.pdf" />
+            <DownloadMenu targetRef={proposalRef} baseName="운영제안서_2026_SNU-SH_DEMO_DAY" assetKey="proposal" />
             <div ref={proposalRef} style={{ background: '#F6F9FF', padding: '6px 4px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <DocCard><ProposalDocument /></DocCard>
               <DocCard><BudgetDocument /></DocCard>
