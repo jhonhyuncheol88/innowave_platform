@@ -193,6 +193,7 @@ export interface SavedProgram {
   durationMin: number;
   source: string;
   order: number;
+  day: number;
 }
 
 /** 발주처 공유 문서용: 저장된 프로그램 구성 (events/{id}/programs) */
@@ -208,6 +209,7 @@ export function usePrograms(eventId: string | null) {
         durationMin: Number(v.durationMin) || 0,
         source: v.source ?? 'user',
         order: Number(v.order) || 0,
+        day: Number(v.day) || 1,
       };
     });
   }, [eventId]);
@@ -862,7 +864,7 @@ export async function saveQuoteParams(p: QuoteParams, updatedBy: string): Promis
 
 /* ── 견적 구성 (REQ-09/10) ────────────────────────── */
 
-function eventDays(event: Event | null): number {
+export function eventDays(event: Event | null): number {
   const s = event?.basicInfo.periodStart;
   const e = event?.basicInfo.periodEnd;
   if (!s || !e) return 1;
@@ -942,6 +944,7 @@ export async function savePrograms(eventId: string, programs: ProgramItem[]): Pr
       startTime: p.time,
       durationMin: p.dur,
       source: p.ai ? 'ai' : 'user',
+      day: p.day || 1,
       linkedRateCardIds: [],
     },
   })));

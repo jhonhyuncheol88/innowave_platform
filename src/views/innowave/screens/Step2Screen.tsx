@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CARD_SHADOW, GROTESK, INPUT_STYLE, LABEL_STYLE, Loading, Notice, StepChat, Stepper } from '../components.js';
 import { INSTRUCTION_TIPS, programDraftFor } from '../data.js';
 import {
-  applyStepInstruction, errMessage, loadStepInstruction, markInstructionApplied, savePrograms,
+  applyStepInstruction, errMessage, eventDays, loadStepInstruction, markInstructionApplied, savePrograms,
   saveWorkflowStep, useEvent, usePrograms, type ProgramInstructionResult,
 } from '../hooks.js';
 import { useAuth } from '../../../hooks/useAuth.js';
@@ -44,6 +44,7 @@ export function Step2Screen() {
           name: p.title,
           dur: p.durationMin || 30,
           ai: p.source === 'ai',
+          day: p.day || 1,
         })),
         programsEventId: s.currentEventId,
       });
@@ -71,7 +72,7 @@ export function Step2Screen() {
                 if (!r.programs?.length) return;
                 set({
                   programs: r.programs.map((p) => ({
-                    time: p.time, name: p.name, dur: Math.max(5, p.dur || 30), ai: true,
+                    time: p.time, name: p.name, dur: Math.max(5, p.dur || 30), ai: true, day: 1,
                   })),
                 });
                 setAiNote(r.note || null);
@@ -96,7 +97,7 @@ export function Step2Screen() {
       s.programs.map((p) => ({ time: p.time, name: p.name, dur: p.dur })),
     );
     if (r.programs?.length) {
-      set({ programs: r.programs.map((p) => ({ time: p.time, name: p.name, dur: Math.max(5, p.dur || 30), ai: true })) });
+      set({ programs: r.programs.map((p) => ({ time: p.time, name: p.name, dur: Math.max(5, p.dur || 30), ai: true, day: 1 })) });
       markDirty();
     }
     return r.note;
@@ -105,7 +106,7 @@ export function Step2Screen() {
   const editSave = () => {
     if (s.editIdx === null) return;
     const next = s.programs.map((p, j) => j === s.editIdx
-      ? { ...p, time: s.editTime, name: s.editName, dur: Math.max(5, s.editDur || 30), ai: false }
+      ? { ...p, time: s.editTime, name: s.editName, dur: Math.max(5, s.editDur || 30), ai: false, day: s.editDay || 1 }
       : p);
     set({ programs: next, editIdx: null });
     markDirty();
@@ -230,6 +231,7 @@ export function Step2Screen() {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.7" /><circle cx="15" cy="6" r="1.7" /><circle cx="9" cy="12" r="1.7" /><circle cx="15" cy="12" r="1.7" /><circle cx="9" cy="18" r="1.7" /><circle cx="15" cy="18" r="1.7" /></svg>
               </div>
               <div style={{ fontFamily: GROTESK, fontWeight: 600, fontSize: '15px', color: '#0D3B8F', width: '52px', flexShrink: 0 }}>{pg.time}</div>
+              <span style={{ background: '#EEF1F6', color: '#5A6478', borderRadius: '999px', padding: '3px 9px', fontSize: '11px', fontWeight: 700, flexShrink: 0 }}>{pg.day}일차</span>
               <div style={{ flex: 1, minWidth: '160px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                 <span style={{ fontSize: '15.5px', fontWeight: 700, color: '#071A3E' }}>{pg.name}</span>
                 <span style={{ background: pg.ai ? '#E5F0FF' : '#EEF1F6', color: pg.ai ? '#1463F3' : '#5A6478', borderRadius: '999px', padding: '3px 10px', fontSize: '11.5px', fontWeight: 700 }}>{pg.ai ? 'AI 제안' : '직접 수정'}</span>
@@ -237,7 +239,7 @@ export function Step2Screen() {
               <div style={{ fontSize: '13.5px', color: '#5A6478', flexShrink: 0 }}>{durText(pg.dur)}</div>
               <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
                 <button
-                  onClick={() => set({ editIdx: i, editTime: pg.time, editName: pg.name, editDur: pg.dur })}
+                  onClick={() => set({ editIdx: i, editTime: pg.time, editName: pg.name, editDur: pg.dur, editDay: pg.day })}
                   title="수정" className="iw-icon-edit"
                   style={{ width: '32px', height: '32px', borderRadius: '10px', border: '1px solid rgba(112,115,124,0.22)', background: '#FFFFFF', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5A6478' }}
                 >
@@ -254,7 +256,7 @@ export function Step2Screen() {
             </div>
           ))}
           <button
-            onClick={() => { set({ programs: [...s.programs, { time: '19:30', name: '새 프로그램', dur: 30, ai: false }] }); markDirty(); }}
+            onClick={() => { set({ programs: [...s.programs, { time: '19:30', name: '새 프로그램', dur: 30, ai: false, day: 1 }] }); markDirty(); }}
             className="iw-btn-dashed"
             style={{ border: '2px dashed rgba(20,99,243,0.35)', background: 'transparent', borderRadius: '20px', padding: '16px', fontSize: '14.5px', fontWeight: 700, color: '#1463F3', cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'all .16s' }}
           >
@@ -321,6 +323,12 @@ export function Step2Screen() {
                   <label style={LABEL_STYLE}>소요 시간 (분)</label>
                   <input type="number" min={5} step={5} value={s.editDur} onChange={(e) => set({ editDur: Number(e.target.value) })} className="iw-input" style={{ ...INPUT_STYLE, padding: '11px 14px', fontFamily: GROTESK }} />
                 </div>
+              </div>
+              <div>
+                <label style={LABEL_STYLE}>일차</label>
+                <select value={s.editDay} onChange={(e) => set({ editDay: Number(e.target.value) })} style={{ ...INPUT_STYLE, padding: '11px 14px', cursor: 'pointer' }}>
+                  {Array.from({ length: Math.max(eventDays(event), 3) }, (_, i) => i + 1).map((d) => <option key={d} value={d}>{d}일차</option>)}
+                </select>
               </div>
               <div style={{ background: '#F0F7FF', border: '1px solid rgba(20,99,243,0.16)', borderRadius: '12px', padding: '11px 14px', fontSize: '12.5px', lineHeight: 1.55, color: '#3A4358' }}>
                 저장하면 이 항목은 <strong style={{ color: '#0D3B8F' }}>직접 수정</strong> 배지로 표시됩니다.

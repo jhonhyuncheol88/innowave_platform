@@ -12,6 +12,7 @@ export interface ProgramItem {
   name: string;
   dur: number; // 분
   ai: boolean; // AI 제안 여부 (false = 직접 수정)
+  day: number; // 일차 (1부터)
 }
 
 /** 3단계 비품 선택 항목 — 레이트카드 스냅샷 + 수량 */
@@ -85,6 +86,7 @@ export interface IwState {
   editTime: string;
   editName: string;
   editDur: number;
+  editDay: number;
   roleTab: string;
   selected: Record<string, boolean>;
   budget: number; // 만 원

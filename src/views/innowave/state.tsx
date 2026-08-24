@@ -19,6 +19,7 @@ const INITIAL_STATE: IwState = {
   editTime: '',
   editName: '',
   editDur: 30,
+  editDay: 1,
   roleTab: '강사',
   selected: {},
   budget: 6000,

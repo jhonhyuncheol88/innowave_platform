@@ -61,8 +61,8 @@ function ProposalBody() {
 
   // 저장된 프로그램(서브컬렉션)이 있으면 우선, 없으면 로컬 구성 표시
   const programRows = savedPrograms.length > 0
-    ? savedPrograms.map((p) => ({ time: p.startTime, name: p.title, dur: p.durationMin }))
-    : s.programs.map((p) => ({ time: p.time, name: p.name, dur: p.dur }));
+    ? savedPrograms.map((p) => ({ time: p.startTime, name: p.title, dur: p.durationMin, day: p.day || 1 }))
+    : s.programs.map((p) => ({ time: p.time, name: p.name, dur: p.dur, day: p.day || 1 }));
 
   const b = event?.basicInfo;
   const title = b?.name ?? '2026 청년 창업 해커톤';
@@ -141,7 +141,7 @@ function ProposalBody() {
               <ProposalDocView
                 doc={sharedDocs.proposal}
                 b={b}
-                programs={programRows.map((p) => ({ title: p.name, startTime: p.time, durationMin: p.dur }))}
+                programs={programRows.map((p) => ({ title: p.name, startTime: p.time, durationMin: p.dur, day: p.day }))}
                 quote={quote}
                 planName="최종"
                 roleCounts={Object.fromEntries(selSummary.map((x) => [x.role, x.count]))}
@@ -153,7 +153,7 @@ function ProposalBody() {
               <WorkorderDocView
                 doc={sharedDocs.workorder}
                 b={b}
-                programs={programRows.map((p) => ({ title: p.name, startTime: p.time, durationMin: p.dur }))}
+                programs={programRows.map((p) => ({ title: p.name, startTime: p.time, durationMin: p.dur, day: p.day }))}
               />
             </div>
           )}

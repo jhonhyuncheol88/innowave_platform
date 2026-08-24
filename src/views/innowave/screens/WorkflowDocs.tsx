@@ -2,7 +2,7 @@
  * 5단계 산출 문서 — 운영사업 제안서 · 과업지시서
  * 서술 섹션은 AI(generateDocument)가 작성하고, 프로그램·예산·인력 표는 워크플로우 실데이터를 배치한다.
  */
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Fragment, useEffect, useRef, useState, type ReactNode } from 'react';
 import { CARD_SHADOW, GROTESK, Notice } from '../components.js';
 import {
   errMessage, generateWorkflowDocument, loadWorkflowDocument, pendingDocumentGeneration, saveWorkflowDocument,
@@ -44,24 +44,31 @@ function RowsTable({ rows }: { rows?: DocRow[] }) {
   );
 }
 
-export interface SavedProgramRow { title: string; startTime: string; durationMin: number }
+export interface SavedProgramRow { title: string; startTime: string; durationMin: number; day?: number }
 
 function durText(min: number): string {
   return (min >= 60 ? `${Math.floor(min / 60)}시간 ` : '') + (min % 60 ? `${min % 60}분` : '');
 }
 
+/** 프로그램을 일차별로 묶어 표시 — 소제목 행 뒤에 해당 일차의 프로그램들을 나열 */
 function ProgramTable({ programs }: { programs: SavedProgramRow[] }) {
   if (!programs.length) return null;
+  const days = Array.from(new Set(programs.map((p) => p.day || 1))).sort((a, b) => a - b);
   return (
     <table style={TABLE}>
       <thead><tr><th style={{ ...TH, width: '80px' }}>시간</th><th style={TH}>프로그램</th><th style={{ ...TH, width: '90px' }}>소요</th></tr></thead>
       <tbody>
-        {programs.map((p, i) => (
-          <tr key={`${p.title}-${i}`}>
-            <td style={{ ...TD, fontFamily: GROTESK }}>{p.startTime}</td>
-            <td style={TD}>{p.title}</td>
-            <td style={TD}>{durText(p.durationMin)}</td>
-          </tr>
+        {days.map((day) => (
+          <Fragment key={day}>
+            <tr><td colSpan={3} style={{ ...TD, fontWeight: 700, color: '#0D3B8F', background: '#F6F9FF' }}>{day}일차</td></tr>
+            {programs.filter((p) => (p.day || 1) === day).map((p, i) => (
+              <tr key={`${p.title}-${i}`}>
+                <td style={{ ...TD, fontFamily: GROTESK }}>{p.startTime}</td>
+                <td style={TD}>{p.title}</td>
+                <td style={TD}>{durText(p.durationMin)}</td>
+              </tr>
+            ))}
+          </Fragment>
         ))}
       </tbody>
     </table>
