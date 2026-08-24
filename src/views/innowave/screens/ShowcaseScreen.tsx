@@ -86,9 +86,42 @@ function GeneratingCard({ label }: { label: string }) {
   );
 }
 
-/* ── 메모 카드 ────────────────────────────────────────────── */
+/* ── 미팅 자료 첨부 카드 ──────────────────────────────────── */
 
-function MemoCard({ value, onChange, editable }: { value: string; onChange: (v: string) => void; editable: boolean }) {
+function UploadCard({ onPicked, disabled }: { onPicked: (fileName: string) => void; disabled: boolean }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  return (
+    <div
+      onClick={() => { if (!disabled) inputRef.current?.click(); }}
+      className="iw-dropzone"
+      style={{
+        background: '#FFFFFF', border: '2px dashed rgba(20,99,243,0.35)', borderRadius: '20px',
+        padding: '52px 24px', textAlign: 'center', cursor: disabled ? 'progress' : 'pointer', transition: 'all .18s',
+      }}
+    >
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".pdf,.docx,.txt,.hwp,.hwpx,.jpeg,.jpg,.png"
+        style={{ display: 'none' }}
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) onPicked(f.name);
+          e.target.value = '';
+        }}
+      />
+      <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: '#E5F0FF', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1463F3" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+      </div>
+      <div style={{ fontSize: '16.5px', fontWeight: 800, color: '#071A3E', marginBottom: '6px' }}>전화·미팅 메모 파일을 첨부하세요</div>
+      <div style={{ fontSize: '13px', color: '#5A6478' }}>클릭해 파일을 선택하세요 · PDF, DOCX, TXT, 이미지 지원</div>
+    </div>
+  );
+}
+
+/* ── 메모 카드 (첨부 파일에서 읽어낸 내용 표시) ────────────── */
+
+function MemoCard({ value, fileName }: { value: string; fileName: string }) {
   return (
     <div style={{ background: '#FFFFFF', borderRadius: '20px', boxShadow: CARD_SHADOW, padding: '26px clamp(16px,5vw,32px)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
@@ -98,21 +131,15 @@ function MemoCard({ value, onChange, editable }: { value: string; onChange: (v: 
         </div>
         <DocBadge tone="memo">전화·미팅 메모</DocBadge>
       </div>
-      <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        readOnly={!editable}
-        rows={20}
-        className="iw-input"
-        style={{
-          width: '100%', boxSizing: 'border-box', resize: 'vertical', border: '1px solid rgba(112,115,124,0.28)',
-          borderRadius: '14px', padding: '16px 18px', fontSize: '13.5px', lineHeight: 1.75, color: '#1B2437',
-          fontFamily: 'inherit', background: editable ? '#FFFFFF' : '#F6F8FB', outline: 'none', minHeight: '360px',
-        }}
-      />
-      <p style={{ margin: '10px 0 0', fontSize: '12px', color: '#9AA3B8' }}>
-        {editable ? '실제 통화·미팅 내용을 그대로 옮긴 메모입니다. 자유롭게 수정한 뒤 아래 버튼을 눌러 보세요.' : '생성이 시작되어 메모는 더 이상 수정할 수 없습니다. 처음부터 다시 시작하면 다시 편집할 수 있어요.'}
-      </p>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#F0FBF4', border: '1px solid rgba(43,182,115,0.35)', borderRadius: '12px', padding: '10px 14px', marginBottom: '12px' }}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1B8A4B" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+        <span style={{ fontSize: '13px', fontWeight: 700, color: '#1B8A4B' }}>{fileName}</span>
+        <span style={{ fontSize: '12px', color: '#5A6478' }}>— AI가 첨부 자료에서 아래 내용을 읽어냈습니다</span>
+      </div>
+      <div style={{
+        whiteSpace: 'pre-wrap', border: '1px solid rgba(112,115,124,0.22)', borderRadius: '14px',
+        padding: '16px 18px', fontSize: '13.5px', lineHeight: 1.75, color: '#1B2437', background: '#F6F8FB',
+      }}>{value}</div>
     </div>
   );
 }
@@ -129,45 +156,57 @@ function DocCard({ children }: { children: React.ReactNode }) {
 
 /* ── 메인 화면 ────────────────────────────────────────────── */
 
+/** 시연 진행 단계 — 페이지 단위로 전환한다 (한 화면에 쌓지 않음)
+ *  attach: 파일 첨부 대기 → reading: 첨부 자료 읽는 연출 → memo: 메모 확인 페이지
+ *  sow-gen/sow: 과업지시서 페이지 → proposal-gen/proposal: 운영제안서 페이지 */
+type ShowPhase = 'attach' | 'reading' | 'memo' | 'sow-gen' | 'sow' | 'proposal-gen' | 'proposal';
+
+function PrimaryButton({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <button
+        onClick={onClick}
+        className="iw-btn-primary"
+        style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '15px 34px', fontSize: '15px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 8px 24px rgba(20,99,243,0.3)', display: 'inline-flex', alignItems: 'center', gap: '9px' }}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z" /></svg>
+        {label}
+      </button>
+    </div>
+  );
+}
+
 export function ShowcaseScreen() {
-  const [memoText, setMemoText] = useState(MEMO_TEXT);
-  const [sowState, setSowState] = useState<GenState>('idle');
-  const [proposalState, setProposalState] = useState<GenState>('idle');
-  const sowRef = useRef<HTMLDivElement>(null);
-  const proposalRef = useRef<HTMLDivElement>(null);
+  const [phase, setPhase] = useState<ShowPhase>('attach');
+  const [fileName, setFileName] = useState('');
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => () => { if (timerRef.current !== null) window.clearTimeout(timerRef.current); }, []);
 
-  const scrollTo = (ref: React.RefObject<HTMLDivElement | null>) => {
-    // 카드가 렌더될 다음 프레임에 스크롤 — 생성 애니메이션이 화면에 들어오는 순간부터 보이게 한다
-    requestAnimationFrame(() => ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  /** 연출 시간 후 다음 phase로 — 페이지 전환 시 항상 맨 위로 */
+  const transition = (interim: ShowPhase, next: ShowPhase, delay: number) => {
+    setPhase(interim);
+    window.scrollTo({ top: 0 });
+    timerRef.current = window.setTimeout(() => {
+      setPhase(next);
+      window.scrollTo({ top: 0 });
+    }, delay);
   };
 
-  const generateSow = () => {
-    if (sowState !== 'idle') return;
-    setSowState('generating');
-    scrollTo(sowRef);
-    timerRef.current = window.setTimeout(() => setSowState('done'), GEN_DELAY_MS);
-  };
-
-  const generateProposal = () => {
-    if (sowState !== 'done' || proposalState !== 'idle') return;
-    setProposalState('generating');
-    scrollTo(proposalRef);
-    timerRef.current = window.setTimeout(() => setProposalState('done'), GEN_DELAY_MS);
+  const onFilePicked = (name: string) => {
+    setFileName(name);
+    transition('reading', 'memo', 1600);
   };
 
   const reset = () => {
     if (timerRef.current !== null) { window.clearTimeout(timerRef.current); timerRef.current = null; }
-    setMemoText(MEMO_TEXT);
-    setSowState('idle');
-    setProposalState('idle');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setFileName('');
+    setPhase('attach');
+    window.scrollTo({ top: 0 });
   };
 
-  const step: 1 | 2 | 3 = proposalState !== 'idle' ? 3 : sowState !== 'idle' ? 2 : 1;
-  const pastStage1 = sowState !== 'idle';
+  const step: 1 | 2 | 3 = phase === 'proposal-gen' || phase === 'proposal' ? 3
+    : phase === 'sow-gen' || phase === 'sow' ? 2 : 1;
 
   return (
     <div style={{ minHeight: '100vh', background: '#F6F9FF', paddingBottom: '120px' }}>
@@ -179,7 +218,7 @@ export function ShowcaseScreen() {
             <span style={{ background: 'linear-gradient(90deg,#26B8CE,#1463F3)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>WAVE</span>
           </div>
           <span style={{ background: '#F0F2F6', color: '#5A6478', borderRadius: '999px', padding: '5px 14px', fontSize: '12px', fontWeight: 700 }}>시연 전용 데모</span>
-          {pastStage1 && (
+          {phase !== 'attach' && (
             <button
               onClick={reset}
               className="iw-btn-outline-navy"
@@ -195,51 +234,40 @@ export function ShowcaseScreen() {
       <div style={{ maxWidth: '880px', margin: '0 auto', padding: '28px clamp(16px,5vw,32px) 0', display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <StageIndicator step={step} />
 
-        <MemoCard value={memoText} onChange={setMemoText} editable={sowState === 'idle'} />
-
-        {sowState === 'idle' && (
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <button
-              onClick={generateSow}
-              className="iw-btn-primary"
-              style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '15px 34px', fontSize: '15px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 8px 24px rgba(20,99,243,0.3)', display: 'inline-flex', alignItems: 'center', gap: '9px' }}
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z" /></svg>
-              과업지시서 생성
-            </button>
-          </div>
+        {/* ── 페이지 1: 미팅 자료 첨부 → 메모 확인 ── */}
+        {phase === 'attach' && (
+          <>
+            <div style={{ textAlign: 'center', margin: '6px 0 2px' }}>
+              <h1 style={{ margin: '0 0 6px', fontSize: '24px', fontWeight: 800, color: '#071A3E', letterSpacing: '-0.01em' }}>미팅 자료를 첨부해 주세요</h1>
+              <p style={{ margin: 0, fontSize: '14px', color: '#5A6478' }}>전화통화·미팅에서 정리한 메모를 올리면 AI가 내용을 읽어 과업지시서를 만들어 드립니다.</p>
+            </div>
+            <UploadCard onPicked={onFilePicked} disabled={false} />
+          </>
+        )}
+        {phase === 'reading' && <GeneratingCard label={'AI가 첨부된 미팅 자료를 읽고 있어요…'} />}
+        {phase === 'memo' && (
+          <>
+            <MemoCard value={MEMO_TEXT} fileName={fileName} />
+            <PrimaryButton label="과업지시서 생성" onClick={() => transition('sow-gen', 'sow', GEN_DELAY_MS)} />
+          </>
         )}
 
-        {sowState !== 'idle' && (
-          <div ref={sowRef}>
-            {sowState === 'generating' && <GeneratingCard label={'AI가 메모를 분석해 과업지시서를 작성하고 있어요…'} />}
-            {sowState === 'done' && <DocCard><SowDocument /></DocCard>}
-          </div>
+        {/* ── 페이지 2: 과업지시서 ── */}
+        {phase === 'sow-gen' && <GeneratingCard label={'AI가 메모를 분석해 과업지시서를 작성하고 있어요…'} />}
+        {phase === 'sow' && (
+          <>
+            <DocCard><SowDocument /></DocCard>
+            <PrimaryButton label="운영제안서 생성" onClick={() => transition('proposal-gen', 'proposal', GEN_DELAY_MS)} />
+          </>
         )}
 
-        {sowState === 'done' && proposalState === 'idle' && (
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <button
-              onClick={generateProposal}
-              className="iw-btn-primary"
-              style={{ background: '#1463F3', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '15px 34px', fontSize: '15px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 8px 24px rgba(20,99,243,0.3)', display: 'inline-flex', alignItems: 'center', gap: '9px' }}
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z" /></svg>
-              운영제안서 생성
-            </button>
-          </div>
-        )}
-
-        {proposalState !== 'idle' && (
-          <div ref={proposalRef} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {proposalState === 'generating' && <GeneratingCard label={'AI가 과업지시서를 분석해 운영제안서를 작성하고 있어요…'} />}
-            {proposalState === 'done' && (
-              <>
-                <DocCard><ProposalDocument /></DocCard>
-                <DocCard><BudgetDocument /></DocCard>
-              </>
-            )}
-          </div>
+        {/* ── 페이지 3: 운영제안서 + 견적서 ── */}
+        {phase === 'proposal-gen' && <GeneratingCard label={'AI가 과업지시서를 분석해 운영제안서를 작성하고 있어요…'} />}
+        {phase === 'proposal' && (
+          <>
+            <DocCard><ProposalDocument /></DocCard>
+            <DocCard><BudgetDocument /></DocCard>
+          </>
         )}
       </div>
     </div>
