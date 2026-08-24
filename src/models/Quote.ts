@@ -100,22 +100,31 @@ export class Quote extends BaseModel {
     const current = this.total;
     if (current <= 0 || budgetLimit <= 0) return this;
     const ratio = budgetLimit / current;
-    const scaled = this.items.map((i) => new QuoteItem({ ...i, qty: Math.max(1, Math.round(i.qty * ratio)) }));
-    let best = new Quote({ optionType: this.optionType, items: scaled, simulatedBudget: budgetLimit });
+    let scaled = this.items.map((i) => new QuoteItem({ ...i, qty: Math.max(1, Math.round(i.qty * ratio)) }));
     if (scaled.length > 0) {
-      // 단가가 가장 큰 항목을 미세조정 대상으로 삼아 ±5 범위에서 총액이 예산에 가장 가까운 수량을 찾는다
+      // 단위당 총액 기여(단가×(1+마진)×(1+부가세))가 가장 작은 항목으로 잔차를 흡수 → 예산에 촘촘히 근접
+      const perUnit = (i: QuoteItem) => i.unitPrice * (1 + (i.marginRate || 0)) * (1 + Quote.VAT_RATE);
       let idx = 0;
-      for (let i = 1; i < scaled.length; i += 1) if (scaled[i].unitPrice > scaled[idx].unitPrice) idx = i;
-      let bestDiff = Math.abs(best.total - budgetLimit);
-      for (let d = -5; d <= 5; d += 1) {
-        if (d === 0) continue;
-        const items = scaled.map((it, i) => (i === idx ? new QuoteItem({ ...it, qty: Math.max(1, it.qty + d) }) : it));
-        const cand = new Quote({ optionType: this.optionType, items, simulatedBudget: budgetLimit });
-        const diff = Math.abs(cand.total - budgetLimit);
-        if (diff < bestDiff) { bestDiff = diff; best = cand; }
+      for (let i = 1; i < scaled.length; i += 1) if (perUnit(scaled[i]) < perUnit(scaled[idx])) idx = i;
+      const step = perUnit(scaled[idx]);
+      if (step > 0) {
+        const base = new Quote({ optionType: this.optionType, items: scaled, simulatedBudget: budgetLimit });
+        const delta = Math.round((budgetLimit - base.total) / step);
+        scaled = scaled.map((it, i) => (i === idx ? new QuoteItem({ ...it, qty: Math.max(1, it.qty + delta) }) : it));
+        // ±2 범위 재탐색으로 반올림 오차 보정
+        let best = new Quote({ optionType: this.optionType, items: scaled, simulatedBudget: budgetLimit });
+        let bestDiff = Math.abs(best.total - budgetLimit);
+        for (let d = -2; d <= 2; d += 1) {
+          if (d === 0) continue;
+          const items = scaled.map((it, i) => (i === idx ? new QuoteItem({ ...it, qty: Math.max(1, it.qty + d) }) : it));
+          const cand = new Quote({ optionType: this.optionType, items, simulatedBudget: budgetLimit });
+          const diff = Math.abs(cand.total - budgetLimit);
+          if (diff < bestDiff) { bestDiff = diff; best = cand; }
+        }
+        return best;
       }
     }
-    return best;
+    return new Quote({ optionType: this.optionType, items: scaled, simulatedBudget: budgetLimit });
   }
 
   toFirestore(): DocumentData {

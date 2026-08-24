@@ -2,14 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { CARD_SHADOW, GROTESK, Loading, Notice, Stepper } from '../components.js';
 import {
   applyStepInstruction, buildOptionQuote, buildQuoteItems, errMessage, invalidateCache, loadStepInstruction,
-  markInstructionApplied, saveWorkflowStep, useEvent, useLatestQuote, useQuoteParams, useRateCards, useSupplies,
+  markInstructionApplied, saveWorkflowStep, useEvent, useLatestQuote, useMatches, useQuoteParams, useRateCards, useSupplies,
   type QuoteInstructionResult,
 } from '../hooks.js';
 import { fmt, mkQuote, useIw } from '../state.js';
 import type { PlanId } from '../types.js';
 import { useAuth } from '../../../hooks/useAuth.js';
 import { Event } from '../../../models/Event.js';
-import { QuoteItem, type QuoteOptionValue } from '../../../models/Quote.js';
+import { Quote, QuoteItem, type QuoteOptionValue } from '../../../models/Quote.js';
 import { WorkflowDocsSection } from './WorkflowDocs.js';
 import { eventRepository } from '../../../repositories/EventRepository.js';
 
@@ -64,11 +64,13 @@ function Step5Body() {
   };
 
   // 3단계에서 확정한 비품 선택이 있으면 그 구성으로 견적 산출, 없으면 카테고리 휴리스틱 폴백
+  // 비품에서 '인력' 카테고리는 제외한다 — 인력비는 4단계 매칭 인력을 별도 라인으로 추가한다.
   const { supplies: savedSupplies } = useSupplies(user ? s.currentEventId : null);
+  const { matches } = useMatches(user ? s.currentEventId : null);
   const items = useMemo(() => {
     if (savedSupplies.length > 0) {
       return savedSupplies
-        .filter((it) => it.qty > 0)
+        .filter((it) => it.qty > 0 && it.cat !== '인력')
         .map((it) => new QuoteItem({
           rateCardId: it.rateCardId, itemName: it.name, unit: it.unit,
           qty: it.qty, unitPrice: it.unitPrice, marginRate: it.marginRate,
@@ -76,6 +78,17 @@ function Step5Body() {
     }
     return buildQuoteItems(cards, event);
   }, [savedSupplies, cards, event]);
+
+  // 인력비 — 4단계에서 선택한 인력을 역할별 인건비 라인으로 (마진 없이 단가 스냅샷 그대로)
+  const personnelItems = useMemo(
+    () => matches
+      .filter((m) => m.unitRateSnapshot > 0)
+      .map((m, i) => new QuoteItem({
+        rateCardId: `personnel-${m.personnelId || i}`, itemName: `인건비 · ${m.role}`,
+        unit: '명', qty: 1, unitPrice: m.unitRateSnapshot, marginRate: 0,
+      })),
+    [matches],
+  );
 
   // ── 4단계에서 입력한 지침 문서(events/{id}/instructions/toStep5)를 반영해 견적 수량 조정 ──
   const [quoteInstruction, setQuoteInstruction] = useState('');
@@ -131,10 +144,17 @@ function Step5Body() {
   // 저장된 비품이 있으면 재스케일하지 않아 3단계 비품과 견적서가 정확히 일치한다
   // (3단계에서 이미 예산에 맞춰 수량을 조정함). 저장본이 없어 휴리스틱으로 폴백한 경우에만 예산 스케일 적용.
   const budgetWon = s.budget * 10000;
-  const selectedQuote = useMemo(
-    () => buildOptionQuote(effectiveItems, 'standard' as QuoteOptionValue, 1.0, savedSupplies.length > 0 ? null : budgetWon),
-    [effectiveItems, budgetWon, savedSupplies.length],
-  );
+  // 최종 견적 = 비품 + 인력. 인력비를 먼저 확보하고, 비품이 (예산 − 인력비)를 채우도록 스케일 → 총액 ≈ 예산
+  const selectedQuote = useMemo(() => {
+    const personnelTotal = new Quote({ optionType: 'standard' as QuoteOptionValue, items: personnelItems }).total;
+    const supplyTarget = Math.max(0, budgetWon - personnelTotal);
+    const scaledSupply = new Quote({ optionType: 'standard' as QuoteOptionValue, items: effectiveItems }).scaleToBudget(supplyTarget);
+    return new Quote({
+      optionType: 'standard' as QuoteOptionValue,
+      items: [...scaledSupply.items, ...personnelItems],
+      simulatedBudget: budgetWon,
+    });
+  }, [effectiveItems, personnelItems, budgetWon]);
 
   // 게스트: 실제 레이트카드 없이 예산 기반 데모 수치를 만들어 블러 처리로만 노출
   const figures = user

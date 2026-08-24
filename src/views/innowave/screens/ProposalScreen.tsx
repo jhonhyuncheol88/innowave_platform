@@ -2,14 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { CARD_SHADOW, GROTESK, Loading, Logo, Notice } from '../components.js';
 import {
-  buildOptionQuote, buildQuoteItems, errMessage, loadWorkflowDocument, tsLabel, useEvent, usePrograms, useQuoteParams, useRateCards, useSupplies,
+  buildOptionQuote, buildQuoteItems, errMessage, loadWorkflowDocument, tsLabel, useEvent, useMatches, usePrograms, useQuoteParams, useRateCards, useSupplies,
   type ProposalDocContent, type WorkorderDocContent,
 } from '../hooks.js';
 import { ProposalDocView, WorkorderDocView } from './WorkflowDocs.js';
 import { downloadElementAsPdf } from '../pdf.js';
 import { useAuth } from '../../../hooks/useAuth.js';
 import { fmt, selectionSummary, useIw } from '../state.js';
-import { QuoteItem, type QuoteOptionValue } from '../../../models/Quote.js';
+import { Quote, QuoteItem, type QuoteOptionValue } from '../../../models/Quote.js';
 
 const PLAN_NAMES = { basic: 'Basic', standard: 'Standard', premium: 'Premium' } as const;
 
@@ -24,6 +24,7 @@ function ProposalBody() {
   // 익명 열람 시 rateCards는 조회하지 않는다 (rules상 로그인 필요) — supplies 스냅샷으로 견적 구성
   const { cards, loading: cardsLoading } = useRateCards(!!user);
   const { supplies: savedSupplies } = useSupplies(eventId);
+  const { matches } = useMatches(eventId);
   const { params } = useQuoteParams();
   const { programs: savedPrograms } = usePrograms(eventId);
   const docRef = useRef<HTMLDivElement>(null);
@@ -42,21 +43,38 @@ function ProposalBody() {
   const [pdfBusy, setPdfBusy] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
 
+  // 비품 — '인력' 카테고리 제외 (인력비는 아래에서 별도 라인으로 추가)
   const items = useMemo(() => {
     if (savedSupplies.length > 0) {
-      return savedSupplies.filter((it) => it.qty > 0).map((it) => new QuoteItem({
+      return savedSupplies.filter((it) => it.qty > 0 && it.cat !== '인력').map((it) => new QuoteItem({
         rateCardId: it.rateCardId, itemName: it.name, unit: it.unit,
         qty: it.qty, unitPrice: it.unitPrice, marginRate: it.marginRate,
       }));
     }
     return buildQuoteItems(cards, event);
   }, [savedSupplies, cards, event]);
-  const mult = s.plan === 'basic' ? params.multBasic : s.plan === 'premium' ? params.multPremium : 1.0;
-  // 저장된 비품이 있으면 재스케일하지 않아 3단계 비품과 견적서가 정확히 일치한다 (없으면 예산 스케일 폴백)
-  const quote = useMemo(
-    () => buildOptionQuote(items, s.plan as QuoteOptionValue, mult, savedSupplies.length > 0 ? null : s.budget * 10000),
-    [items, s.plan, mult, s.budget, savedSupplies.length],
+  // 인력비 — 선택한 인력을 역할별 인건비 라인으로
+  const personnelItems = useMemo(
+    () => matches
+      .filter((m) => m.unitRateSnapshot > 0)
+      .map((m, i) => new QuoteItem({
+        rateCardId: `personnel-${m.personnelId || i}`, itemName: `인건비 · ${m.role}`,
+        unit: '명', qty: 1, unitPrice: m.unitRateSnapshot, marginRate: 0,
+      })),
+    [matches],
   );
+  // 최종 견적 = 비품 + 인력, 비품이 (예산 − 인력비)를 채우도록 스케일 → 총액 ≈ 예산
+  const budgetWon = event?.basicInfo.budgetLimit || s.budget * 10000;
+  const quote = useMemo(() => {
+    const personnelTotal = new Quote({ optionType: 'standard' as QuoteOptionValue, items: personnelItems }).total;
+    const supplyTarget = Math.max(0, budgetWon - personnelTotal);
+    const scaledSupply = new Quote({ optionType: 'standard' as QuoteOptionValue, items }).scaleToBudget(supplyTarget);
+    return new Quote({
+      optionType: 'standard' as QuoteOptionValue,
+      items: [...scaledSupply.items, ...personnelItems],
+      simulatedBudget: budgetWon,
+    });
+  }, [items, personnelItems, budgetWon]);
 
   const selSummary = selectionSummary(s.selected);
 
