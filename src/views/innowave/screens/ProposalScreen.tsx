@@ -67,11 +67,14 @@ function ProposalBody() {
   const budgetWon = event?.basicInfo.budgetLimit || s.budget * 10000;
   const quote = useMemo(() => {
     const personnelTotal = new Quote({ optionType: 'standard' as QuoteOptionValue, items: personnelItems }).total;
-    const supplyTarget = Math.max(0, budgetWon - personnelTotal);
-    const scaledSupply = new Quote({ optionType: 'standard' as QuoteOptionValue, items }).scaleToBudget(supplyTarget);
+    const supplyTarget = budgetWon - personnelTotal;
+    // 인력비만으로 예산을 넘는 극단 케이스: 비품을 전부 최소 수량(1)으로 축소해 초과 폭 최소화
+    const scaledSupplyItems = supplyTarget > 0
+      ? new Quote({ optionType: 'standard' as QuoteOptionValue, items }).scaleToBudget(supplyTarget).items
+      : items.map((i) => new QuoteItem({ ...i, qty: 1 }));
     return new Quote({
       optionType: 'standard' as QuoteOptionValue,
-      items: [...scaledSupply.items, ...personnelItems],
+      items: [...scaledSupplyItems, ...personnelItems],
       simulatedBudget: budgetWon,
     });
   }, [items, personnelItems, budgetWon]);

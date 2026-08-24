@@ -30,8 +30,9 @@ function scaleSuppliesToBudget(items: SupplyItem[], budgetWon: number): SupplyIt
     const r = budgetWon / all;
     return items.map((it) => ({ ...it, qty: Math.max(1, Math.round(it.qty * r)) }));
   }
+  // 내림(floor) 편향 — 예산 초과를 피하고 예산 이하에서 근접시킨다
   const ratio = Math.max(0.2, (budgetWon - fixedTotal) / scalableTotal);
-  return items.map((it) => (isPerPerson(it) ? it : { ...it, qty: Math.max(1, Math.round(it.qty * ratio)) }));
+  return items.map((it) => (isPerPerson(it) ? it : { ...it, qty: Math.max(1, Math.floor(it.qty * ratio)) }));
 }
 
 /** 게스트 데모용 풀 — INITIAL_RATE_LIST를 공용 풀 형태로 변환 */

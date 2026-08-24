@@ -95,12 +95,14 @@ export class Quote extends BaseModel {
     return this.subtotal + this.marginTotal + this.vat;
   }
 
-  /** 예산 한도에 맞춰 전 항목 수량을 비례 조정하고, 대표(단가 최대) 항목 수량을 미세조정해 총액을 예산에 최대한 근접시킨다 */
+  /** 예산 한도에 맞춰 전 항목 수량을 비례 조정하고, 최소 단가 항목으로 잔차를 흡수한다.
+   *  총액(부가세 포함)이 예산을 넘지 않는 후보를 우선 선택 — 예산 이하에서 최대한 근접. */
   scaleToBudget(budgetLimit: number): Quote {
     const current = this.total;
     if (current <= 0 || budgetLimit <= 0) return this;
     const ratio = budgetLimit / current;
-    let scaled = this.items.map((i) => new QuoteItem({ ...i, qty: Math.max(1, Math.round(i.qty * ratio)) }));
+    // 내림(floor) 편향 — 비례 조정 단계에서부터 예산 초과를 피한다
+    let scaled = this.items.map((i) => new QuoteItem({ ...i, qty: Math.max(1, Math.floor(i.qty * ratio)) }));
     if (scaled.length > 0) {
       // 단위당 총액 기여(단가×(1+마진)×(1+부가세))가 가장 작은 항목으로 잔차를 흡수 → 예산에 촘촘히 근접
       const perUnit = (i: QuoteItem) => i.unitPrice * (1 + (i.marginRate || 0)) * (1 + Quote.VAT_RATE);
@@ -109,19 +111,22 @@ export class Quote extends BaseModel {
       const step = perUnit(scaled[idx]);
       if (step > 0) {
         const base = new Quote({ optionType: this.optionType, items: scaled, simulatedBudget: budgetLimit });
-        const delta = Math.round((budgetLimit - base.total) / step);
+        const delta = Math.floor((budgetLimit - base.total) / step);
         scaled = scaled.map((it, i) => (i === idx ? new QuoteItem({ ...it, qty: Math.max(1, it.qty + delta) }) : it));
-        // ±2 범위 재탐색으로 반올림 오차 보정
-        let best = new Quote({ optionType: this.optionType, items: scaled, simulatedBudget: budgetLimit });
-        let bestDiff = Math.abs(best.total - budgetLimit);
-        for (let d = -2; d <= 2; d += 1) {
-          if (d === 0) continue;
+        // ±3 범위 재탐색 — 예산 이하 후보 중 총액이 가장 큰(=예산에 가장 가까운) 것을 고른다.
+        // 예산 이하 후보가 하나도 없으면(최소 수량 제약) 총액이 가장 작은 후보로 폴백.
+        let bestUnder: Quote | null = null;
+        let minOver: Quote | null = null;
+        for (let d = -3; d <= 3; d += 1) {
           const items = scaled.map((it, i) => (i === idx ? new QuoteItem({ ...it, qty: Math.max(1, it.qty + d) }) : it));
           const cand = new Quote({ optionType: this.optionType, items, simulatedBudget: budgetLimit });
-          const diff = Math.abs(cand.total - budgetLimit);
-          if (diff < bestDiff) { bestDiff = diff; best = cand; }
+          if (cand.total <= budgetLimit) {
+            if (!bestUnder || cand.total > bestUnder.total) bestUnder = cand;
+          } else if (!minOver || cand.total < minOver.total) {
+            minOver = cand;
+          }
         }
-        return best;
+        return bestUnder ?? minOver ?? base;
       }
     }
     return new Quote({ optionType: this.optionType, items: scaled, simulatedBudget: budgetLimit });

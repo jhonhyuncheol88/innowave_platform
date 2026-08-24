@@ -147,11 +147,14 @@ function Step5Body() {
   // 최종 견적 = 비품 + 인력. 인력비를 먼저 확보하고, 비품이 (예산 − 인력비)를 채우도록 스케일 → 총액 ≈ 예산
   const selectedQuote = useMemo(() => {
     const personnelTotal = new Quote({ optionType: 'standard' as QuoteOptionValue, items: personnelItems }).total;
-    const supplyTarget = Math.max(0, budgetWon - personnelTotal);
-    const scaledSupply = new Quote({ optionType: 'standard' as QuoteOptionValue, items: effectiveItems }).scaleToBudget(supplyTarget);
+    const supplyTarget = budgetWon - personnelTotal;
+    // 인력비만으로 예산을 넘는 극단 케이스: 비품을 전부 최소 수량(1)으로 축소해 초과 폭 최소화
+    const scaledSupplyItems = supplyTarget > 0
+      ? new Quote({ optionType: 'standard' as QuoteOptionValue, items: effectiveItems }).scaleToBudget(supplyTarget).items
+      : effectiveItems.map((i) => new QuoteItem({ ...i, qty: 1 }));
     return new Quote({
       optionType: 'standard' as QuoteOptionValue,
-      items: [...scaledSupply.items, ...personnelItems],
+      items: [...scaledSupplyItems, ...personnelItems],
       simulatedBudget: budgetWon,
     });
   }, [effectiveItems, personnelItems, budgetWon]);

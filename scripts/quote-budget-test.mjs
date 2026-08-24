@@ -12,28 +12,27 @@ function scaleToBudget(items, budgetLimit) {
   const current = q(items).total;
   if (current <= 0 || budgetLimit <= 0) return items;
   const ratio = budgetLimit / current;
-  let scaled = items.map((i) => ({ ...i, qty: Math.max(1, Math.round(i.qty * ratio)) }));
-  // 단위당 총액 기여(단가×(1+마진)×(1+부가세))가 가장 작은 항목으로 미세조정 → 예산에 촘촘히 근접
+  let scaled = items.map((i) => ({ ...i, qty: Math.max(1, Math.floor(i.qty * ratio)) }));
   const perUnit = (i) => i.unitPrice * (1 + (i.marginRate || 0)) * (1 + VAT);
   let idx = 0;
   for (let i = 1; i < scaled.length; i++) if (perUnit(scaled[i]) < perUnit(scaled[idx])) idx = i;
   const step = perUnit(scaled[idx]);
   if (step <= 0) return scaled;
-  const delta = Math.round((budgetLimit - q(scaled).total) / step);
+  const delta = Math.floor((budgetLimit - q(scaled).total) / step);
   scaled = scaled.map((it, i) => (i === idx ? { ...it, qty: Math.max(1, it.qty + delta) } : it));
-  let best = scaled, bestDiff = Math.abs(q(scaled).total - budgetLimit);
-  for (let d = -2; d <= 2; d++) {
-    if (d === 0) continue;
+  let bestUnder = null, minOver = null;
+  for (let d = -3; d <= 3; d++) {
     const cand = scaled.map((it, i) => (i === idx ? { ...it, qty: Math.max(1, it.qty + d) } : it));
-    const diff = Math.abs(q(cand).total - budgetLimit);
-    if (diff < bestDiff) { bestDiff = diff; best = cand; }
+    const t = q(cand).total;
+    if (t <= budgetLimit) { if (!bestUnder || t > q(bestUnder).total) bestUnder = cand; }
+    else if (!minOver || t < q(minOver).total) minOver = cand;
   }
-  return best;
+  return bestUnder ?? minOver ?? scaled;
 }
 function finalQuote(supplies, personnel, budget) {
   const personnelTotal = q(personnel).total;
-  const supplyTarget = Math.max(0, budget - personnelTotal);
-  const scaledSupply = scaleToBudget(supplies, supplyTarget);
+  const supplyTarget = budget - personnelTotal;
+  const scaledSupply = supplyTarget > 0 ? scaleToBudget(supplies, supplyTarget) : supplies.map((i) => ({ ...i, qty: 1 }));
   return q([...scaledSupply, ...personnel]);
 }
 const fmt = (n) => Math.round(n).toLocaleString('ko-KR');
@@ -90,7 +89,7 @@ for (const sc of scenarios) {
   const res = finalQuote(sc.supplies, sc.personnel, sc.budget);
   const diff = res.total - sc.budget;
   const pct = (Math.abs(diff) / sc.budget) * 100;
-  const pass = pct < 3; // Option A(근사): 3% 이내면 통과
+  const pass = diff <= 0 && pct < 3; // 예산 이하(초과 금지) + 3% 이내
   if (!pass) allPass = false;
   const personnelTotal = q(sc.personnel).total;
   console.log(`\n■ ${sc.name}`);
@@ -100,5 +99,5 @@ for (const sc of scenarios) {
   console.log(`  예산 대비 차이    ${diff >= 0 ? '+' : ''}${fmt(diff)}원 (${pct.toFixed(2)}%)  → ${pass ? 'PASS ✅' : 'FAIL ❌'}`);
   console.log(`  인력 라인: ${sc.personnel.map((p) => p.name + ' ₩' + fmt(p.unitPrice)).join(', ') || '(없음)'}`);
 }
-console.log(`\n=== ${allPass ? 'ALL PASS ✅ — 비품+인력 총액이 예산에 근접(≤3%)' : 'SOME FAIL ❌'} ===`);
+console.log(`\n=== ${allPass ? 'ALL PASS ✅ — 총액(부가세 포함) ≤ 예산, 오차 3% 이내' : 'SOME FAIL ❌'} ===`);
 process.exit(allPass ? 0 : 1);
