@@ -189,6 +189,9 @@ function downloadAsset(href: string, fileName: string) {
   a.remove();
 }
 
+/** 한글(HWPX) 다운로드 노출 여부 — 한컴오피스 실기기 검증 전까지 잠시 숨김 */
+const SHOW_HWPX = false;
+
 /** 각 단계 산출물 다운로드 — 형식(PDF·DOCX·HWPX)을 선택해 저장 */
 function DownloadMenu({ targetRef, baseName, assetKey }: {
   targetRef: React.RefObject<HTMLDivElement | null>;
@@ -239,10 +242,12 @@ function DownloadMenu({ targetRef, baseName, assetKey }: {
             <span style={{ width: '26px', height: '26px', borderRadius: '8px', background: '#E5F0FF', color: '#1B5EBE', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '8.5px', fontWeight: 800 }}>DOC</span>
             워드 문서 (DOCX)
           </button>
-          <button onClick={() => asset('hwpx')} style={itemStyle} className="iw-accordion-head">
-            <span style={{ width: '26px', height: '26px', borderRadius: '8px', background: '#E8F6FF', color: '#0B84C4', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '8.5px', fontWeight: 800 }}>HWP</span>
-            한글 문서 (HWPX)
-          </button>
+          {SHOW_HWPX && (
+            <button onClick={() => asset('hwpx')} style={itemStyle} className="iw-accordion-head">
+              <span style={{ width: '26px', height: '26px', borderRadius: '8px', background: '#E8F6FF', color: '#0B84C4', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '8.5px', fontWeight: 800 }}>HWP</span>
+              한글 문서 (HWPX)
+            </button>
+          )}
         </div>
       )}
     </div>
