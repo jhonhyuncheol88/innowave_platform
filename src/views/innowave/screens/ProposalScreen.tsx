@@ -52,9 +52,10 @@ function ProposalBody() {
     return buildQuoteItems(cards, event);
   }, [savedSupplies, cards, event]);
   const mult = s.plan === 'basic' ? params.multBasic : s.plan === 'premium' ? params.multPremium : 1.0;
+  // 저장된 비품이 있으면 재스케일하지 않아 3단계 비품과 견적서가 정확히 일치한다 (없으면 예산 스케일 폴백)
   const quote = useMemo(
-    () => buildOptionQuote(items, s.plan as QuoteOptionValue, mult, s.budget * 10000),
-    [items, s.plan, mult, s.budget],
+    () => buildOptionQuote(items, s.plan as QuoteOptionValue, mult, savedSupplies.length > 0 ? null : s.budget * 10000),
+    [items, s.plan, mult, s.budget, savedSupplies.length],
   );
 
   const selSummary = selectionSummary(s.selected);

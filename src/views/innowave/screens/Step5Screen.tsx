@@ -127,11 +127,13 @@ function Step5Body() {
     return m;
   }, [cards]);
 
-  // 최종 견적 — 3단계 비품 구성 그대로 (옵션 배율 없음), 예산 한도 반영
+  // 최종 견적 — 3단계에서 확정한 비품 구성을 그대로 반영한다.
+  // 저장된 비품이 있으면 재스케일하지 않아 3단계 비품과 견적서가 정확히 일치한다
+  // (3단계에서 이미 예산에 맞춰 수량을 조정함). 저장본이 없어 휴리스틱으로 폴백한 경우에만 예산 스케일 적용.
   const budgetWon = s.budget * 10000;
   const selectedQuote = useMemo(
-    () => buildOptionQuote(effectiveItems, 'standard' as QuoteOptionValue, 1.0, budgetWon),
-    [effectiveItems, budgetWon],
+    () => buildOptionQuote(effectiveItems, 'standard' as QuoteOptionValue, 1.0, savedSupplies.length > 0 ? null : budgetWon),
+    [effectiveItems, budgetWon, savedSupplies.length],
   );
 
   // 게스트: 실제 레이트카드 없이 예산 기반 데모 수치를 만들어 블러 처리로만 노출
