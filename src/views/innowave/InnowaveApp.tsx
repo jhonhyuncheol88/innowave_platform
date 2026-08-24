@@ -15,6 +15,7 @@ import { DashboardScreen } from './screens/DashboardScreen.js';
 import { ProjectsScreen } from './screens/ProjectsScreen.js';
 import { ProjectHubScreen } from './screens/ProjectHubScreen.js';
 import { AdminScreen } from './screens/AdminScreen.js';
+import { ShowcaseScreen } from './screens/ShowcaseScreen.js';
 import './innowave.css';
 
 const SCREENS: Record<ScreenId, ComponentType> = {
@@ -31,6 +32,7 @@ const SCREENS: Record<ScreenId, ComponentType> = {
   projects: ProjectsScreen,
   project: ProjectHubScreen,
   admin: AdminScreen,
+  showcase: ShowcaseScreen,
 };
 
 function CurrentScreen() {

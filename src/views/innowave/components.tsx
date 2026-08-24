@@ -92,7 +92,7 @@ export function Stepper({ current }: { current: number }) {
 /* ── 전역 헤더 (GNB) ──────────────────────────────── */
 
 /** 자체 상단 바를 가진 화면 — 랜딩(다크 헤더), 발주처 공유 문서/대시보드(조회 전용 바) */
-const HEADERLESS_SCREENS: ScreenId[] = ['landing', 'proposal', 'dashboard'];
+const HEADERLESS_SCREENS: ScreenId[] = ['landing', 'proposal', 'dashboard', 'showcase'];
 
 function GnbLink({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
   return (
@@ -155,7 +155,7 @@ const NAV_SCREENS: [ScreenId, string][] = [
 ];
 
 /** 라우트로는 존재하지만 하단 데모 내비게이션에는 노출하지 않는 화면 */
-const HIDDEN_SCREENS: ScreenId[] = ['project'];
+const HIDDEN_SCREENS: ScreenId[] = ['project', 'showcase'];
 
 export function screenFromPath(pathname: string): ScreenId {
   const seg = pathname.replace(/^\/+|\/+$/g, '');

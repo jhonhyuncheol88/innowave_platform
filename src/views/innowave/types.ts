@@ -5,7 +5,8 @@ export type ScreenId =
   | 'landing' | 'auth'
   | 'step1' | 'step2' | 'step3' | 'step4' | 'step5'
   | 'proposal' | 'progress' | 'dashboard' | 'projects' | 'admin'
-  | 'project'; // 프로젝트 상세 허브 (하단 데모 내비게이션에는 미노출)
+  | 'project' // 프로젝트 상세 허브 (하단 데모 내비게이션에는 미노출)
+  | 'showcase'; // 시연 전용 (내비 미노출)
 
 export interface ProgramItem {
   time: string;
