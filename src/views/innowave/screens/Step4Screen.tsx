@@ -49,9 +49,9 @@ function Step4Body() {
   );
 
   const ranked = useMemo(() => {
-    // 비로그인 게스트: rules상 인력풀 조회가 불가하므로 데모 인력으로 추천 흐름 제공
-    if (!user) {
-      return (PEOPLE_DATA[s.roleTab] ?? []).map((d, i) => ({
+    const base = !user
+      // 비로그인 게스트: rules상 인력풀 조회가 불가하므로 데모 인력으로 추천 흐름 제공
+      ? (PEOPLE_DATA[s.roleTab] ?? []).map((d, i) => ({
         p: new Personnel({
           id: `demo-${s.roleTab}-${i}`,
           name: d.name,
@@ -63,12 +63,30 @@ function Step4Body() {
           unitRate: d.rate,
         }),
         fit: d.fit,
-      }));
+      }))
+      : people
+        .map((p) => ({ p, fit: Math.round(p.matchScoreFor(event)) }))
+        .sort((a, b) => b.fit - a.fit)
+        .slice(0, 8);
+
+    // 데모 고정: 지상철 교수님을 '강사' 탭 최상단에 적합도 100으로 노출 (시간당 300만원)
+    if (s.roleTab === '강사') {
+      const pinned = {
+        p: new Personnel({
+          id: 'pinned-jisangchul',
+          name: '지상철',
+          role: '강사',
+          expertiseField: '교통·도시공학 · 특별강연',
+          careerSummary: '지상철 교수 — 교통·도시공학 분야 권위자, 대형 공공행사 기조강연 다수',
+          rating: 5.0,
+          activityRegion: '서울',
+          unitRate: 3000000,
+        }),
+        fit: 100,
+      };
+      return [pinned, ...base.filter((r) => r.p.name !== '지상철')];
     }
-    return people
-      .map((p) => ({ p, fit: Math.round(p.matchScoreFor(event)) }))
-      .sort((a, b) => b.fit - a.fit)
-      .slice(0, 8);
+    return base;
   }, [user, s.roleTab, people, event]);
 
   const selSummary = selectionSummary(s.selected);
