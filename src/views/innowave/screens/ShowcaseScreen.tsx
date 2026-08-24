@@ -1,12 +1,17 @@
 /**
- * /showcase — 김유환 교수 시연 전용 페이지 (숨김 라우트, 로그인·내비 미노출)
- * 전화·미팅 메모 → (AI 생성 애니메이션) → 과업지시서 → (AI 생성 애니메이션) → 운영제안서·견적서
- * 세 산출물은 고정 상수(showcaseDocs.tsx)로, 실제 AI 호출·Firebase 저장은 하지 않는 결정적 데모다.
+ * /showcase — 김유환 교수 시연 전용 페이지 (숨김 라우트, 내비 미노출)
+ * 미팅 자료 첨부 → 메모 → (AI 생성 애니메이션) → 과업지시서 → (AI 생성 애니메이션) → 운영제안서·견적서
+ * 세 산출물은 고정 상수(showcaseDocs.tsx)의 결정적 데이터. 운영제안서 완성 시
+ * 로그인 사용자라면 내 프로젝트에 이벤트로 저장된다.
  */
 import { useEffect, useRef, useState } from 'react';
 import { CARD_SHADOW, GROTESK } from '../components.js';
 import { downloadElementAsPdf } from '../pdf.js';
 import { BudgetDocument, DocBadge, ProposalDocument, SowDocument } from './showcaseDocs.js';
+import { useIw } from '../state.js';
+import { useAuth } from '../../../hooks/useAuth.js';
+import { Event } from '../../../models/Event.js';
+import { eventRepository } from '../../../repositories/EventRepository.js';
 
 const MEMO_TEXT = `2026년 SNU-SH DEMO DAY 프로그램 과업지시서 (요약)
 
@@ -217,13 +222,42 @@ function PrimaryButton({ label, onClick }: { label: string; onClick: () => void 
 }
 
 export function ShowcaseScreen() {
+  const { go } = useIw();
+  const { user, role, approval } = useAuth();
+  const canOperate = role === 'admin' || approval === 'approved';
   const [phase, setPhase] = useState<ShowPhase>('attach');
   const [fileName, setFileName] = useState('');
+  const [savedToProjects, setSavedToProjects] = useState(false);
   const timerRef = useRef<number | null>(null);
+  const savedRef = useRef(false);
   // 단계별 PDF 캡처 대상 영역
   const memoRef = useRef<HTMLDivElement>(null);
   const sowRef = useRef<HTMLDivElement>(null);
   const proposalRef = useRef<HTMLDivElement>(null);
+
+  // 운영제안서 완성 시 내 프로젝트에 저장 (로그인·승인 사용자, 세션당 1회)
+  useEffect(() => {
+    if (phase !== 'proposal' || savedRef.current || !user || !canOperate) return;
+    savedRef.current = true;
+    void eventRepository.create(new Event({
+      ownerUid: user.uid,
+      basicInfo: {
+        name: '2026 SNU-SH DEMO DAY',
+        organizer: '서울대학교 시흥캠퍼스본부',
+        eventType: '데모데이·IR피칭',
+        periodStart: '2026-09-01',
+        periodEnd: '2026-12-31',
+        region: '경기 시흥',
+        operationType: '오프라인',
+        participantScale: 6,
+        budgetLimit: 23800000,
+        purpose: '예비창업패키지 선정기업의 투자유치 역량을 단계적으로 제고하고, 투자자 관점의 IR 커뮤니케이션 체계를 내재화한다.',
+      },
+      parsedFromDoc: true,
+      status: 'quoted',
+      currentStep: 5,
+    })).then(() => setSavedToProjects(true)).catch(() => { savedRef.current = false; });
+  }, [phase, user, canOperate]);
 
   useEffect(() => () => { if (timerRef.current !== null) window.clearTimeout(timerRef.current); }, []);
 
@@ -262,11 +296,19 @@ export function ShowcaseScreen() {
             <span style={{ background: 'linear-gradient(90deg,#26B8CE,#1463F3)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>WAVE</span>
           </div>
           <span style={{ background: '#E5F0FF', color: '#0D3B8F', borderRadius: '999px', padding: '5px 14px', fontSize: '12px', fontWeight: 700 }}>AI 문서 자동화</span>
+          <button
+            onClick={() => go('projects')}
+            className="iw-btn-outline-navy"
+            style={{ marginLeft: 'auto', background: 'transparent', color: '#0D3B8F', border: '1px solid rgba(13,59,143,0.25)', borderRadius: '999px', padding: '9px 18px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: '7px' }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+            내 프로젝트
+          </button>
           {phase !== 'attach' && (
             <button
               onClick={reset}
               className="iw-btn-outline-navy"
-              style={{ marginLeft: 'auto', background: 'transparent', color: '#0D3B8F', border: '1px solid rgba(13,59,143,0.25)', borderRadius: '999px', padding: '9px 18px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: '7px' }}
+              style={{ background: 'transparent', color: '#0D3B8F', border: '1px solid rgba(13,59,143,0.25)', borderRadius: '999px', padding: '9px 18px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: '7px' }}
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" /></svg>
               처음부터 다시
@@ -315,6 +357,13 @@ export function ShowcaseScreen() {
         {phase === 'proposal-gen' && <GeneratingCard label={'AI가 과업지시서를 분석해 운영제안서를 작성하고 있어요…'} />}
         {phase === 'proposal' && (
           <>
+            {savedToProjects && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#F0FBF4', border: '1px solid rgba(43,182,115,0.35)', borderRadius: '14px', padding: '13px 18px' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1B8A4B" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                <span style={{ fontSize: '13.5px', fontWeight: 700, color: '#1B8A4B' }}>내 프로젝트에 저장되었습니다</span>
+                <button onClick={() => go('projects')} style={{ marginLeft: 'auto', background: 'transparent', border: 'none', color: '#1463F3', fontSize: '13px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline' }}>내 프로젝트 보기</button>
+              </div>
+            )}
             <PdfButton targetRef={proposalRef} fileName="운영제안서_2026_SNU-SH_DEMO_DAY.pdf" />
             <div ref={proposalRef} style={{ background: '#F6F9FF', padding: '6px 4px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <DocCard><ProposalDocument /></DocCard>
