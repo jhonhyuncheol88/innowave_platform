@@ -89,6 +89,25 @@ function Step4Body() {
     return base;
   }, [user, s.roleTab, people, event]);
 
+  // ── 자동 선택: 현재 역할 탭에 선택된 인력이 없으면 적합도 상위 2명을 자동 선택해 '다음'만 눌러도 진행 가능하게 한다 ──
+  const autoSelectedRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    if (matchesLoading || ranked.length === 0) return;
+    const tabKey = `${s.currentEventId ?? 'guest'}:${s.roleTab}`;
+    if (autoSelectedRef.current.has(tabKey)) return;
+    // 이미 이 역할 탭에 선택된 인력이 있으면 자동선택하지 않는다(저장 복원/사용자 선택 존중)
+    const hasForTab = Object.keys(s.selected).some((k) => k.startsWith(`${s.roleTab}:`));
+    if (hasForTab) { autoSelectedRef.current.add(tabKey); return; }
+    autoSelectedRef.current.add(tabKey);
+    const next = { ...s.selected };
+    ranked.slice(0, 2).forEach(({ p, fit }) => {
+      const key = `${s.roleTab}:${p.id}`;
+      next[key] = true;
+      selectionInfo.set(key, { personnelId: p.id ?? '', role: s.roleTab, matchScore: fit, unitRateSnapshot: p.unitRate });
+    });
+    set({ selected: next });
+  }, [matchesLoading, ranked, s.roleTab, s.currentEventId, s.selected, set]);
+
   const selSummary = selectionSummary(s.selected);
   /** 선택 인력의 계약 단가 합계 (1일 기준) — 선택 시점 스냅샷 기준 */
   const selectedRateTotal = Object.keys(s.selected)

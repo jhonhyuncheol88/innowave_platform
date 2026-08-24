@@ -95,19 +95,27 @@ export class Quote extends BaseModel {
     return this.subtotal + this.marginTotal + this.vat;
   }
 
-  /** 예산 시뮬레이션 (REQ-10): 예산 한도에 맞춰 전 항목 수량/구성 비례 축소 */
+  /** 예산 한도에 맞춰 전 항목 수량을 비례 조정하고, 대표(단가 최대) 항목 수량을 미세조정해 총액을 예산에 최대한 근접시킨다 */
   scaleToBudget(budgetLimit: number): Quote {
-    if (this.total <= budgetLimit) return this;
-    const ratio = budgetLimit / this.total;
-    const scaled = this.items.map((i) => new QuoteItem({
-      ...i,
-      qty: Math.max(1, Math.floor(i.qty * ratio)),
-    }));
-    return new Quote({
-      optionType: this.optionType,
-      items: scaled,
-      simulatedBudget: budgetLimit,
-    });
+    const current = this.total;
+    if (current <= 0 || budgetLimit <= 0) return this;
+    const ratio = budgetLimit / current;
+    const scaled = this.items.map((i) => new QuoteItem({ ...i, qty: Math.max(1, Math.round(i.qty * ratio)) }));
+    let best = new Quote({ optionType: this.optionType, items: scaled, simulatedBudget: budgetLimit });
+    if (scaled.length > 0) {
+      // 단가가 가장 큰 항목을 미세조정 대상으로 삼아 ±5 범위에서 총액이 예산에 가장 가까운 수량을 찾는다
+      let idx = 0;
+      for (let i = 1; i < scaled.length; i += 1) if (scaled[i].unitPrice > scaled[idx].unitPrice) idx = i;
+      let bestDiff = Math.abs(best.total - budgetLimit);
+      for (let d = -5; d <= 5; d += 1) {
+        if (d === 0) continue;
+        const items = scaled.map((it, i) => (i === idx ? new QuoteItem({ ...it, qty: Math.max(1, it.qty + d) }) : it));
+        const cand = new Quote({ optionType: this.optionType, items, simulatedBudget: budgetLimit });
+        const diff = Math.abs(cand.total - budgetLimit);
+        if (diff < bestDiff) { bestDiff = diff; best = cand; }
+      }
+    }
+    return best;
   }
 
   toFirestore(): DocumentData {

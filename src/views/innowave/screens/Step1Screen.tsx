@@ -26,7 +26,12 @@ interface FormState {
 
 const EMPTY_FORM: FormState = {
   name: '', org: '', type: '', start: '', end: '', region: '',
-  scale: '', budget: '', purpose: '', opMode: '오프라인', kpis: [],
+  scale: '', budget: '', purpose: '', opMode: '오프라인',
+  kpis: [
+    { name: '참가자 만족도', target: '85점 이상' },
+    { name: '프로그램 이수율', target: '90%' },
+    { name: '후속 성과 연계', target: '10건' },
+  ],
 };
 
 const FILLED_FORM: FormState = {

@@ -10,6 +10,15 @@ import { fmt, useIw } from '../state.js';
 import { useAuth } from '../../../hooks/useAuth.js';
 import type { SupplyItem } from '../types.js';
 
+/** 비품 구성의 최종 견적(공급가+마진+부가세)이 예산에 근접하도록 수량을 비례 조정 */
+function scaleSuppliesToBudget(items: SupplyItem[], budgetWon: number): SupplyItem[] {
+  if (budgetWon <= 0 || items.length === 0) return items;
+  const grossed = items.reduce((sum, it) => sum + it.unitPrice * it.qty * (1 + (it.marginRate || 0)), 0) * 1.1;
+  if (grossed <= 0) return items;
+  const ratio = budgetWon / grossed;
+  return items.map((it) => ({ ...it, qty: Math.max(1, Math.round(it.qty * ratio)) }));
+}
+
 /** 게스트 데모용 추천 구성 — 카테고리별 대표 항목 + 규모 기반 수량 (INITIAL_RATE_LIST 기준) */
 function demoSupplies(scale: number): SupplyItem[] {
   const picks: { cat: string; qty: number }[] = [
@@ -60,12 +69,12 @@ function Step3Body() {
     }
     if (!event || cards.length === 0) return;
     const cardById = new Map(cards.map((c) => [c.id ?? '', c]));
-    const draft: SupplyItem[] = buildQuoteItems(cards, event).map((qi) => ({
+    const draft: SupplyItem[] = scaleSuppliesToBudget(buildQuoteItems(cards, event).map((qi) => ({
       rateCardId: qi.rateCardId, name: qi.itemName,
       cat: cardById.get(qi.rateCardId)?.category ?? '',
       unit: qi.unit, unitPrice: qi.unitPrice, marginRate: qi.marginRate,
       qty: qi.qty, source: 'ai',
-    }));
+    })), event.basicInfo.budgetLimit || 0);
     set({ supplies: draft, suppliesEventId: s.currentEventId });
     setIsDraft(true);
     // 2단계에서 입력한 지침 문서(events/{id}/instructions/toStep3)가 있으면 추천 수량 조정
@@ -99,7 +108,7 @@ function Step3Body() {
   // 게스트: 데모 추천 구성
   useEffect(() => {
     if (user || s.supplies.length > 0) return;
-    set({ supplies: demoSupplies(s.guestInfo?.participantScale || 100) });
+    set({ supplies: scaleSuppliesToBudget(demoSupplies(s.guestInfo?.participantScale || 100), s.guestInfo?.budgetLimit || 0) });
   }, [user, s.supplies.length, s.guestInfo, set]);
 
   const patchItem = (idx: number, qty: number) => {
