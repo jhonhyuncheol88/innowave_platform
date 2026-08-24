@@ -39,7 +39,7 @@ function demoSupplies(scale: number): SupplyItem[] {
     if (!item) return [];
     return [{
       rateCardId: '', name: item.name, cat: item.cat, unit: item.unit,
-      unitPrice: item.price, marginRate: item.margin, qty, source: 'ai' as const,
+      unitPrice: item.price, marginRate: (item.margin || 0) / 100, qty, source: 'ai' as const,
     }];
   });
 }
@@ -159,7 +159,7 @@ function Step3Body() {
     }
     return INITIAL_RATE_LIST.filter((r) => r.active).map((r) => ({
       rateCardId: '', name: r.name, cat: r.cat, unit: r.unit,
-      unitPrice: r.price, marginRate: r.margin, qty: 1, source: 'user' as const,
+      unitPrice: r.price, marginRate: (r.margin || 0) / 100, qty: 1, source: 'user' as const,
     }));
   }, [user, cards]);
 

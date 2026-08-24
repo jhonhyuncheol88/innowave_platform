@@ -29,6 +29,7 @@
     "@vitejs/plugin-react": "^4.3.0",
     "eslint": "^9.0.0",
     "firebase-admin": "^14.1.0",
+    "playwright": "^1.62.1",
     "typescript": "^6.0.3",
     "vite": "^5.4.0",
     "vite-plugin-sitemap": "^0.7.1"
