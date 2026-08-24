@@ -57,6 +57,11 @@ const RESPONSE_SCHEMA = {
     participantScale: fieldSchema(Type.INTEGER, { description: '참가 인원 수 (숫자만, 없으면 0)' }),
     budgetLimit: fieldSchema(Type.INTEGER, { description: '사업 예산 총액, 원 단위 정수 (없으면 0)' }),
     purpose: fieldSchema(Type.STRING, { description: '행사 목적 요약 (2문장 이내)' }),
+    kpis: {
+      type: Type.ARRAY,
+      items: { type: Type.OBJECT, properties: { name: { type: Type.STRING }, target: { type: Type.STRING } }, required: ['name', 'target'] },
+      description: '문서에서 도출한 정량 성과지표(KPI) 추천 3~5개 (지표명 + 목표값)',
+    },
   },
   required: ['name', 'organizer', 'eventType', 'periodStart', 'periodEnd', 'region', 'operationType', 'participantScale', 'budgetLimit', 'purpose'],
 };
@@ -69,7 +74,8 @@ const PROMPT = `당신은 MICE 행사 용역 문서 분석 전문가다. 첨부�
 - participantScale은 목표 참가 인원 숫자만. "300여 명" → 300.
 - eventType은 주어진 목록 중 가장 가까운 하나를 고른다. 애매하면 confidence를 낮춘다.
 - 문서에서 찾지 못한 항목은 value를 빈 문자열(숫자는 0)로 두고 confidence 0으로 표시한다. 지어내지 마라.
-- evidence에는 판단 근거가 된 문서 원문 구절을 30자 내외로 인용한다.`;
+- evidence에는 판단 근거가 된 문서 원문 구절을 30자 내외로 인용한다.
+- kpis는 참가 규모·목적·행사 유형에서 합리적으로 도출한 정량 성과지표 3~5개를 지표명과 목표값으로 추천한다.`;
 
 /** HWPX(zip/XML)에서 본문 텍스트 추출 */
 async function extractHwpxText(buffer: Buffer): Promise<string> {

@@ -600,6 +600,7 @@ export interface ParsedFields {
   participantScale: ParsedFieldValue;
   budgetLimit: ParsedFieldValue;
   purpose: ParsedFieldValue;
+  kpis?: { name: string; target: string }[];
 }
 
 /* ── 시연용 결정적 파싱 프로필 ──────────────────────
@@ -626,6 +627,11 @@ const DEMO_PARSE_PROFILES: DemoParseProfile[] = [
       participantScale: { value: 0, confidence: 0, evidence: '' },
       budgetLimit: { value: 60000000, confidence: 0.95, evidence: '기초금액(부가가치세 포함) 60,000,000원' },
       purpose: { value: '아산 지역 스타트업 벤처포럼 프로그램 운영을 통한 창업 생태계 활성화', confidence: 0.55, evidence: '포럼 운영 및 창업 유치 관련 실적' },
+      kpis: [
+        { name: '참가자 수', target: '150명' },
+        { name: '창업 상담 연계', target: '20건' },
+        { name: '참가자 만족도', target: '85점' },
+      ],
     },
   },
 ];

@@ -32,6 +32,7 @@ export interface EventBasicInfo {
   participantScale: number;
   budgetLimit: number;
   purpose: string;
+  kpis?: { name: string; target: string }[];
 }
 
 export interface ProgressSummary {
@@ -93,6 +94,7 @@ export class Event extends BaseModel {
       participantScale: 0,
       budgetLimit: 0,
       purpose: '',
+      kpis: [],
       ...basicInfo,
     };
     this.parsedFromDoc = parsedFromDoc;

@@ -21,11 +21,12 @@ interface FormState {
   budget: string;
   purpose: string;
   opMode: string;
+  kpis: { name: string; target: string }[];
 }
 
 const EMPTY_FORM: FormState = {
   name: '', org: '', type: '', start: '', end: '', region: '',
-  scale: '', budget: '', purpose: '', opMode: '오프라인',
+  scale: '', budget: '', purpose: '', opMode: '오프라인', kpis: [],
 };
 
 const FILLED_FORM: FormState = {
@@ -39,6 +40,11 @@ const FILLED_FORM: FormState = {
   budget: UPLOADED_FORM.budget,
   purpose: UPLOADED_FORM.purpose,
   opMode: '오프라인',
+  kpis: [
+    { name: '참가자 만족도', target: '85점' },
+    { name: '수료율', target: '90%' },
+    { name: '후속 연계', target: '10건' },
+  ],
 };
 
 /** 숫자만 추출 — '6,000만 원' → 6000, '300명' → 300 */
@@ -68,6 +74,7 @@ function fieldsToForm(f: ParsedFields): Partial<FormState> {
   if (num(f.participantScale.value) > 0) patch.scale = `${num(f.participantScale.value)}명`;
   if (num(f.budgetLimit.value) > 0) patch.budget = `${Math.round(num(f.budgetLimit.value) / 10000).toLocaleString('ko-KR')}만 원`;
   if (str(f.purpose.value)) patch.purpose = str(f.purpose.value);
+  if (f.kpis && f.kpis.length) patch.kpis = f.kpis;
   return patch;
 }
 
@@ -246,6 +253,7 @@ function Step1Inner() {
       budget: b.budgetLimit ? `${Math.round(b.budgetLimit / 10000).toLocaleString('ko-KR')}만 원` : '',
       purpose: b.purpose,
       opMode: b.operationType || '오프라인',
+      kpis: b.kpis ?? [],
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -265,6 +273,7 @@ function Step1Inner() {
       budget: b.budgetLimit ? `${Math.round(b.budgetLimit / 10000).toLocaleString('ko-KR')}만 원` : '',
       purpose: b.purpose,
       opMode: b.operationType || '오프라인',
+      kpis: b.kpis ?? [],
     });
   }, [event]);
 
@@ -292,6 +301,7 @@ function Step1Inner() {
       participantScale: parseDigits(form.scale),
       budgetLimit: parseBudgetWon(form.budget),
       purpose: form.purpose.trim(),
+      kpis: form.kpis.filter((k) => k.name.trim() || k.target.trim()),
     };
     // 비로그인 게스트 또는 승인 대기 계정: Firestore 저장 없이 로컬 상태로 진행
     // (게스트는 견적 확인 시점에 로그인 유도, 미승인 계정은 관리자 승인 후 저장 가능)
@@ -498,6 +508,52 @@ function Step1Inner() {
                   <div>
                     <label style={LABEL_STYLE}>행사 목적</label>
                     <textarea rows={3} value={form.purpose} onChange={(e) => patch({ purpose: e.target.value })} placeholder="행사를 통해 이루고 싶은 목표를 적어 주세요" className="iw-input" style={{ ...INPUT_STYLE, resize: 'vertical', lineHeight: 1.55 }} />
+                  </div>
+                  <div>
+                    <label style={{ ...LABEL_STYLE, marginBottom: '8px' }}>성과지표 (AI 추천)</label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {form.kpis.map((k, i) => (
+                        <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '8px', alignItems: 'center' }}>
+                          <input
+                            type="text"
+                            value={k.name}
+                            onChange={(e) => {
+                              const kpis = form.kpis.map((row, idx) => (idx === i ? { ...row, name: e.target.value } : row));
+                              patch({ kpis });
+                            }}
+                            placeholder="지표명 (예: 참가자 만족도)"
+                            className="iw-input"
+                            style={INPUT_STYLE}
+                          />
+                          <input
+                            type="text"
+                            value={k.target}
+                            onChange={(e) => {
+                              const kpis = form.kpis.map((row, idx) => (idx === i ? { ...row, target: e.target.value } : row));
+                              patch({ kpis });
+                            }}
+                            placeholder="목표값 (예: 85점)"
+                            className="iw-input"
+                            style={INPUT_STYLE}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => patch({ kpis: form.kpis.filter((_, idx) => idx !== i) })}
+                            aria-label="지표 삭제"
+                            style={{ border: 'none', background: 'transparent', color: '#9AA3B8', cursor: 'pointer', fontSize: '18px', lineHeight: 1, padding: '8px' }}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => patch({ kpis: [...form.kpis, { name: '', target: '' }] })}
+                        style={{ alignSelf: 'flex-start', border: '1px dashed rgba(20,99,243,0.4)', background: 'transparent', color: '#1463F3', borderRadius: '999px', padding: '8px 16px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}
+                      >
+                        + 지표 추가
+                      </button>
+                    </div>
                   </div>
                 </div>
 
