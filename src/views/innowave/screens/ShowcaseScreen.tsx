@@ -5,6 +5,7 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import { CARD_SHADOW, GROTESK } from '../components.js';
+import { downloadElementAsPdf } from '../pdf.js';
 import { BudgetDocument, DocBadge, ProposalDocument, SowDocument } from './showcaseDocs.js';
 
 const MEMO_TEXT = `2026년 SNU-SH DEMO DAY 프로그램 과업지시서 (요약)
@@ -90,13 +91,25 @@ function GeneratingCard({ label }: { label: string }) {
 
 function UploadCard({ onPicked, disabled }: { onPicked: (fileName: string) => void; disabled: boolean }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
   return (
     <div
       onClick={() => { if (!disabled) inputRef.current?.click(); }}
+      onDragOver={(e) => { e.preventDefault(); if (!disabled) setDragging(true); }}
+      onDragLeave={() => setDragging(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setDragging(false);
+        if (disabled) return;
+        const f = e.dataTransfer.files?.[0];
+        if (f) onPicked(f.name);
+      }}
       className="iw-dropzone"
       style={{
-        background: '#FFFFFF', border: '2px dashed rgba(20,99,243,0.35)', borderRadius: '20px',
+        background: dragging ? '#F0F6FF' : '#FFFFFF',
+        border: `2px dashed ${dragging ? '#1463F3' : 'rgba(20,99,243,0.35)'}`, borderRadius: '20px',
         padding: '52px 24px', textAlign: 'center', cursor: disabled ? 'progress' : 'pointer', transition: 'all .18s',
+        transform: dragging ? 'scale(1.01)' : 'none',
       }}
     >
       <input
@@ -161,6 +174,33 @@ function DocCard({ children }: { children: React.ReactNode }) {
  *  sow-gen/sow: 과업지시서 페이지 → proposal-gen/proposal: 운영제안서 페이지 */
 type ShowPhase = 'attach' | 'reading' | 'memo' | 'sow-gen' | 'sow' | 'proposal-gen' | 'proposal';
 
+/** 각 단계 산출물을 PDF로 저장 — 대상 영역(ref)을 캡처해 다운로드 */
+function PdfButton({ targetRef, fileName }: { targetRef: React.RefObject<HTMLDivElement | null>; fileName: string }) {
+  const [busy, setBusy] = useState(false);
+  const onClick = async () => {
+    if (!targetRef.current || busy) return;
+    setBusy(true);
+    try {
+      await downloadElementAsPdf(targetRef.current, fileName);
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <button
+        onClick={() => void onClick()}
+        disabled={busy}
+        className="iw-btn-outline-navy"
+        style={{ background: 'transparent', color: '#0D3B8F', border: '1px solid rgba(13,59,143,0.25)', borderRadius: '999px', padding: '9px 18px', fontSize: '13px', fontWeight: 700, cursor: busy ? 'wait' : 'pointer', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: '7px', opacity: busy ? 0.7 : 1 }}
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+        {busy ? 'PDF 생성 중…' : 'PDF 다운로드'}
+      </button>
+    </div>
+  );
+}
+
 function PrimaryButton({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -180,6 +220,10 @@ export function ShowcaseScreen() {
   const [phase, setPhase] = useState<ShowPhase>('attach');
   const [fileName, setFileName] = useState('');
   const timerRef = useRef<number | null>(null);
+  // 단계별 PDF 캡처 대상 영역
+  const memoRef = useRef<HTMLDivElement>(null);
+  const sowRef = useRef<HTMLDivElement>(null);
+  const proposalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => () => { if (timerRef.current !== null) window.clearTimeout(timerRef.current); }, []);
 
@@ -247,7 +291,10 @@ export function ShowcaseScreen() {
         {phase === 'reading' && <GeneratingCard label={'AI가 첨부된 미팅 자료를 읽고 있어요…'} />}
         {phase === 'memo' && (
           <>
-            <MemoCard value={MEMO_TEXT} fileName={fileName} />
+            <PdfButton targetRef={memoRef} fileName="미팅메모_2026_SNU-SH_DEMO_DAY.pdf" />
+            <div ref={memoRef} style={{ background: '#F6F9FF', padding: '6px 4px' }}>
+              <MemoCard value={MEMO_TEXT} fileName={fileName} />
+            </div>
             <PrimaryButton label="과업지시서 생성" onClick={() => transition('sow-gen', 'sow', GEN_DELAY_MS)} />
           </>
         )}
@@ -256,7 +303,10 @@ export function ShowcaseScreen() {
         {phase === 'sow-gen' && <GeneratingCard label={'AI가 메모를 분석해 과업지시서를 작성하고 있어요…'} />}
         {phase === 'sow' && (
           <>
-            <DocCard><SowDocument /></DocCard>
+            <PdfButton targetRef={sowRef} fileName="과업지시서_2026_SNU-SH_DEMO_DAY.pdf" />
+            <div ref={sowRef} style={{ background: '#F6F9FF', padding: '6px 4px' }}>
+              <DocCard><SowDocument /></DocCard>
+            </div>
             <PrimaryButton label="운영제안서 생성" onClick={() => transition('proposal-gen', 'proposal', GEN_DELAY_MS)} />
           </>
         )}
@@ -265,8 +315,11 @@ export function ShowcaseScreen() {
         {phase === 'proposal-gen' && <GeneratingCard label={'AI가 과업지시서를 분석해 운영제안서를 작성하고 있어요…'} />}
         {phase === 'proposal' && (
           <>
-            <DocCard><ProposalDocument /></DocCard>
-            <DocCard><BudgetDocument /></DocCard>
+            <PdfButton targetRef={proposalRef} fileName="운영제안서_2026_SNU-SH_DEMO_DAY.pdf" />
+            <div ref={proposalRef} style={{ background: '#F6F9FF', padding: '6px 4px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <DocCard><ProposalDocument /></DocCard>
+              <DocCard><BudgetDocument /></DocCard>
+            </div>
           </>
         )}
       </div>
