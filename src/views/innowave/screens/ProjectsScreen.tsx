@@ -99,7 +99,7 @@ function ProjectsInner() {
           <h1 style={{ margin: 0, fontSize: '26px', fontWeight: 800, color: '#071A3E', letterSpacing: '-0.01em' }}>내 프로젝트</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <button
-              onClick={() => { if (canOperate) { set(WORKFLOW_RESET); go('step1'); } }}
+              onClick={() => { if (canOperate) { set(WORKFLOW_RESET); go('showcase'); } }}
               disabled={!canOperate}
               title={canOperate ? undefined : '관리자 승인 후 이용할 수 있습니다'}
               className={canOperate ? 'iw-btn-primary' : undefined}
@@ -242,7 +242,7 @@ function ProjectsInner() {
               <h2 style={{ margin: '0 0 10px', fontSize: 'clamp(24px,3vw,34px)', fontWeight: 800, color: '#071A3E', letterSpacing: '-0.01em' }}>첫 기획을 시작해 보세요</h2>
               <p style={{ margin: '0 0 28px', fontSize: '15px', color: '#5A6478' }}>행사 정보만 입력하면 AI가 기획안과 견적까지 만들어 드립니다.</p>
               <button
-                onClick={() => { if (canOperate) { set(WORKFLOW_RESET); go('step1'); } }}
+                onClick={() => { if (canOperate) { set(WORKFLOW_RESET); go('showcase'); } }}
                 disabled={!canOperate}
                 className={canOperate ? 'iw-btn-primary' : undefined}
                 style={{ background: canOperate ? '#1463F3' : '#B9C6E4', color: '#FFFFFF', border: 'none', borderRadius: '999px', padding: '14px 34px', fontSize: '15.5px', fontWeight: 700, cursor: canOperate ? 'pointer' : 'not-allowed', fontFamily: 'inherit', boxShadow: canOperate ? '0 8px 24px rgba(20,99,243,0.35)' : 'none' }}
