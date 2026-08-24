@@ -261,7 +261,7 @@ export function ShowcaseScreen() {
             <span style={{ color: '#071A3E' }}>INNO</span>
             <span style={{ background: 'linear-gradient(90deg,#26B8CE,#1463F3)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>WAVE</span>
           </div>
-          <span style={{ background: '#F0F2F6', color: '#5A6478', borderRadius: '999px', padding: '5px 14px', fontSize: '12px', fontWeight: 700 }}>시연 전용 데모</span>
+          <span style={{ background: '#E5F0FF', color: '#0D3B8F', borderRadius: '999px', padding: '5px 14px', fontSize: '12px', fontWeight: 700 }}>AI 문서 자동화</span>
           {phase !== 'attach' && (
             <button
               onClick={reset}
