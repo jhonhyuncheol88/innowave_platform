@@ -62,12 +62,16 @@ function Step3Body() {
   const needsHydration = !!user && !!s.currentEventId && s.suppliesEventId !== s.currentEventId;
   useEffect(() => {
     if (!needsHydration || savedLoading || cardsLoading) return;
+    // 예산(basicInfo.budgetLimit)이 필요하므로 이벤트 로드까지 대기 — 저장본/초안 모두 예산에 맞춰 채운다
+    if (!event) return;
+    const budgetWon = event.basicInfo.budgetLimit || 0;
     if (savedSupplies.length > 0) {
-      set({ supplies: savedSupplies, suppliesEventId: s.currentEventId });
+      // 저장된 비품도 최초 진입 시 예산에 맞춰 스케일 → 3단계 비품 = 견적서 = 문서(≈예산) 일치
+      set({ supplies: scaleSuppliesToBudget(savedSupplies, budgetWon), suppliesEventId: s.currentEventId });
       setIsDraft(false);
       return;
     }
-    if (!event || cards.length === 0) return;
+    if (cards.length === 0) return;
     const cardById = new Map(cards.map((c) => [c.id ?? '', c]));
     const draft: SupplyItem[] = scaleSuppliesToBudget(buildQuoteItems(cards, event).map((qi) => ({
       rateCardId: qi.rateCardId, name: qi.itemName,
